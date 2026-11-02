@@ -1,6 +1,7 @@
 // Same rules as the app (unlag/supabase-client.js and session-monitor.js), so the site and
 // the app always agree on who is signed in and which plan they have.
-import { supabase } from './supabase.js';
+import { supabase, scratchClient } from './supabase.js';
+import { passwordProblem } from './password.js';
 
 export const PLAN_NAME = { free: 'Free', premium: 'Premium', ultra: 'Ultimate' };
 export const AI_LIMIT = { free: 3, premium: 7, ultra: 20 };
@@ -52,7 +53,11 @@ const MESSAGES = {
   'auth/invalid-credential': 'Wrong email or password',
   'auth/email-not-confirmed': 'Confirm your email first. The link is in your inbox',
   'auth/email-already-in-use': 'An account already uses this email',
-  'auth/weak-password': 'Choose a longer password, at least 6 characters',
+  'auth/weak-password': 'Use at least 8 characters, with letters and numbers',
+  'auth/captcha': 'We could not check that you are human. Reload the page and try again',
+  'auth/code-invalid': 'This code is wrong or has expired. Ask for a new one',
+  'auth/mfa-invalid': 'Wrong code. Use the current code from your authenticator app',
+  'auth/mfa-required': 'Enter the code from your authenticator app first',
   'auth/same-password': 'The new password must differ from the current one',
   'auth/wrong-password': 'The current password is wrong',
   'auth/too-many-requests': 'Too many attempts. Wait a minute and try again',
@@ -72,6 +77,8 @@ export function errorCode(error) {
     over_request_rate_limit: 'auth/too-many-requests', over_email_send_rate_limit: 'auth/too-many-requests',
     signup_disabled: 'auth/operation-not-allowed', provider_disabled: 'auth/social-not-configured',
     validation_failed: 'auth/invalid-credential', reauthentication_needed: 'auth/requires-login',
+    captcha_failed: 'auth/captcha', otp_expired: 'auth/code-invalid', otp_disabled: 'auth/operation-not-allowed',
+    mfa_verification_failed: 'auth/mfa-invalid', mfa_challenge_expired: 'auth/mfa-invalid', insufficient_aal: 'auth/mfa-required',
   };
   if (error?.code?.startsWith?.('auth/')) return error.code;
   if (invalidSession(error)) return 'auth/requires-login';
@@ -100,19 +107,40 @@ export async function updateDisplayName(value) {
   return checked(await supabase.auth.updateUser({ data: { display_name: name } })).user;
 }
 
-// The app asks for the current password before changing it. The site does the same.
-export async function changePassword(currentPassword, password) {
+// The app asks for the current password before changing it. The site does the same. The check runs on
+// a throwaway client, so the current session (and its two-factor level) is not replaced by a weaker one.
+export async function changePassword(currentPassword, password, captchaToken) {
   const user = await fetchUser();
   if (!userInfo(user).providers.includes('email')) throw { code: 'auth/operation-not-allowed' };
-  if (typeof password !== 'string' || password.length < 6 || password.length > 4096) throw { code: 'auth/weak-password' };
-  const verified = await supabase.auth.signInWithPassword({ email: user.email, password: currentPassword });
+  if (passwordProblem(password)) throw { code: 'auth/weak-password' };
+  const scratch = scratchClient();
+  const verified = await scratch.auth.signInWithPassword({ email: user.email, password: currentPassword, options: { captchaToken } });
   if (verified.error) throw verified.error.code === 'invalid_credentials' ? { code: 'auth/wrong-password' } : verified.error;
+  await scratch.auth.signOut({ scope: 'local' }).catch(() => {});
   if (verified.data.user.id !== user.id) throw { code: 'auth/requires-login' };
   checked(await supabase.auth.updateUser({ password }));
 }
 
-export async function resendConfirmation(email) {
-  checked(await supabase.auth.resend({ type: 'signup', email, options: { emailRedirectTo: `${window.location.origin}/account` } }));
+export async function resendConfirmation(email, captchaToken) {
+  checked(await supabase.auth.resend({ type: 'signup', email, options: { emailRedirectTo: `${window.location.origin}/account`, captchaToken } }));
+}
+
+// Two-factor (TOTP authenticator apps)
+export async function mfaStatus() {
+  const { data, error } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  if (error) throw error;
+  return { required: data.nextLevel === 'aal2' && data.currentLevel !== 'aal2', level: data.currentLevel };
+}
+
+export async function verifiedTotp() {
+  const data = checked(await supabase.auth.mfa.listFactors());
+  return (data.totp || []).find((f) => f.status === 'verified') || null;
+}
+
+export async function verifyMfa(code) {
+  const factor = await verifiedTotp();
+  if (!factor) throw { code: 'auth/mfa-invalid' };
+  checked(await supabase.auth.mfa.challengeAndVerify({ factorId: factor.id, code }));
 }
 
 // Reads today's assistant count without using a message (ai_daily_quota, p_consume false).

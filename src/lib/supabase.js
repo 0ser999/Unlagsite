@@ -12,6 +12,11 @@ function valid() {
 
 export const supabaseReady = valid();
 
+// A second client that never stores a session: checks a password without replacing the one in use.
+export function scratchClient() {
+  return createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false } });
+}
+
 export const supabase = supabaseReady
   ? createClient(url, key, {
       auth: { flowType: 'pkce', detectSessionInUrl: true, persistSession: true, autoRefreshToken: true },

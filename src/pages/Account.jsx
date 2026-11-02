@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, Navigate, useSearchParams } from 'react-router-dom';
 import {
-  Check, Lock, Monitor, LogOut, RefreshCw, Star, MailWarning, LayoutGrid, Settings, MessageSquare, Download, ArrowRight,
+  Check, Lock, Monitor, LogOut, RefreshCw, Star, MailWarning, LayoutGrid, Settings, MessageSquare, Download, ArrowRight, Copy,
 } from 'lucide-react';
+import { useCaptcha } from '../lib/captcha.jsx';
+import { passwordProblem } from '../lib/password.js';
+import { CodeInput, PasswordInput, PasswordMeter } from '../components/AuthBits.jsx';
 import { supabase } from '../lib/supabase.js';
 import { useAuth } from '../lib/auth.jsx';
 import {
@@ -10,7 +13,7 @@ import {
 } from '../lib/account.js';
 import { PLANS, PLAN_MATRIX, DOWNLOAD_URL, VERSION } from '../data.js';
 
-const PROVIDER = { email: 'Email and password', google: 'Google', discord: 'Discord' };
+const PROVIDER = { email: 'Email', google: 'Google', discord: 'Discord' };
 const TABS = [
   ['overview', 'Overview', LayoutGrid],
   ['settings', 'Settings', Settings],
@@ -257,6 +260,7 @@ function PasswordRow({ info }) {
   const [current, setCurrent] = useState('');
   const [password, setPassword] = useState('');
   const [status, setStatus] = useState('');
+  const captcha = useCaptcha();
   if (!info.providers.includes('email')) {
     return (
       <Row label="Password" hint="Managed by your sign-in provider">
@@ -266,9 +270,10 @@ function PasswordRow({ info }) {
   }
   const save = async (event) => {
     event.preventDefault();
+    if (passwordProblem(password)) return setStatus(authMessage({ code: 'auth/weak-password' }));
     setStatus('busy');
     try {
-      await changePassword(current, password);
+      await changePassword(current, password, await captcha.getToken());
       setCurrent('');
       setPassword('');
       setStatus('done');
@@ -279,13 +284,112 @@ function PasswordRow({ info }) {
   return (
     <Row label="Password" hint="The app asks for your current password too">
       <form className="set-form" onSubmit={save}>
-        <input className="input" type="password" aria-label="Current password" placeholder="Current password" autoComplete="current-password" required value={current} onChange={(e) => { setCurrent(e.target.value); setStatus(''); }} />
-        <input className="input" type="password" aria-label="New password" placeholder="New password, 6 characters or more" autoComplete="new-password" minLength={6} maxLength={4096} required value={password} onChange={(e) => { setPassword(e.target.value); setStatus(''); }} />
+        <PasswordInput className="input" aria-label="Current password" placeholder="Current password" autoComplete="current-password" required value={current} onChange={(e) => { setCurrent(e.target.value); setStatus(''); }} />
+        <PasswordInput className="input" aria-label="New password" placeholder="New password" autoComplete="new-password" required value={password} onChange={(e) => { setPassword(e.target.value); setStatus(''); }} />
+        <PasswordMeter value={password} />
+        {captcha.element}
         <div className="set-actions">
           <button type="submit" className="btn btn-secondary btn-sm" disabled={status === 'busy'}>Change password</button>
           <Status value={status} done="Changed" />
         </div>
       </form>
+    </Row>
+  );
+}
+
+function TwoFactorRow() {
+  const [factor, setFactor] = useState(undefined); // undefined loading, null off, object on
+  const [setup, setSetup] = useState(null); // { id, qr, secret } while enrolling
+  const [code, setCode] = useState('');
+  const [status, setStatus] = useState('');
+  const fail = (result) => { if (result.error) throw result.error; return result.data; };
+  const load = async () => {
+    try {
+      const data = fail(await supabase.auth.mfa.listFactors());
+      setFactor((data.totp || []).find((f) => f.status === 'verified') || null);
+    } catch { setFactor(null); }
+  };
+  useEffect(() => { load(); }, []);
+
+  const start = async () => {
+    setStatus('busy');
+    try {
+      // An abandoned setup leaves an unverified factor behind: clear it first.
+      const data = fail(await supabase.auth.mfa.listFactors());
+      for (const f of data.all || []) if (f.status === 'unverified') await supabase.auth.mfa.unenroll({ factorId: f.id });
+      const enrolled = fail(await supabase.auth.mfa.enroll({ factorType: 'totp', friendlyName: `Unlag ${Date.now().toString(36)}` }));
+      setSetup({ id: enrolled.id, qr: enrolled.totp.qr_code, secret: enrolled.totp.secret });
+      setCode('');
+      setStatus('');
+    } catch (error) { setStatus(authMessage(error)); }
+  };
+  const confirm = async (event) => {
+    event.preventDefault();
+    setStatus('busy');
+    try {
+      fail(await supabase.auth.mfa.challengeAndVerify({ factorId: setup.id, code }));
+      setSetup(null);
+      setStatus('on');
+      await load();
+    } catch (error) { setStatus(authMessage(error)); setCode(''); }
+  };
+  const cancel = async () => {
+    if (setup) await supabase.auth.mfa.unenroll({ factorId: setup.id }).catch(() => {});
+    setSetup(null);
+    setStatus('');
+  };
+  const turnOff = async () => {
+    setStatus('busy');
+    try {
+      fail(await supabase.auth.mfa.unenroll({ factorId: factor.id }));
+      await supabase.auth.refreshSession();
+      setStatus('off');
+      await load();
+    } catch (error) { setStatus(authMessage(error)); }
+  };
+
+  const message = status && !['busy', 'on', 'off'].includes(status) ? <span className="form-error">{status}</span> : null;
+  return (
+    <Row label="Two-factor authentication" hint="A code from an authenticator app is asked after you sign in, on the site and in the app">
+      {factor === undefined ? <p className="set-text">Checking</p>
+        : setup ? (
+          <form className="set-form" onSubmit={confirm}>
+            <p className="set-text">1. Scan this QR code with Google Authenticator, Microsoft Authenticator, Authy or 1Password.</p>
+            <div className="mfa-setup">
+              <img src={setup.qr} alt="QR code for your authenticator app" width="176" height="176" className="mfa-qr" />
+              <div className="mfa-secret">
+                <span>Or type this key</span>
+                <code className="mono">{setup.secret}</code>
+                <button type="button" className="btn-quiet" onClick={() => navigator.clipboard?.writeText(setup.secret)}><Copy size={14} strokeWidth={1.5} />Copy</button>
+              </div>
+            </div>
+            <p className="set-text">2. Enter the 6-digit code the app shows.</p>
+            <CodeInput value={code} onChange={setCode} length={6} autoFocus={false} />
+            <div className="set-actions">
+              <button type="submit" className="btn btn-secondary btn-sm" disabled={status === 'busy' || code.length !== 6}>Turn on</button>
+              <button type="button" className="btn-quiet" onClick={cancel}>Cancel</button>
+              {message}
+            </div>
+          </form>
+        ) : factor ? (
+          <div className="set-form">
+            <div className="set-static"><span className="stat-state is-ok"><i />On</span><span className="set-text">Your account asks for an authenticator code.</span></div>
+            <div className="set-actions">
+              <button type="button" className="btn btn-secondary btn-sm" onClick={turnOff} disabled={status === 'busy'}>Turn off</button>
+              {status === 'on' && <span className="acct-ok"><Check size={14} strokeWidth={1.5} />Turned on</span>}
+              {message}
+            </div>
+          </div>
+        ) : (
+          <div className="set-form">
+            <p className="set-text">Off. Anyone with your password could sign in.</p>
+            <div className="set-actions">
+              <button type="button" className="btn btn-secondary btn-sm" onClick={start} disabled={status === 'busy'}>Set up</button>
+              {status === 'off' && <span className="acct-muted">Turned off</span>}
+              {message}
+            </div>
+          </div>
+        )}
     </Row>
   );
 }
@@ -306,6 +410,7 @@ function SettingsView({ info }) {
         </ul>
       </Row>
       <PasswordRow info={info} />
+      <TwoFactorRow />
       <Row label="Sign out" hint="Signs out this browser only. The app on your PC stays signed in">
         <button type="button" className="btn btn-secondary btn-sm" onClick={() => supabase.auth.signOut({ scope: 'local' })}>
           <LogOut size={16} strokeWidth={1.5} />Sign out
@@ -381,9 +486,10 @@ function FeedbackView({ info }) {
 
 function VerifyNotice({ info }) {
   const [status, setStatus] = useState('');
+  const captcha = useCaptcha();
   const resend = async () => {
     setStatus('busy');
-    try { await resendConfirmation(info.email); setStatus('done'); } catch (error) { setStatus(authMessage(error)); }
+    try { await resendConfirmation(info.email, await captcha.getToken()); setStatus('done'); } catch (error) { setStatus(authMessage(error)); }
   };
   return (
     <div className="acct-notice">
@@ -393,17 +499,18 @@ function VerifyNotice({ info }) {
         {status === 'done' ? 'Link sent' : 'Send the link again'}
       </button>
       {status && !['busy', 'done'].includes(status) && <span className="form-error">{status}</span>}
+      {captcha.element}
     </div>
   );
 }
 
 export default function Account() {
-  const { user, info, loading, verified, refresh } = useAuth();
+  const { user, info, loading, verified, refresh, mfaRequired } = useAuth();
   const [params, setParams] = useSearchParams();
   const tab = TABS.some(([id]) => id === params.get('tab')) ? params.get('tab') : 'overview';
 
   if (loading) return <main className="dash" aria-busy="true" />;
-  if (!info) return <Navigate to="/sign-in?next=/account" replace />;
+  if (!info || mfaRequired) return <Navigate to="/sign-in?next=/account" replace />;
 
   const hwid = typeof user?.app_metadata?.hwid === 'string' ? user.app_metadata.hwid : null;
   const title = TABS.find(([id]) => id === tab)[1];

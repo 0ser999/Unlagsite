@@ -1,15 +1,25 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { supabase } from './supabase.js';
-import { fetchUser, invalidSession, refreshPlan, userInfo } from './account.js';
+import { fetchUser, invalidSession, mfaStatus, refreshPlan, userInfo } from './account.js';
 
-const AuthContext = createContext({ user: null, info: null, loading: true, recovery: false, verified: false, refresh: async () => {} });
+// Read from the session itself (no network): an account with a verified authenticator whose token is
+// not yet aal2 must enter its code before anything is shown.
+function sessionNeedsMfa(session) {
+  if (!session?.user?.factors?.some((f) => f.status === 'verified')) return false;
+  try {
+    const part = session.access_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(atob(part)).aal !== 'aal2';
+  } catch { return true; }
+}
+
+const AuthContext = createContext({ user: null, info: null, loading: true, recovery: false, verified: false, mfaRequired: false, refresh: async () => {}, recheck: async () => {} });
 
 export function AuthProvider({ children }) {
-  const [state, setState] = useState({ user: null, info: null, loading: Boolean(supabase), recovery: false, verified: false });
+  const [state, setState] = useState({ user: null, info: null, loading: Boolean(supabase), recovery: false, verified: false, mfaRequired: false });
   const checking = useRef(false);
 
-  const apply = useCallback((user, verified) => {
-    setState((s) => ({ ...s, user, info: userInfo(user), loading: false, verified }));
+  const apply = useCallback((user, verified, mfaRequired = false) => {
+    setState((s) => ({ ...s, user, info: userInfo(user), loading: false, verified, mfaRequired: Boolean(user) && mfaRequired }));
   }, []);
 
   // Never trust the token alone: getUser() asks Supabase, so a plan changed in the dashboard,
@@ -24,7 +34,9 @@ export function AuthProvider({ children }) {
       if (!user) { await supabase.auth.signOut({ scope: 'local' }); apply(null, true); return; }
       // A plan set after the token was issued: get a token that carries it.
       if (user.app_metadata?.plan !== data.session.user.app_metadata?.plan) await supabase.auth.refreshSession();
-      apply(user, true);
+      // Accounts with an authenticator app stay locked until its code is entered (aal2).
+      const mfa = await mfaStatus();
+      apply(user, true, mfa.required);
     } catch (error) {
       if (invalidSession(error)) {
         await supabase.auth.signOut({ scope: 'local' }).catch(() => {});
@@ -40,7 +52,7 @@ export function AuthProvider({ children }) {
 
   const refresh = useCallback(async () => {
     const user = await refreshPlan();
-    apply(user, true);
+    apply(user, true, (await mfaStatus()).required);
     return userInfo(user);
   }, [apply]);
 
@@ -48,7 +60,7 @@ export function AuthProvider({ children }) {
     if (!supabase) return undefined;
     // Show the cached session at once, then confirm it with the server.
     supabase.auth.getSession().then(({ data }) => {
-      setState((s) => ({ ...s, user: data.session?.user ?? null, info: userInfo(data.session?.user), loading: Boolean(data.session) }));
+      setState((s) => ({ ...s, user: data.session?.user ?? null, info: userInfo(data.session?.user), loading: Boolean(data.session), mfaRequired: sessionNeedsMfa(data.session) }));
       verify();
     });
     // Never await SDK calls inside onAuthStateChange: it holds the auth lock.
@@ -58,9 +70,10 @@ export function AuthProvider({ children }) {
         user: session?.user ?? null,
         info: userInfo(session?.user),
         loading: false,
+        mfaRequired: sessionNeedsMfa(session),
         recovery: event === 'PASSWORD_RECOVERY' ? true : event === 'SIGNED_OUT' ? false : s.recovery,
       }));
-      if (event === 'SIGNED_IN' || event === 'USER_UPDATED') setTimeout(verify, 0);
+      if (['SIGNED_IN', 'USER_UPDATED', 'MFA_CHALLENGE_VERIFIED'].includes(event)) setTimeout(verify, 0);
     });
     const onFocus = () => { if (document.visibilityState === 'visible') verify(); };
     document.addEventListener('visibilitychange', onFocus);
@@ -74,7 +87,7 @@ export function AuthProvider({ children }) {
     };
   }, [verify]);
 
-  return <AuthContext.Provider value={{ ...state, refresh }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ ...state, refresh, recheck: verify }}>{children}</AuthContext.Provider>;
 }
 
 export const useAuth = () => useContext(AuthContext);

@@ -752,3 +752,49 @@ a.cat:hover .cat-bar span { background: var(--text-2); }
   .cta-logo { width: 72px; height: 72px; border-radius: 18px; }
   .cta .btn { width: 100%; }
 }
+
+/* ---------- Sign-in, security ---------- */
+.auth-icon { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 12px; background: var(--raised); border: 1px solid var(--line-2); color: var(--accent); }
+.auth-social { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 32px; }
+.auth-social .btn { width: 100%; height: 44px; font-size: 14px; }
+.auth-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; margin-bottom: 20px; background: var(--deep); border: 1px solid var(--line); border-radius: 10px; }
+.auth-tabs button { height: 36px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 7px; background: transparent; color: var(--text-3); font: 500 14px var(--font); cursor: pointer; transition: background-color var(--fast) var(--ease), color var(--fast) var(--ease); }
+.auth-tabs button:hover { color: var(--text-2); }
+.auth-tabs button.is-on { background: var(--raised); color: var(--text); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06); }
+.auth-hint { font-size: 13px; line-height: 20px; color: var(--text-3); }
+.auth-fine { display: flex; align-items: flex-start; gap: 8px; margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 12px; line-height: 18px; color: var(--text-3); }
+.auth-fine svg { flex: none; margin-top: 2px; }
+.link-btn { display: inline-flex; align-items: center; gap: 6px; padding: 0; border: 0; background: none; color: var(--text); font: 500 14px var(--font); cursor: pointer; }
+.link-btn:hover { text-decoration: underline; text-underline-offset: 3px; }
+.link-btn:disabled { color: var(--text-3); text-decoration: none; cursor: default; }
+.link-btn.center { align-self: center; font-size: 13px; color: var(--text-2); }
+.code-sent { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; font-size: 14px; line-height: 22px; color: var(--text-2); }
+.code-sent b { color: var(--text); font-weight: 500; overflow-wrap: anywhere; }
+.code-sent .link-btn { font-size: 13px; color: var(--text-3); }
+.code-input {
+  width: 100%; height: 56px; padding: 0 16px; text-align: center; letter-spacing: 0.4em; font-size: 24px;
+  background: var(--deep); border: 1px solid var(--line-2); border-radius: 10px; color: var(--text); outline: 0;
+  transition: border-color var(--fast) var(--ease);
+}
+.code-input::placeholder { color: rgba(238, 240, 245, 0.18); }
+.code-input:focus { border-color: rgba(91, 140, 255, 0.6); }
+.pw-wrap { position: relative; display: flex; }
+.pw-wrap input { flex: 1; min-width: 0; padding-right: 44px; }
+.pw-eye { position: absolute; top: 0; right: 0; bottom: 0; width: 44px; display: grid; place-items: center; border: 0; background: none; color: var(--text-3); cursor: pointer; }
+.pw-eye:hover { color: var(--text); }
+.pw-hint { font-size: 12px; line-height: 18px; color: var(--text-3); }
+.pw-meter { display: flex; align-items: center; gap: 12px; font-size: 12px; line-height: 18px; color: var(--text-3); }
+.pw-bars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; width: 120px; flex: none; }
+.pw-bars i { height: 4px; border-radius: 2px; background: var(--line-2); transition: background-color var(--fast) var(--ease); }
+.pw-meter.score-1 .pw-bars i:nth-child(-n+1) { background: #e0656a; }
+.pw-meter.score-2 .pw-bars i:nth-child(-n+2) { background: #d6a23e; }
+.pw-meter.score-3 .pw-bars i:nth-child(-n+3) { background: var(--accent); }
+.pw-meter.score-4 .pw-bars i { background: #4cc38a; }
+.pw-meter.score-1 .pw-label { color: #f08a8d; }
+.captcha:empty { display: none; }
+.mfa-setup { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+.mfa-qr { width: 176px; height: 176px; padding: 10px; background: #ffffff; border-radius: 12px; }
+.mfa-secret { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; min-width: 0; font-size: 13px; color: var(--text-3); }
+.mfa-secret code { font-size: 13px; color: var(--text); overflow-wrap: anywhere; }
+.set-form .code-input { max-width: 240px; }
+@media (max-width: 420px) { .auth-social { grid-template-columns: 1fr; } }
