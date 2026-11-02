@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unlag — optimisation Windows 11 réversible</title>
+<meta name="description" content="Unlag applique 117 réglages Windows 10 et 11 pour le réseau, le processeur, la confidentialité et le BIOS. Chaque valeur d'origine est sauvegardée et peut être restaurée exactement.">
+<link rel="icon" type="image/png" href="assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --deep: #07080d;
+  --bg: #0b0d14;
+  --card: #11141c;
+  --raised: #1a1e28;
+  --line: rgba(238, 240, 245, 0.08);
+  --line-2: rgba(238, 240, 245, 0.12);
+  --text: #eef0f5;
+  --text-2: #a3a9b8;
+  --text-3: #7a8296;
+  --accent: #4d84ff;
+  --accent-soft: rgba(77, 132, 255, 0.14);
+  --positive: #4cc38a;
+  --font: "Poppins", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --wrap: 1200px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 400 15px/1.6 var(--font); -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+.wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 32px; }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.icon { width: 18px; height: 18px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 20px;
+  border-radius: 10px; font: 500 15px/1 var(--font); white-space: nowrap;
+  transition: background-color 160ms var(--ease), border-color 160ms var(--ease), transform 120ms var(--ease);
+}
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--text); color: var(--deep); box-shadow: inset 0 1px 0 rgba(255,255,255,0.4); }
+.btn-primary:hover { background: #ffffff; }
+.btn-secondary { background: var(--raised); color: var(--text); border: 1px solid var(--line-2); }
+.btn-secondary:hover { border-color: rgba(238,240,245,0.2); }
+.btn-sm { height: 36px; padding: 0 16px; font-size: 14px; border-radius: 8px; }
+
+/* Nav */
+.nav { position: sticky; top: 0; z-index: 10; background: rgba(11, 13, 20, 0.86); backdrop-filter: blur(12px); border-bottom: 1px solid transparent; transition: border-color 200ms var(--ease); }
+.nav.scrolled { border-bottom-color: var(--line); }
+.nav-in { height: 64px; display: flex; align-items: center; gap: 32px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 17px; letter-spacing: 0; }
+.brand img { width: 28px; height: 28px; border-radius: 7px; }
+.nav-links { display: flex; gap: 28px; margin-left: 16px; }
+.nav-links a { font-size: 14px; color: var(--text-2); transition: color 160ms var(--ease); }
+.nav-links a:hover { color: var(--text); }
+.nav-end { margin-left: auto; display: flex; align-items: center; gap: 20px; }
+.nav-menu { display: none; background: none; border: 0; color: var(--text); padding: 8px; margin-right: -8px; cursor: pointer; }
+
+/* Hero */
+.hero { padding: 80px 0 96px; }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 56px; align-items: center; }
+.eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-2); margin-bottom: 24px; }
+.eyebrow .dot { width: 6px; height: 6px; border-radius: 3px; background: var(--positive); }
+h1 { font-size: 52px; line-height: 1.06; font-weight: 500; letter-spacing: -0.03em; margin: 0 0 24px; }
+.lead { font-size: 18px; line-height: 30px; color: var(--text-2); margin: 0 0 40px; max-width: 34rem; }
+.actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.hero-meta { margin-top: 24px; font-size: 13px; color: var(--text-3); }
+
+/* App window */
+.window {
+  background: var(--card); border: 1px solid var(--line-2); border-radius: 16px; overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.5);
+  font-size: 13px;
+}
+.titlebar { height: 36px; display: flex; align-items: center; gap: 8px; padding: 0 12px; border-bottom: 1px solid var(--line); background: var(--deep); color: var(--text-3); font-size: 12px; }
+.titlebar img { width: 16px; height: 16px; border-radius: 4px; }
+.titlebar .ctrl { margin-left: auto; display: flex; gap: 16px; }
+.titlebar .ctrl span { width: 10px; height: 1px; background: var(--text-3); display: block; }
+.app { display: grid; grid-template-columns: 184px minmax(0, 1fr); min-height: 432px; }
+.side { background: var(--deep); border-right: 1px solid var(--line); padding: 12px 8px; display: flex; flex-direction: column; gap: 2px; }
+.side-label { font-size: 11px; color: var(--text-3); padding: 12px 10px 4px; }
+.side-label:first-child { padding-top: 0; }
+.side-item { height: 32px; display: flex; align-items: center; gap: 10px; padding: 0 10px; border-radius: 8px; color: var(--text-2); }
+.side-item .icon { width: 16px; height: 16px; color: var(--text-3); }
+.side-item.active { background: var(--raised); color: var(--text); box-shadow: inset 0 1px 0 rgba(255,255,255,0.06); }
+.side-item.active .icon { color: var(--accent); }
+.main { padding: 20px 20px 16px; min-width: 0; }
+.main-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
+.main-head h3 { margin: 0; font-size: 18px; font-weight: 500; }
+.main-head span { color: var(--text-3); font-size: 12px; }
+.main-sub { color: var(--text-2); font-size: 12px; margin: 0 0 16px; }
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 12px; }
+.tab { padding: 0 10px 10px; color: var(--text-3); font-size: 12px; border-bottom: 1px solid transparent; margin-bottom: -1px; }
+.tab.on { color: var(--text); border-bottom-color: var(--text); }
+.rows { display: flex; flex-direction: column; gap: 4px; }
+.row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 16px; padding: 10px 12px; border-radius: 10px; border: 1px solid transparent; }
+.row.open { background: var(--raised); border-color: var(--line); }
+.row-name { color: var(--text); font-weight: 500; font-size: 13px; }
+.row-desc { color: var(--text-3); font-size: 12px; line-height: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.impact { font-size: 11px; color: var(--text-3); }
+.impact.high { color: var(--text-2); }
+.toggle { width: 32px; height: 18px; border-radius: 9px; background: var(--raised); border: 1px solid var(--line-2); position: relative; }
+.toggle::after { content: ""; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 6px; background: var(--text-3); }
+.toggle.on { background: var(--accent); border-color: var(--accent); }
+.toggle.on::after { left: 16px; background: #fff; }
+.diff { grid-column: 1 / -1; margin-top: 4px; border-top: 1px solid var(--line); padding-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+.diff-path { font-family: var(--mono); font-size: 11px; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.diff-line { display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 12px; font-variant-numeric: tabular-nums; flex-wrap: wrap; }
+.diff-line .k { color: var(--text-2); }
+.v-old { color: var(--text-3); text-decoration: line-through; text-decoration-color: rgba(122,130,150,0.6); }
+.v-new { color: var(--accent); }
+.arrow { color: var(--text-3); }
+.diff-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 4px; font-size: 11px; color: var(--text-3); }
+.mini-btn { height: 24px; padding: 0 10px; border-radius: 6px; border: 1px solid var(--line-2); color: var(--text-2); font-size: 11px; display: inline-flex; align-items: center; gap: 6px; }
+.mini-btn .icon { width: 12px; height: 12px; }
+
+/* Sections */
+section { scroll-margin-top: 64px; }
+.section { padding: 96px 0; border-top: 1px solid var(--line); }
+.section-head { max-width: 40rem; margin-bottom: 48px; }
+h2 { font-size: 36px; line-height: 1.15; font-weight: 500; letter-spacing: -0.02em; margin: 0 0 16px; }
+.section-head p { color: var(--text-2); font-size: 17px; line-height: 28px; margin: 0; }
+
+/* Modules */
+.modules { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.mod { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 12px; }
+.mod-top { display: flex; align-items: center; justify-content: space-between; color: var(--text-3); }
+.mod-top .count { font-family: var(--mono); font-size: 12px; }
+.mod h3 { margin: 0; font-size: 17px; font-weight: 500; }
+.mod p { margin: 0; color: var(--text-2); font-size: 14px; line-height: 22px; }
+.mod ul { list-style: none; margin: auto 0 0; padding: 12px 0 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--text-3); }
+.tools { margin-top: 16px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
+.tool { padding: 20px; border: 1px solid var(--line); border-radius: 14px; display: flex; flex-direction: column; gap: 8px; }
+.tool .icon { color: var(--text-3); margin-bottom: 4px; }
+.tool h4 { margin: 0; font-size: 15px; font-weight: 500; }
+.tool p { margin: 0; font-size: 13px; line-height: 20px; color: var(--text-2); }
+
+/* Revert */
+.revert-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 64px; align-items: center; }
+.steps { list-style: none; padding: 0; margin: 32px 0 0; display: flex; flex-direction: column; gap: 24px; }
+.steps li { display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 16px; }
+.steps .n { width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--line-2); font-family: var(--mono); font-size: 12px; color: var(--text-2); display: grid; place-items: center; }
+.steps h4 { margin: 2px 0 4px; font-size: 15px; font-weight: 500; }
+.steps p { margin: 0; color: var(--text-2); font-size: 14px; line-height: 22px; }
+.ledger { background: var(--deep); border: 1px solid var(--line-2); border-radius: 16px; overflow: hidden; }
+.ledger-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 12px; color: var(--text-3); }
+.ledger-body { padding: 8px 0; }
+.entry { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; padding: 12px 20px; border-bottom: 1px solid var(--line); }
+.entry:last-child { border-bottom: 0; }
+.entry .id { font-family: var(--mono); font-size: 12px; color: var(--text-2); }
+.entry .when { font-family: var(--mono); font-size: 11px; color: var(--text-3); text-align: right; }
+.entry .val { grid-column: 1 / -1; font-family: var(--mono); font-size: 13px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.entry .val .k { color: var(--text); }
+
+/* Plans */
+.plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
+.plan { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 28px; display: flex; flex-direction: column; }
+.plan.featured { border-color: rgba(77, 132, 255, 0.45); background: linear-gradient(#141927, #11141c); }
+.plan-name { display: flex; align-items: center; justify-content: space-between; font-size: 17px; font-weight: 500; }
+.plan-tag { font-size: 12px; font-weight: 400; color: var(--accent); }
+.plan-desc { color: var(--text-2); font-size: 14px; line-height: 22px; margin: 8px 0 24px; min-height: 44px; }
+.plan ul { list-style: none; margin: 0 0 28px; padding: 20px 0 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px; font-size: 14px; }
+.plan li { display: flex; gap: 10px; align-items: flex-start; color: var(--text); }
+.plan li .icon { width: 16px; height: 16px; color: var(--text-3); margin-top: 3px; }
+.plan li.inherit { color: var(--text-2); }
+.plan .btn { margin-top: auto; justify-content: center; }
+.plans-note { margin-top: 20px; color: var(--text-3); font-size: 13px; }
+
+/* FAQ */
+.faq { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: 64px; }
+.faq-list { border-top: 1px solid var(--line); }
+details { border-bottom: 1px solid var(--line); }
+summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px 0; font-size: 16px; font-weight: 500; }
+summary::-webkit-details-marker { display: none; }
+summary .icon { color: var(--text-3); transition: transform 200ms var(--ease); }
+details[open] summary .icon { transform: rotate(45deg); }
+details p { margin: 0 0 20px; color: var(--text-2); font-size: 15px; line-height: 24px; max-width: 40rem; }
+
+/* CTA + footer */
+.cta { padding: 96px 0; border-top: 1px solid var(--line); }
+.cta-in { display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
+.cta h2 { margin: 0 0 8px; }
+.cta p { margin: 0; color: var(--text-2); }
+footer { border-top: 1px solid var(--line); padding: 32px 0 48px; color: var(--text-3); font-size: 13px; }
+.foot-in { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; align-items: center; }
+.foot-links { display: flex; gap: 24px; }
+.foot-links a:hover { color: var(--text-2); }
+
+/* Entrance */
+@media (prefers-reduced-motion: no-preference) {
+  .rise { opacity: 0; transform: translateY(8px); animation: rise 500ms var(--ease) forwards; }
+  .rise:nth-child(2) { animation-delay: 50ms; }
+  .rise:nth-child(3) { animation-delay: 100ms; }
+  .rise:nth-child(4) { animation-delay: 150ms; }
+  .hero-visual.rise { animation-delay: 200ms; }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+}
+
+/* Responsive */
+@media (max-width: 1080px) {
+  .modules { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tools { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .hero-grid, .revert-grid { grid-template-columns: minmax(0, 1fr); gap: 48px; }
+  .faq { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+}
+@media (max-width: 760px) {
+  .wrap { padding: 0 16px; }
+  .nav-links, .nav-end .login { display: none; }
+  .nav-menu { display: inline-flex; }
+  .nav.open .nav-links { display: flex; position: absolute; top: 64px; left: 0; right: 0; flex-direction: column; gap: 0; margin: 0; padding: 8px 16px 16px; background: var(--bg); border-bottom: 1px solid var(--line); }
+  .nav.open .nav-links a { padding: 12px 0; font-size: 15px; }
+  .hero { padding: 48px 0 64px; }
+  h1 { font-size: 38px; }
+  h2 { font-size: 28px; }
+  .lead { font-size: 17px; line-height: 28px; }
+  .section, .cta { padding: 64px 0; }
+  .app { grid-template-columns: minmax(0, 1fr); min-height: 0; }
+  .side { display: none; }
+  .row-desc { display: none; }
+  .row .impact { display: none; }
+  .row { grid-template-columns: minmax(0, 1fr) auto; }
+  .modules, .plans { grid-template-columns: minmax(0, 1fr); }
+  .tools { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .plan-desc { min-height: 0; }
+}
+@media (max-width: 420px) {
+  .tools { grid-template-columns: minmax(0, 1fr); }
+  .actions .btn { flex: 1; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 15V3"/><path d="m7 10 5 5 5-5"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></symbol>
+    <symbol id="i-layout" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></symbol>
+    <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></symbol>
+    <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><path d="M12 20h.01"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></symbol>
+    <symbol id="i-gamepad" viewBox="0 0 24 24"><path d="M6 12h4M8 10v4"/><path d="M15 13h.01M18 11h.01"/><rect x="2" y="6" width="20" height="12" rx="6"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+    <symbol id="i-package" viewBox="0 0 24 24"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="m3 8 9 5 9-5"/><path d="M12 13v8"/></symbol>
+    <symbol id="i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></symbol>
+    <symbol id="i-chip" viewBox="0 0 24 24"><path d="M4 7h16v10H4z"/><path d="M8 7V4M12 7V4M16 7V4M8 20v-3M12 20v-3M16 20v-3"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+    <symbol id="i-undo" viewBox="0 0 24 24"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-15-6.7L3 13"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  </defs>
+</svg>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a href="#" class="brand"><img src="assets/logo.png" alt="" width="28" height="28">Unlag</a>
+    <nav class="nav-links" aria-label="Navigation">
+      <a href="#modules">Modules</a>
+      <a href="#reversible">Réversible</a>
+      <a href="#offres">Offres</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-end">
+      <a href="downloads/unlag-Setup-1.0.0.exe" class="btn btn-primary btn-sm">Télécharger</a>
+      <button class="nav-menu" id="menu" aria-label="Menu" aria-expanded="false"><svg class="icon"><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow rise"><span class="dot"></span>Windows 10 et 11, version 1.0</div>
+        <h1 class="rise">Moins de latence sur Windows, sans rien casser</h1>
+        <p class="lead rise">117 réglages pour le réseau, le processeur, la confidentialité et le BIOS. Unlag note chaque valeur d'origine avant d'y toucher, pour revenir en arrière à l'identique.</p>
+        <div class="rise">
+          <div class="actions">
+            <a href="downloads/unlag-Setup-1.0.0.exe" class="btn btn-primary"><svg class="icon"><use href="#i-download"/></svg>Télécharger pour Windows</a>
+            <a href="#modules" class="btn btn-secondary">Voir les modules</a>
+          </div>
+          <p class="hero-meta">Gratuit pour commencer · Installateur x64 · Droits administrateur requis</p>
+        </div>
+      </div>
+
+      <div class="hero-visual rise" aria-label="Aperçu de l'application Unlag, page Network">
+        <div class="window">
+          <div class="titlebar"><img src="assets/logo.png" alt="">unlag<div class="ctrl"><span></span><span></span><span></span></div></div>
+          <div class="app">
+            <aside class="side">
+              <div class="side-label">Système</div>
+              <div class="side-item"><svg class="icon"><use href="#i-home"/></svg>Home</div>
+              <div class="side-item"><svg class="icon"><use href="#i-layout"/></svg>General</div>
+              <div class="side-item"><svg class="icon"><use href="#i-cpu"/></svg>Performance</div>
+              <div class="side-item active"><svg class="icon"><use href="#i-wifi"/></svg>Network</div>
+              <div class="side-item"><svg class="icon"><use href="#i-shield"/></svg>Privacy</div>
+              <div class="side-label">Outils</div>
+              <div class="side-item"><svg class="icon"><use href="#i-trash"/></svg>Cleaner</div>
+              <div class="side-item"><svg class="icon"><use href="#i-package"/></svg>Debloat</div>
+              <div class="side-item"><svg class="icon"><use href="#i-history"/></svg>Backups</div>
+              <div class="side-item"><svg class="icon"><use href="#i-chip"/></svg>BIOS</div>
+            </aside>
+            <div class="main">
+              <div class="main-head"><h3>Network</h3><span class="mono">8 / 21 actifs</span></div>
+              <p class="main-sub">Faster pings, cleaner packets, smarter DNS.</p>
+              <div class="tabs"><span class="tab">Latency</span><span class="tab on">Bandwidth</span><span class="tab">DNS</span><span class="tab">Adapter</span></div>
+              <div class="rows">
+                <div class="row open">
+                  <div><div class="row-name">Remove Network Throttling</div><div class="row-desc">Disables the multimedia throttling index that caps non-media traffic</div></div>
+                  <span class="impact">Medium</span><span class="toggle on"></span>
+                  <div class="diff">
+                    <div class="diff-path">HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile</div>
+                    <div class="diff-line"><span class="k">NetworkThrottlingIndex</span><span class="v-old">10</span><span class="arrow">→</span><span class="v-new">ffffffff</span></div>
+                    <div class="diff-foot"><span>Valeur d'origine sauvegardée</span><span class="mini-btn"><svg class="icon"><use href="#i-undo"/></svg>Revert</span></div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div><div class="row-name">Disable Delivery Optimization</div><div class="row-desc">Stops Windows from uploading updates to other PCs over your connection</div></div>
+                  <span class="impact">Medium</span><span class="toggle on"></span>
+                </div>
+                <div class="row">
+                  <div><div class="row-name">Optimize TCP Auto-Tuning</div><div class="row-desc">Sets TCP auto-tuning to Normal so fast connections are not capped</div></div>
+                  <span class="impact">Low</span><span class="toggle"></span>
+                </div>
+                <div class="row">
+                  <div><div class="row-name">Faster Port Reuse</div><div class="row-desc">Opens the full port range and frees closed connections after 30 s</div></div>
+                  <span class="impact">Low</span><span class="toggle"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="modules">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Quatre familles de réglages, et les outils autour</h2>
+        <p>Chaque réglage indique son impact et son niveau de risque. Ceux marqués comme recommandés sont sûrs pour la plupart des PC de jeu.</p>
+      </div>
+      <div class="modules">
+        <article class="mod">
+          <div class="mod-top"><svg class="icon"><use href="#i-layout"/></svg><span class="count">36 réglages</span></div>
+          <h3>General</h3>
+          <p>Remet de l'ordre dans l'apparence et le comportement de Windows, et le prépare pour le jeu.</p>
+          <ul><li>Menu contextuel classique</li><li>Widgets et suggestions retirés</li><li>Dynamic Lighting désactivé</li></ul>
+        </article>
+        <article class="mod">
+          <div class="mod-top"><svg class="icon"><use href="#i-cpu"/></svg><span class="count">28 réglages</span></div>
+          <h3>Performance</h3>
+          <p>Tire le maximum du processeur, de la carte graphique, de la mémoire et du stockage.</p>
+          <ul><li>Plan Ultimate Performance</li><li>Timer haute précision</li><li>Core parking désactivé</li></ul>
+        </article>
+        <article class="mod">
+          <div class="mod-top"><svg class="icon"><use href="#i-wifi"/></svg><span class="count">21 réglages</span></div>
+          <h3>Network</h3>
+          <p>Un ping plus bas, des paquets envoyés sans attente et un DNS mieux choisi.</p>
+          <ul><li>Algorithme de Nagle désactivé</li><li>Réglages TCP optimisés</li><li>Network throttling retiré</li></ul>
+        </article>
+        <article class="mod">
+          <div class="mod-top"><svg class="icon"><use href="#i-shield"/></svg><span class="count">32 réglages</span></div>
+          <h3>Privacy</h3>
+          <p>Reprend la main sur ce que Windows envoie à Microsoft.</p>
+          <ul><li>Télémétrie désactivée</li><li>Snapshots Recall coupés</li><li>Historique d'activité désactivé</li></ul>
+        </article>
+      </div>
+      <div class="tools">
+        <div class="tool"><svg class="icon"><use href="#i-gamepad"/></svg><h4>Game Mode</h4><p>Les réglages de jeu regroupés sur une seule page</p></div>
+        <div class="tool"><svg class="icon"><use href="#i-trash"/></svg><h4>Cleaner</h4><p>Supprime les fichiers temporaires et les caches</p></div>
+        <div class="tool"><svg class="icon"><use href="#i-package"/></svg><h4>Debloat</h4><p>Désinstalle Copilot, Clipchamp, Teams et 15 autres apps</p></div>
+        <div class="tool"><svg class="icon"><use href="#i-history"/></svg><h4>Backups</h4><p>Crée des points de restauration Windows</p></div>
+        <div class="tool"><svg class="icon"><use href="#i-chat"/></svg><h4>Assistant</h4><p>Connaît votre matériel et propose des réglages à activer</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="reversible">
+    <div class="wrap revert-grid">
+      <div>
+        <h2>Tout ce qu'Unlag change peut être défait</h2>
+        <p style="color:var(--text-2);font-size:17px;line-height:28px;margin:0">Unlag modifie vraiment le système, avec les droits administrateur. C'est pour ça qu'il garde une trace de chaque valeur avant de l'écrire.</p>
+        <ol class="steps">
+          <li><span class="n">1</span><div><h4>Lecture</h4><p>Avant d'appliquer un réglage, Unlag lit la valeur actuelle de chaque clé concernée.</p></div></li>
+          <li><span class="n">2</span><div><h4>Sauvegarde</h4><p>Les valeurs d'origine sont enregistrées dans <span class="mono" style="font-size:13px;color:var(--text)">%ProgramData%\unlag\tweaks.json</span>.</p></div></li>
+          <li><span class="n">3</span><div><h4>Retour exact</h4><p>Désactiver un réglage réécrit la valeur d'origine, ou supprime la clé si elle n'existait pas.</p></div></li>
+        </ol>
+      </div>
+      <div class="ledger" aria-label="Exemple de valeurs sauvegardées">
+        <div class="ledger-head"><span>tweaks.json</span><span>3 entrées</span></div>
+        <div class="ledger-body">
+          <div class="entry">
+            <span class="id">net-throttle</span><span class="when">appliqué</span>
+            <div class="val"><span class="k">NetworkThrottlingIndex</span><span class="v-old">10</span><span class="arrow">→</span><span class="v-new">ffffffff</span></div>
+          </div>
+          <div class="entry">
+            <span class="id">perf-timer</span><span class="when">appliqué</span>
+            <div class="val"><span class="k">GlobalTimerResolutionRequests</span><span class="v-old">absente</span><span class="arrow">→</span><span class="v-new">1</span></div>
+          </div>
+          <div class="entry">
+            <span class="id">priv-telemetry</span><span class="when">appliqué</span>
+            <div class="val"><span class="k">AllowTelemetry</span><span class="v-old">absente</span><span class="arrow">→</span><span class="v-new">0</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="offres">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Commencez gratuitement</h2>
+        <p>Les réglages essentiels sont gratuits. Les offres payantes ajoutent les modules qui touchent aux performances et au BIOS.</p>
+      </div>
+      <div class="plans">
+        <div class="plan">
+          <div class="plan-name">Free</div>
+          <p class="plan-desc">Pour nettoyer Windows et protéger sa vie privée</p>
+          <ul>
+            <li><svg class="icon"><use href="#i-check"/></svg>Home, General et Privacy</li>
+            <li><svg class="icon"><use href="#i-check"/></svg>Cleaner et Debloat</li>
+            <li><svg class="icon"><use href="#i-check"/></svg>Points de restauration</li>
+            <li><svg class="icon"><use href="#i-check"/></svg>Assistant, 3 messages par jour</li>
+          </ul>
+          <a href="downloads/unlag-Setup-1.0.0.exe" class="btn btn-secondary">Télécharger</a>
+        </div>
+        <div class="plan featured">
+          <div class="plan-name">Premium<span class="plan-tag">Pour jouer</span></div>
+          <p class="plan-desc">Pour réduire la latence en jeu et en ligne</p>
+          <ul>
+            <li class="inherit"><svg class="icon"><use href="#i-check"/></svg>Tout ce qu'offre Free</li>
+            <li><svg class="icon"><use href="#i-check"/></svg>Performance</li>
+            <li><svg class="icon"><use href="#i-check"/></svg>Game Mode</li>
+            <li><svg class="icon"><use href="#i-check"/></svg>Network</li>
+            <li><svg class="icon"><use href="#i-check"/></svg>Assistant, 7 messages par jour</li>
+          </ul>
+          <a href="downloads/unlag-Setup-1.0.0.exe" class="btn btn-primary">Choisir Premium</a>
+        </div>
+        <div class="plan">
+          <div class="plan-name">Ultimate</div>
+          <p class="plan-desc">Pour régler aussi le firmware de la carte mère</p>
+          <ul>
+            <li class="inherit"><svg class="icon"><use href="#i-check"/></svg>Tout ce qu'offre Premium</li>
+            <li><svg class="icon"><use href="#i-check"/></svg>BIOS via AMI SCEWIN</li>
+            <li><svg class="icon"><use href="#i-check"/></svg>Assistant, 20 messages par jour</li>
+          </ul>
+          <a href="downloads/unlag-Setup-1.0.0.exe" class="btn btn-secondary">Choisir Ultimate</a>
+        </div>
+      </div>
+      <p class="plans-note">Une offre payante est liée à un seul PC.</p>
+    </div>
+  </section>
+
+  <section class="section" id="faq">
+    <div class="wrap faq">
+      <div class="section-head" style="margin:0">
+        <h2>Questions fréquentes</h2>
+        <p>Ce qu'il faut savoir avant d'installer Unlag.</p>
+      </div>
+      <div class="faq-list">
+        <details open>
+          <summary>Est-ce que je peux annuler un réglage ?<svg class="icon"><use href="#i-plus"/></svg></summary>
+          <p>Oui. Chaque réglage enregistre les valeurs d'origine avant de les modifier, et les réécrit à l'identique quand vous le désactivez. Vous pouvez aussi créer un point de restauration Windows depuis la page Backups avant de commencer.</p>
+        </details>
+        <details>
+          <summary>Pourquoi Unlag demande les droits administrateur ?<svg class="icon"><use href="#i-plus"/></svg></summary>
+          <p>Les réglages touchent au registre système, aux services et aux plans d'alimentation. Sans droits administrateur, le moteur d'Unlag refuse toute modification.</p>
+        </details>
+        <details>
+          <summary>Unlag fonctionne sur Windows 10 ?<svg class="icon"><use href="#i-plus"/></svg></summary>
+          <p>Oui, Unlag prend en charge Windows 10 et Windows 11 en 64 bits. Certains réglages, comme le menu contextuel classique ou Recall, ne concernent que Windows 11.</p>
+        </details>
+        <details>
+          <summary>Je peux utiliser mon offre sur deux PC ?<svg class="icon"><use href="#i-plus"/></svg></summary>
+          <p>Non. Une offre Premium ou Ultimate fonctionne sur un seul PC, identifié par sa carte mère. Réinstaller Windows ne change rien, le PC reste reconnu.</p>
+        </details>
+        <details>
+          <summary>Le module BIOS est-il risqué ?<svg class="icon"><use href="#i-plus"/></svg></summary>
+          <p>Il écrit des paramètres firmware à travers AMI SCEWIN, sur les cartes mères compatibles. C'est le module le plus avancé, réservé à l'offre Ultimate. Notez vos réglages actuels avant de l'utiliser.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="wrap cta-in">
+      <div>
+        <h2>Essayez Unlag sur votre PC</h2>
+        <p>Gratuit, et chaque changement se défait en un clic.</p>
+      </div>
+      <a href="downloads/unlag-Setup-1.0.0.exe" class="btn btn-primary"><svg class="icon"><use href="#i-download"/></svg>Télécharger pour Windows</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    <a href="#" class="brand" style="font-size:15px"><img src="assets/logo.png" alt="" width="24" height="24" style="width:24px;height:24px;border-radius:6px">Unlag</a>
+    <div class="foot-links"><a href="#modules">Modules</a><a href="#offres">Offres</a><a href="#faq">FAQ</a></div>
+    <span>© 2026 Unlag</span>
+  </div>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  const menu = document.getElementById('menu');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 8);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  menu.addEventListener('click', () => {
+    const open = nav.classList.toggle('open');
+    menu.setAttribute('aria-expanded', open);
+  });
+  nav.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => {
+    nav.classList.remove('open');
+    menu.setAttribute('aria-expanded', 'false');
+  }));
+</script>
+</body>
+</html>
