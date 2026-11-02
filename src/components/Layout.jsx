@@ -102,7 +102,7 @@ function Footer() {
 }
 
 const TITLES = {
-  '/': 'Unlag · Windows tuned for games',
+  '/': 'Unlag · Cut the lag out of Windows',
   '/features': 'Features · Unlag',
   '/how-it-works': 'How it works · Unlag',
   '/pricing': 'Pricing · Unlag',

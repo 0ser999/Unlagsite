@@ -5,7 +5,7 @@ import LaserFlow from '../components/LaserFlow.jsx';
 import { Nav } from '../components/Layout.jsx';
 import { Ledger, Steps, PlanCards, CtaBand } from '../components/Blocks.jsx';
 import { ToolIcon } from '../components/ToolIcon.jsx';
-import { DOWNLOAD_URL, VERSION, CATEGORIES, CATEGORY_LINES, TOTAL_TWEAKS, TOOLS } from '../data.js';
+import { DOWNLOAD_URL, VERSION, CATEGORIES, CATEGORY_LINES, TOOLS } from '../data.js';
 
 function Hero() {
   return (
@@ -19,10 +19,10 @@ function Hero() {
       </div>
       <Nav />
       <div className="wrap hero-copy">
-        <h1 className="enter">Tune Windows for games and keep every original value</h1>
+        <h1 className="enter">Cut the lag out of Windows</h1>
         <p className="hero-sub enter">
-          Unlag applies {TOTAL_TWEAKS} tweaks to your network, CPU, privacy settings and BIOS.
-          Before each change it writes down the original value, so you can undo anything.
+          Lower input lag, steadier frame times and a quieter system. Unlag tunes your network, CPU,
+          privacy settings and BIOS for gaming, and saves every original value first so you can undo anything.
         </p>
         <div className="hero-actions enter">
           <a href={DOWNLOAD_URL} className="btn btn-primary">
@@ -53,7 +53,7 @@ function Overview() {
     <section className="section section-first">
       <div className="wrap">
         <div className="section-head">
-          <h2>{TOTAL_TWEAKS} tweaks in four families</h2>
+          <h2>Four families of tweaks</h2>
           <p>Each one shows its impact and risk level. The ones marked as recommended are safe for most gaming PCs.</p>
         </div>
         <div className="tweaks-grid">

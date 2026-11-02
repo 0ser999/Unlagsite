@@ -163,7 +163,7 @@ export const PLANS = [
     line: 'Tune the motherboard firmware too',
     inherits: 'Premium',
     pages: ['Unlock BIOS tweaks'],
-    perks: ['All 117 tweaks, advanced ones included', 'Priority access to new tweaks', 'Personal help to set up your PC'],
+    perks: ['Every tweak, advanced ones included', 'Priority access to new tweaks', 'Personal help to set up your PC'],
     ai: 20,
   },
 ];

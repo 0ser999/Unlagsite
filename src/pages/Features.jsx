@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { Check, ArrowRight } from 'lucide-react';
 import { PageHeader, CtaBand } from '../components/Blocks.jsx';
 import { ToolIcon } from '../components/ToolIcon.jsx';
-import { CATEGORIES, CATEGORY_LINES, TOTAL_TWEAKS, RISK_LABEL, TOOLS, BLOATWARE } from '../data.js';
+import { CATEGORIES, CATEGORY_LINES, RISK_LABEL, TOOLS, BLOATWARE } from '../data.js';
 
 function RiskMix({ risk }) {
   return (
@@ -112,7 +112,7 @@ function Debloat() {
 export default function Features() {
   return (
     <main>
-      <PageHeader title={`${TOTAL_TWEAKS} tweaks in four modules`}>
+      <PageHeader title="Every tweak, in four modules">
         What each module works on, how many tweaks it holds and how careful you need to be with them.
       </PageHeader>
       <Modules />

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, ShieldCheck, History, Cpu } from 'lucide-react';
 import { PageHeader, Ledger, Steps, CtaBand } from '../components/Blocks.jsx';
-import { RISK_TOTAL, TOTAL_TWEAKS, RISK_LABEL } from '../data.js';
+import { RISK_TOTAL, RISK_LABEL } from '../data.js';
 
 const RISK_TEXT = {
   safe: 'Fits almost every PC. Most recommended tweaks are here',
@@ -30,7 +30,7 @@ function RiskShare() {
             {Object.entries(counts).map(([risk, n]) => (
               <div className="risk-item" key={risk}>
                 <dt><span className={`risk risk-${risk}`}><i />{RISK_LABEL[risk]}</span></dt>
-                <dd className="mono">{n} of {TOTAL_TWEAKS}</dd>
+                <dd className="mono">{n} tweaks</dd>
                 <dd className="risk-text">{RISK_TEXT[risk]}</dd>
               </div>
             ))}
@@ -77,7 +77,7 @@ export default function HowItWorks() {
         <div className="wrap rev-grid">
           <div>
             <h2>Read, save, revert</h2>
-            <p className="rev-lead">The same three steps run for each of the {TOTAL_TWEAKS} tweaks.</p>
+            <p className="rev-lead">The same three steps run for every tweak.</p>
             <Steps />
           </div>
           <Ledger />
