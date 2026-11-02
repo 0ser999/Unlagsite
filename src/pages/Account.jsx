@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, Navigate, useSearchParams } from 'react-router-dom';
 import {
-  Check, Lock, Monitor, LogOut, RefreshCw, Star, MailWarning, LayoutGrid, Settings, MessageSquare, Download, ArrowRight, Copy,
+  Check, Lock, Monitor, LogOut, RefreshCw, Star, MailWarning, LayoutGrid, Settings, MessageSquare, Download, ArrowRight,
 } from 'lucide-react';
 import { useCaptcha } from '../lib/captcha.jsx';
 import { passwordProblem } from '../lib/password.js';
-import { CodeInput, PasswordInput, PasswordMeter } from '../components/AuthBits.jsx';
+import { PasswordInput, PasswordMeter } from '../components/AuthBits.jsx';
 import { supabase } from '../lib/supabase.js';
 import { useAuth } from '../lib/auth.jsx';
 import {
@@ -297,99 +297,41 @@ function PasswordRow({ info }) {
   );
 }
 
-function TwoFactorRow() {
-  const [factor, setFactor] = useState(undefined); // undefined loading, null off, object on
-  const [setup, setSetup] = useState(null); // { id, qr, secret } while enrolling
-  const [code, setCode] = useState('');
+function EmailCodeRow({ info }) {
+  const { user, recheck } = useAuth();
+  const on = user?.app_metadata?.email_2fa === true;
   const [status, setStatus] = useState('');
-  const fail = (result) => { if (result.error) throw result.error; return result.data; };
-  const load = async () => {
-    try {
-      const data = fail(await supabase.auth.mfa.listFactors());
-      setFactor((data.totp || []).find((f) => f.status === 'verified') || null);
-    } catch { setFactor(null); }
-  };
-  useEffect(() => { load(); }, []);
-
-  const start = async () => {
+  if (!info.providers.includes('email')) {
+    return (
+      <Row label="Two-step sign-in" hint="A code by email after your password">
+        <p className="set-text">You sign in with {info.providers.map((p) => PROVIDER[p] || p).join(' and ')}, which already protects your account.</p>
+      </Row>
+    );
+  }
+  const toggle = async () => {
     setStatus('busy');
     try {
-      // An abandoned setup leaves an unverified factor behind: clear it first.
-      const data = fail(await supabase.auth.mfa.listFactors());
-      for (const f of data.all || []) if (f.status === 'unverified') await supabase.auth.mfa.unenroll({ factorId: f.id });
-      const enrolled = fail(await supabase.auth.mfa.enroll({ factorType: 'totp', friendlyName: `Unlag ${Date.now().toString(36)}` }));
-      setSetup({ id: enrolled.id, qr: enrolled.totp.qr_code, secret: enrolled.totp.secret });
-      setCode('');
-      setStatus('');
-    } catch (error) { setStatus(authMessage(error)); }
-  };
-  const confirm = async (event) => {
-    event.preventDefault();
-    setStatus('busy');
-    try {
-      fail(await supabase.auth.mfa.challengeAndVerify({ factorId: setup.id, code }));
-      setSetup(null);
-      setStatus('on');
-      await load();
-    } catch (error) { setStatus(authMessage(error)); setCode(''); }
-  };
-  const cancel = async () => {
-    if (setup) await supabase.auth.mfa.unenroll({ factorId: setup.id }).catch(() => {});
-    setSetup(null);
-    setStatus('');
-  };
-  const turnOff = async () => {
-    setStatus('busy');
-    try {
-      fail(await supabase.auth.mfa.unenroll({ factorId: factor.id }));
+      const { error } = await supabase.rpc('set_email_2fa', { p_enabled: !on });
+      if (error) throw error;
       await supabase.auth.refreshSession();
-      setStatus('off');
-      await load();
+      await recheck();
+      setStatus(on ? 'off' : 'on');
     } catch (error) { setStatus(authMessage(error)); }
   };
-
-  const message = status && !['busy', 'on', 'off'].includes(status) ? <span className="form-error">{status}</span> : null;
   return (
-    <Row label="Two-factor authentication" hint="A code from an authenticator app is asked after you sign in, on the site and in the app">
-      {factor === undefined ? <p className="set-text">Checking</p>
-        : setup ? (
-          <form className="set-form" onSubmit={confirm}>
-            <p className="set-text">1. Scan this QR code with Google Authenticator, Microsoft Authenticator, Authy or 1Password.</p>
-            <div className="mfa-setup">
-              <img src={setup.qr} alt="QR code for your authenticator app" width="176" height="176" className="mfa-qr" />
-              <div className="mfa-secret">
-                <span>Or type this key</span>
-                <code className="mono">{setup.secret}</code>
-                <button type="button" className="btn-quiet" onClick={() => navigator.clipboard?.writeText(setup.secret)}><Copy size={14} strokeWidth={1.5} />Copy</button>
-              </div>
-            </div>
-            <p className="set-text">2. Enter the 6-digit code the app shows.</p>
-            <CodeInput value={code} onChange={setCode} length={6} autoFocus={false} />
-            <div className="set-actions">
-              <button type="submit" className="btn btn-secondary btn-sm" disabled={status === 'busy' || code.length !== 6}>Turn on</button>
-              <button type="button" className="btn-quiet" onClick={cancel}>Cancel</button>
-              {message}
-            </div>
-          </form>
-        ) : factor ? (
-          <div className="set-form">
-            <div className="set-static"><span className="stat-state is-ok"><i />On</span><span className="set-text">Your account asks for an authenticator code.</span></div>
-            <div className="set-actions">
-              <button type="button" className="btn btn-secondary btn-sm" onClick={turnOff} disabled={status === 'busy'}>Turn off</button>
-              {status === 'on' && <span className="acct-ok"><Check size={14} strokeWidth={1.5} />Turned on</span>}
-              {message}
-            </div>
-          </div>
-        ) : (
-          <div className="set-form">
-            <p className="set-text">Off. Anyone with your password could sign in.</p>
-            <div className="set-actions">
-              <button type="button" className="btn btn-secondary btn-sm" onClick={start} disabled={status === 'busy'}>Set up</button>
-              {status === 'off' && <span className="acct-muted">Turned off</span>}
-              {message}
-            </div>
-          </div>
-        )}
+    <Row label="Two-step sign-in" hint="After your password, a code is sent to your email. Asked on the site and in the app">
+      <div className="set-form">
+        <div className="set-static">
+          <span className={`stat-state${on ? ' is-ok' : ''}`}><i />{on ? 'On' : 'Off'}</span>
+          <span className="set-text">{on ? `Codes go to ${info.email}.` : 'Your password alone opens your account.'}</span>
+        </div>
+        <div className="set-actions">
+          <button type="button" className="btn btn-secondary btn-sm" onClick={toggle} disabled={status === 'busy'}>{on ? 'Turn off' : 'Turn on'}</button>
+          {status === 'on' && <span className="acct-ok"><Check size={14} strokeWidth={1.5} />Turned on</span>}
+          {status === 'off' && <span className="acct-muted">Turned off</span>}
+          {status && !['busy', 'on', 'off'].includes(status) && <span className="form-error">{status}</span>}
+        </div>
+      </div>
     </Row>
   );
 }
@@ -410,7 +352,7 @@ function SettingsView({ info }) {
         </ul>
       </Row>
       <PasswordRow info={info} />
-      <TwoFactorRow />
+      <EmailCodeRow info={info} />
       <Row label="Sign out" hint="Signs out this browser only. The app on your PC stays signed in">
         <button type="button" className="btn btn-secondary btn-sm" onClick={() => supabase.auth.signOut({ scope: 'local' })}>
           <LogOut size={16} strokeWidth={1.5} />Sign out

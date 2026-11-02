@@ -58,6 +58,7 @@ const MESSAGES = {
   'auth/code-invalid': 'This code is wrong or has expired. Ask for a new one',
   'auth/mfa-invalid': 'Wrong code. Use the current code from your authenticator app',
   'auth/mfa-required': 'Enter the code from your authenticator app first',
+  'auth/email-code-required': 'Sign in again with the code sent by email to change this',
   'auth/same-password': 'The new password must differ from the current one',
   'auth/wrong-password': 'The current password is wrong',
   'auth/too-many-requests': 'Too many attempts. Wait a minute and try again',
@@ -81,6 +82,7 @@ export function errorCode(error) {
     mfa_verification_failed: 'auth/mfa-invalid', mfa_challenge_expired: 'auth/mfa-invalid', insufficient_aal: 'auth/mfa-required',
   };
   if (error?.code?.startsWith?.('auth/')) return error.code;
+  if (error?.code === 'P0401') return 'auth/email-code-required';
   if (invalidSession(error)) return 'auth/requires-login';
   return codes[error?.code] || (error?.status === 429 ? 'auth/too-many-requests' : 'auth/service-unavailable');
 }

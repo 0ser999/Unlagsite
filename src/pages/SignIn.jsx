@@ -79,6 +79,7 @@ export default function SignIn({ mode = 'sign-in' }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [sent, setSent] = useState(false);
+  const [twoStep, setTwoStep] = useState(false); // password accepted, email code still needed
 
   useEffect(() => {
     if (!cooldown) return undefined;
@@ -137,12 +138,24 @@ export default function SignIn({ mode = 'sign-in' }) {
         ? await supabase.auth.signUp({ email: email.trim(), password, options: { emailRedirectTo: `${window.location.origin}/account`, captchaToken } })
         : await supabase.auth.signInWithPassword({ email: email.trim(), password, options: { captchaToken } }));
       if (isSignUp && !data.session) setSent(true);
+      // Two-step sign-in is on: the password session is dropped and a code is emailed instead.
+      if (!isSignUp && data.user?.app_metadata?.email_2fa === true) {
+        await supabase.auth.signOut({ scope: 'local' });
+        fail(await supabase.auth.signInWithOtp({ email: email.trim(), options: { shouldCreateUser: false } }));
+        setPassword('');
+        setMethod('code');
+        setCodeSent(true);
+        setTwoStep(true);
+        setCode('');
+        setCooldown(RESEND_AFTER);
+      }
     });
   };
 
   const switchMethod = (value) => {
     if (busy) return;
     setMethod(value);
+    setTwoStep(false);
     setCodeSent(false);
     setCode('');
     setError('');
@@ -155,9 +168,12 @@ export default function SignIn({ mode = 'sign-in' }) {
 
   return (
     <AuthShell
-      title={isSignUp ? 'Create your Unlag account' : 'Welcome back'}
-      lead={isSignUp ? 'One account for the app and the site. The Free plan is included.' : 'Sign in to manage your plan, your PC and the assistant'}
+      icon={twoStep ? Mail : undefined}
+      title={twoStep ? 'Check your email' : isSignUp ? 'Create your Unlag account' : 'Welcome back'}
+      lead={twoStep ? 'Two-step sign-in is on for this account. Enter the code we just emailed you.'
+        : isSignUp ? 'One account for the app and the site. The Free plan is included.' : 'Sign in to manage your plan, your PC and the assistant'}
     >
+      {!twoStep && <>
       <div className="auth-social">
         <button type="button" className="btn btn-secondary" onClick={() => social('google')} disabled={busy}><GoogleIcon />Google</button>
         <button type="button" className="btn btn-secondary" onClick={() => social('discord')} disabled={busy}><DiscordIcon />Discord</button>
@@ -172,14 +188,15 @@ export default function SignIn({ mode = 'sign-in' }) {
           <Mail size={15} strokeWidth={1.5} />Email code
         </button>
       </div>
+      </>}
 
       <form className="auth-form" onSubmit={submit}>
         {method === 'code' && codeSent ? (
           <>
             <div className="code-sent">
               <p>We sent a code to <b>{email.trim()}</b>. It expires in a few minutes.</p>
-              <button type="button" className="link-btn" onClick={() => { setCodeSent(false); setCode(''); setError(''); }}>
-                <ArrowLeft size={14} strokeWidth={1.5} />Use another email
+              <button type="button" className="link-btn" onClick={() => { setCodeSent(false); setTwoStep(false); setMethod(twoStep ? 'password' : method); setCode(''); setError(''); }}>
+                <ArrowLeft size={14} strokeWidth={1.5} />{twoStep ? 'Back' : 'Use another email'}
               </button>
             </div>
             <CodeInput value={code} onChange={setCode} />
@@ -228,7 +245,7 @@ export default function SignIn({ mode = 'sign-in' }) {
       </p>
       <p className="auth-fine">
         <ShieldCheck size={14} strokeWidth={1.5} />
-        Turn on two-factor authentication in Account settings for extra protection.
+        Turn on two-step sign-in in Account settings: a code by email after your password.
       </p>
     </AuthShell>
   );
