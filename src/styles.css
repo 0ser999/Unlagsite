@@ -35,6 +35,8 @@ body {
 }
 a { color: inherit; text-decoration: none; }
 img { display: block; max-width: 100%; }
+/* Images and canvases cannot be dragged out, selected or saved from the menu (main.jsx blocks the menu). */
+img, canvas, video, picture { -webkit-user-drag: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
 button { font: inherit; color: inherit; }
 h1, h2, h3, h4, p { margin: 0; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
