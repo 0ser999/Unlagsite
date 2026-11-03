@@ -60,7 +60,7 @@ export function PlanCards() {
   const showPrices = Boolean(PRICES.premium && PRICES.ultra);
   const { user, info } = useAuth();
   const current = info?.plan ?? null;
-  const target = (p) => (p.id === 'free' ? '/download' : user ? '/account' : `/sign-up?next=${encodeURIComponent('/account')}`);
+  const target = (p) => (p.id === 'free' ? '/download' : user ? `/checkout?plan=${p.id}` : `/sign-up?next=${encodeURIComponent(`/checkout?plan=${p.id}`)}`);
   return (
     <div className="plans">
       {PLANS.map((p) => {

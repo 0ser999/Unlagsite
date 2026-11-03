@@ -179,7 +179,7 @@ function Unlocks({ info }) {
           <h2>{t('account.inApp')}</h2>
           <p>{t('account.pagesOpen', { plan: planName(info.plan) })}</p>
         </div>
-        {next && <Link to="/pricing" className="btn btn-primary btn-sm">{t('plans.get', { plan: planName(next.id) })}</Link>}
+        {next && <Link to={`/checkout?plan=${next.id}`} className="btn btn-primary btn-sm">{t('plans.get', { plan: planName(next.id) })}</Link>}
       </div>
       <ul className="unlocks">
         {PLAN_MATRIX.map(([page, min], i) => {
