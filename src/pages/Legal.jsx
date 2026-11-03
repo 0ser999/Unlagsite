@@ -2,15 +2,10 @@ import { Link } from 'react-router-dom';
 import { PageHeader } from '../components/Blocks.jsx';
 import { currentLang, t } from '../i18n/index.jsx';
 
-/* ---- Fill these in. They appear on the three legal pages. ---- */
+/* Publisher shown on the three legal pages: the brand and a contact address. */
 const OWNER = {
-  name: 'Hachem Hanouna',
-  status: '[Entrepreneur individuel (micro-entreprise) / SAS…]',
-  address: '[Adresse postale complète]',
-  siret: '[Numéro SIRET]',
-  email: '[contact@unlag.pro]',
-  director: 'Hachem Hanouna',
-  mediator: '[Nom et site du médiateur de la consommation]',
+  name: 'Unlag',
+  email: 'unlagpcoptimizer@gmail.com',
 };
 const HOST = 'Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, USA (vercel.com)';
 const UPDATED = '2026-11-03';
@@ -23,7 +18,7 @@ const TEXTS = {
       title: 'Terms of service',
       lead: 'The rules for using Unlag, the app, this site and your account.',
       sections: [
-        ['1. Who we are', [`Unlag is published by ${OWNER.name} (${OWNER.status}), ${OWNER.address}, SIRET ${OWNER.siret}. Contact: ${OWNER.email}.`]],
+        ['1. Who we are', [`Unlag is the publisher of the Unlag app and of this site. Contact: ${OWNER.email}.`]],
         ['2. What Unlag is', ['Unlag is a Windows 10 and 11 application that changes system settings (registry, services, power plans, drivers and, on compatible motherboards, firmware settings) to reduce latency and clean up Windows. This site lets you download the app and manage your account and plan.']],
         ['3. Accepting these terms', ['By creating an account, installing or using Unlag, you accept these terms. If you do not accept them, do not use Unlag. You must be at least 15 years old, or have the permission of a parent or guardian.']],
         ['4. Your account', ['You need an account to use the app. You keep your sign-in details secret and you are responsible for what happens with your account. Turn on two-step sign-in in Account settings for extra protection. Tell us right away if you think someone else uses your account.']],
@@ -36,14 +31,14 @@ const TEXTS = {
         ['11. Updates and availability', ['The app updates itself from our official releases. We can change, improve or stop features. We do our best to keep accounts available but do not guarantee uninterrupted service.']],
         ['12. Suspension', ['We can suspend or close an account that breaks these terms, in particular to bypass plan checks, share a paid plan or abuse the service. You can stop using Unlag and ask for your account to be deleted at any time.']],
         ['13. Changes to these terms', ['We can update these terms. The date at the top shows the last version. Important changes are announced on the site or by email.']],
-        ['14. Law and disputes', [`These terms are governed by French law. Contact us first at ${OWNER.email}. As a consumer you can also use the consumer mediator ${OWNER.mediator}, free of charge. Otherwise, the competent French courts have jurisdiction.`]],
+        ['14. Law and disputes', [`These terms are governed by French law. Contact us first at ${OWNER.email}. Otherwise, the competent French courts have jurisdiction.`]],
       ],
     },
     privacy: {
       title: 'Privacy policy',
       lead: 'What we collect, why, and how to control it.',
       sections: [
-        ['1. Who is responsible', [`The data controller is ${OWNER.name}, ${OWNER.address}. For any question about your data: ${OWNER.email}.`]],
+        ['1. Who is responsible', [`The data controller is ${OWNER.name}. For any question about your data: ${OWNER.email}.`]],
         ['2. What we collect', [
           'Account: email address, display name, sign-in method, and the name and profile photo address sent by Google or Discord if you use them.',
           'Plan: your plan and, for paid plans, a fingerprint of your PC (a SHA-256 hash computed from hardware identifiers). It cannot be turned back into the identifiers.',
@@ -66,7 +61,7 @@ const TEXTS = {
       title: 'Legal notice',
       lead: 'Who publishes this site and who hosts it.',
       sections: [
-        ['Publisher', [`${OWNER.name}, ${OWNER.status}`, OWNER.address, `SIRET: ${OWNER.siret}`, `Email: ${OWNER.email}`, `Publication director: ${OWNER.director}`]],
+        ['Publisher', [OWNER.name, `Email: ${OWNER.email}`]],
         ['Hosting', [HOST]],
         ['Intellectual property', ['The Unlag name, logo, app, site and texts belong to their publisher. Any reproduction without permission is forbidden. Windows is a trademark of Microsoft Corporation; NVIDIA, AMD, Intel, Google and Discord belong to their owners. Unlag is not affiliated with them.']],
         ['Personal data', []],
@@ -78,7 +73,7 @@ const TEXTS = {
       title: "Conditions générales d'utilisation et de vente",
       lead: "Les règles d'utilisation d'Unlag, de l'application, de ce site et de votre compte.",
       sections: [
-        ['1. Qui sommes-nous', [`Unlag est édité par ${OWNER.name} (${OWNER.status}), ${OWNER.address}, SIRET ${OWNER.siret}. Contact : ${OWNER.email}.`]],
+        ['1. Qui sommes-nous', [`Unlag édite l'application Unlag et ce site. Contact : ${OWNER.email}.`]],
         ["2. Ce qu'est Unlag", ["Unlag est une application pour Windows 10 et 11 qui modifie des réglages du système (registre, services, plans d'alimentation, pilotes et, sur les cartes mères compatibles, réglages du firmware) pour réduire la latence et alléger Windows. Ce site permet de télécharger l'application et de gérer votre compte et votre offre."]],
         ['3. Acceptation', ["En créant un compte, en installant ou en utilisant Unlag, vous acceptez ces conditions. Si vous ne les acceptez pas, n'utilisez pas Unlag. Vous devez avoir au moins 15 ans, ou l'accord d'un parent ou tuteur."]],
         ['4. Votre compte', ["Un compte est nécessaire pour utiliser l'application. Vous gardez vos identifiants secrets et vous êtes responsable de ce qui est fait avec votre compte. Activez la connexion en deux étapes dans les réglages du compte pour plus de sécurité. Prévenez-nous immédiatement si vous pensez qu'un tiers utilise votre compte."]],
@@ -91,14 +86,14 @@ const TEXTS = {
         ['11. Mises à jour et disponibilité', ["L'application se met à jour depuis nos versions officielles. Nous pouvons modifier, améliorer ou arrêter des fonctions. Nous faisons notre possible pour que les comptes restent disponibles, sans garantir un service ininterrompu."]],
         ['12. Suspension', ["Nous pouvons suspendre ou fermer un compte qui ne respecte pas ces conditions, notamment pour contourner les vérifications d'offre, partager une offre payante ou abuser du service. Vous pouvez arrêter d'utiliser Unlag et demander la suppression de votre compte à tout moment."]],
         ['13. Modification des conditions', ['Nous pouvons mettre à jour ces conditions. La date en haut indique la dernière version. Les changements importants sont annoncés sur le site ou par email.']],
-        ['14. Droit applicable et litiges', [`Ces conditions sont soumises au droit français. Contactez-nous d'abord à ${OWNER.email}. En tant que consommateur, vous pouvez aussi saisir gratuitement le médiateur de la consommation ${OWNER.mediator}. À défaut, les tribunaux français compétents sont seuls compétents.`]],
+        ['14. Droit applicable et litiges', [`Ces conditions sont soumises au droit français. Contactez-nous d'abord à ${OWNER.email}. À défaut, les tribunaux français compétents sont seuls compétents.`]],
       ],
     },
     privacy: {
       title: 'Politique de confidentialité',
       lead: 'Ce que nous collectons, pourquoi, et comment le contrôler.',
       sections: [
-        ['1. Responsable du traitement', [`Le responsable du traitement est ${OWNER.name}, ${OWNER.address}. Pour toute question sur vos données : ${OWNER.email}.`]],
+        ['1. Responsable du traitement', [`Le responsable du traitement est ${OWNER.name}. Pour toute question sur vos données : ${OWNER.email}.`]],
         ['2. Données collectées', [
           "Compte : adresse email, nom d'affichage, méthode de connexion, ainsi que le nom et l'adresse de la photo de profil transmis par Google ou Discord si vous les utilisez.",
           "Offre : votre offre et, pour les offres payantes, une empreinte de votre PC (un hachage SHA-256 calculé à partir d'identifiants matériels). Elle ne permet pas de retrouver ces identifiants.",
@@ -121,7 +116,7 @@ const TEXTS = {
       title: 'Mentions légales',
       lead: 'Qui édite ce site et qui l’héberge.',
       sections: [
-        ['Éditeur', [`${OWNER.name}, ${OWNER.status}`, OWNER.address, `SIRET : ${OWNER.siret}`, `Email : ${OWNER.email}`, `Directeur de la publication : ${OWNER.director}`]],
+        ['Éditeur', [OWNER.name, `Email : ${OWNER.email}`]],
         ['Hébergement', [HOST]],
         ['Propriété intellectuelle', ["Le nom Unlag, son logo, l'application, le site et les textes appartiennent à leur éditeur. Toute reproduction sans autorisation est interdite. Windows est une marque de Microsoft Corporation ; NVIDIA, AMD, Intel, Google et Discord appartiennent à leurs propriétaires. Unlag n'est pas affilié à ces sociétés."]],
         ['Données personnelles', []],
