@@ -145,7 +145,7 @@ export const PLANS = [
     name: 'Free',
     line: 'Clean up Windows and take back your privacy',
     pages: ['Home', 'General', 'Privacy', 'Cleaner', 'Debloat', 'Backups'],
-    perks: ['43 safe tweaks'],
+    perks: ['30 essential tweaks'],
     ai: 3,
   },
   {
@@ -180,7 +180,7 @@ export const PLAN_MATRIX = [
   ['Game Mode', 'premium'],
   ['Network', 'premium'],
   ['BIOS', 'ultra'],
-  ['Safe tweaks', 'free'],
+  ['Essential tweaks', 'free'],
   ['Moderate tweaks', 'premium'],
   ['Advanced tweaks', 'ultra'],
   ['Priority support', 'premium'],

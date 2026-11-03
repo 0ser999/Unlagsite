@@ -5,42 +5,30 @@ import LaserFlow from '../components/LaserFlow.jsx';
 import { Nav } from '../components/Layout.jsx';
 import { Ledger, Steps, PlanCards, CtaBand } from '../components/Blocks.jsx';
 import { ToolIcon } from '../components/ToolIcon.jsx';
-import { DOWNLOAD_URL, VERSION, CATEGORIES, CATEGORY_LINES, TOOLS } from '../data.js';
+import { DOWNLOAD_URL, VERSION, CATEGORIES, TOOLS, BLOATWARE } from '../data.js';
+import { t } from '../i18n/index.jsx';
 
 function Hero() {
   return (
     <section className="hero">
       <div className="hero-scene">
-        <HexScene
-          src="/hero-mouse.png"
-          focusX={0.8}
-          alt="A gaming mouse sliding across a desk mat, drawn in hexadecimal digits under cobalt light"
-        />
+        <HexScene src="/hero-mouse.png" focusX={0.8} alt={t('hero.alt')} />
       </div>
       <Nav />
       <div className="wrap hero-copy">
-        <h1 className="enter">Cut the lag out of Windows</h1>
-        <p className="hero-sub enter">
-          Lower input lag, steadier frame times and a quieter system. Unlag tunes your network, CPU,
-          privacy settings and BIOS for gaming, and saves every original value first so you can undo anything.
-        </p>
+        <h1 className="enter">{t('hero.title')}</h1>
+        <p className="hero-sub enter">{t('hero.sub')}</p>
         <div className="hero-actions enter">
           <a href={DOWNLOAD_URL} className="btn btn-primary">
-            <Download size={18} strokeWidth={1.5} />Download for Windows
+            <Download size={18} strokeWidth={1.5} />{t('common.downloadWindows')}
           </a>
-          <Link to="/features" className="btn btn-secondary">See what it tunes</Link>
+          <Link to="/features" className="btn btn-secondary">{t('hero.see')}</Link>
         </div>
-        <p className="hero-meta enter mono">v{VERSION} · Windows 10 and 11 x64 · free to start</p>
+        <p className="hero-meta enter mono">{t('hero.meta', { v: VERSION })}</p>
       </div>
       <div className="wrap hero-product enter">
         <LaserFlow x={0.82} hit={260} />
-        <img
-          className="hero-shot"
-          src="/app-home.png"
-          width="1320"
-          height="840"
-          alt="The Unlag home screen with live CPU, memory and latency, quick actions and the optimization score"
-        />
+        <img className="hero-shot" src="/app-home.png" width="1320" height="840" alt={t('hero.shotAlt')} />
       </div>
     </section>
   );
@@ -53,16 +41,16 @@ function Overview() {
     <section className="section section-first">
       <div className="wrap">
         <div className="section-head">
-          <h2>Four families of tweaks</h2>
-          <p>Each one shows its impact and risk level. The ones marked as recommended are safe for most gaming PCs.</p>
+          <h2>{t('home.familiesTitle')}</h2>
+          <p>{t('home.familiesText')}</p>
         </div>
         <div className="tweaks-grid">
           <div className="cat-list">
             {sorted.map((c) => (
               <Link to={`/features#${c.id}`} className="cat" key={c.id}>
                 <div className="cat-text">
-                  <h3>{c.name}</h3>
-                  <p>{CATEGORY_LINES[c.id]}</p>
+                  <h3>{t(`cat.${c.id}.name`)}</h3>
+                  <p>{t(`cat.${c.id}.line`)}</p>
                 </div>
                 <div className="cat-bar" aria-hidden="true">
                   <span style={{ width: `${(c.count / max) * 100}%` }} />
@@ -72,17 +60,17 @@ function Overview() {
             ))}
           </div>
           <div className="tool-list">
-            <div className="tool-head">And the tools around them</div>
-            {TOOLS.map((t) => (
-              <div className="tool" key={t.id}>
-                <ToolIcon id={t.id} />
+            <div className="tool-head">{t('home.toolsHead')}</div>
+            {TOOLS.map((tool) => (
+              <div className="tool" key={tool.id}>
+                <ToolIcon id={tool.id} />
                 <div>
-                  <div className="tool-name">{t.name}</div>
-                  <div className="tool-line">{t.line}</div>
+                  <div className="tool-name">{t(`tools.${tool.id}.name`)}</div>
+                  <div className="tool-line">{t(`tools.${tool.id}.line`, { n: BLOATWARE.length })}</div>
                 </div>
               </div>
             ))}
-            <Link to="/features" className="text-link">See the modules<ArrowRight size={16} strokeWidth={1.5} /></Link>
+            <Link to="/features" className="text-link">{t('home.seeModules')}<ArrowRight size={16} strokeWidth={1.5} /></Link>
           </div>
         </div>
       </div>
@@ -95,12 +83,10 @@ function Reversible() {
     <section className="section">
       <div className="wrap rev-grid">
         <div>
-          <h2>Everything Unlag changes can be undone</h2>
-          <p className="rev-lead">
-            Unlag really changes the system, with administrator rights. So it keeps a record of every value before writing it.
-          </p>
+          <h2>{t('home.revTitle')}</h2>
+          <p className="rev-lead">{t('home.revLead')}</p>
           <Steps />
-          <Link to="/how-it-works" className="text-link">How it works<ArrowRight size={16} strokeWidth={1.5} /></Link>
+          <Link to="/how-it-works" className="text-link">{t('common.howItWorks')}<ArrowRight size={16} strokeWidth={1.5} /></Link>
         </div>
         <Ledger />
       </div>
@@ -113,11 +99,11 @@ function PricingTeaser() {
     <section className="section">
       <div className="wrap">
         <div className="section-head">
-          <h2>Start for free</h2>
-          <p>Cleanup and privacy are free. Paid plans add the modules that deal with latency and the BIOS.</p>
+          <h2>{t('home.freeTitle')}</h2>
+          <p>{t('home.freeText')}</p>
         </div>
         <PlanCards />
-        <p className="plans-note"><Link to="/pricing" className="text-link inline">Compare plans<ArrowRight size={16} strokeWidth={1.5} /></Link></p>
+        <p className="plans-note"><Link to="/pricing" className="text-link inline">{t('common.comparePlans')}<ArrowRight size={16} strokeWidth={1.5} /></Link></p>
       </div>
     </section>
   );

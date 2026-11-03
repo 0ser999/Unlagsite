@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
-import { passwordProblem, passwordScore, SCORE_LABEL } from '../lib/password.js';
+import { passwordProblem, passwordScore, scoreLabel } from '../lib/password.js';
+import { t } from '../i18n/index.jsx';
 
 export function PasswordInput({ value, onChange, className = '', ...props }) {
   const [shown, setShown] = useState(false);
   return (
     <span className="pw-wrap">
       <input {...props} className={className} type={shown ? 'text' : 'password'} value={value} onChange={onChange} maxLength={4096} />
-      <button type="button" className="pw-eye" onClick={() => setShown(!shown)} aria-label={shown ? 'Hide password' : 'Show password'}>
+      <button type="button" className="pw-eye" onClick={() => setShown(!shown)} aria-label={shown ? t('common.hidePassword') : t('common.showPassword')}>
         {shown ? <EyeOff size={16} strokeWidth={1.5} /> : <Eye size={16} strokeWidth={1.5} />}
       </button>
     </span>
@@ -15,13 +16,13 @@ export function PasswordInput({ value, onChange, className = '', ...props }) {
 }
 
 export function PasswordMeter({ value }) {
-  if (!value) return <p className="pw-hint">At least 8 characters, with letters and numbers</p>;
+  if (!value) return <p className="pw-hint">{t('password.hint')}</p>;
   const score = passwordScore(value);
   const problem = passwordProblem(value);
   return (
     <div className={`pw-meter score-${score}`} aria-live="polite">
       <span className="pw-bars" aria-hidden="true"><i /><i /><i /><i /></span>
-      <span className="pw-label">{problem || SCORE_LABEL[score]}</span>
+      <span className="pw-label">{problem || scoreLabel(score)}</span>
     </div>
   );
 }
@@ -36,7 +37,7 @@ export function CodeInput({ value, onChange, autoFocus = true, length = 10 }) {
       pattern="[0-9]*"
       maxLength={length}
       placeholder="000000"
-      aria-label="Code"
+      aria-label={t('common.code')}
       autoFocus={autoFocus}
       required
       value={value}

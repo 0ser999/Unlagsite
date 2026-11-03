@@ -1,12 +1,14 @@
+import { t } from '../i18n/index.jsx';
+
 // Same rules as the app (unlag/src/auth.js and supabase-client.js). Set the same minimum in
 // Supabase > Authentication > Providers > Email so the server enforces it too.
 export const MIN_PASSWORD = 8;
 
 // What is still missing, or '' when the password is accepted.
 export function passwordProblem(password) {
-  if (typeof password !== 'string' || password.length < MIN_PASSWORD) return `Use at least ${MIN_PASSWORD} characters`;
-  if (password.length > 4096) return 'Use 4096 characters or fewer';
-  if (!/[A-Za-z]/.test(password) || !/\d/.test(password)) return 'Mix letters and numbers';
+  if (typeof password !== 'string' || password.length < MIN_PASSWORD) return t('password.min');
+  if (password.length > 4096) return t('password.max');
+  if (!/[A-Za-z]/.test(password) || !/\d/.test(password)) return t('password.mix');
   return '';
 }
 
@@ -20,4 +22,4 @@ export function passwordScore(password) {
   return Math.min(4, score);
 }
 
-export const SCORE_LABEL = ['', 'Too weak', 'Fair', 'Good', 'Strong'];
+export const scoreLabel = (score) => t('password.score')[score] || '';

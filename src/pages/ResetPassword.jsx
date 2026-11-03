@@ -8,6 +8,7 @@ import { useCaptcha } from '../lib/captcha.jsx';
 import { passwordProblem } from '../lib/password.js';
 import { PasswordInput, PasswordMeter } from '../components/AuthBits.jsx';
 import { AuthShell, MfaPrompt } from './SignIn.jsx';
+import { t } from '../i18n/index.jsx';
 
 export default function ResetPassword() {
   const { recovery, mfaRequired } = useAuth();
@@ -19,7 +20,7 @@ export default function ResetPassword() {
   const [error, setError] = useState('');
   const [sent, setSent] = useState(false);
 
-  if (!supabaseReady) return <AuthShell title="Accounts are not set up" />;
+  if (!supabaseReady) return <AuthShell title={t('auth.notSetUp')} />;
 
   // The link from the email signs the person in with a recovery session.
   if (recovery) {
@@ -36,15 +37,15 @@ export default function ResetPassword() {
       return navigate('/account', { replace: true });
     };
     return (
-      <AuthShell icon={KeyRound} title="Choose a new password" lead="You will use it in the app and on the site">
+      <AuthShell icon={KeyRound} title={t('auth.newPasswordTitle')} lead={t('auth.newPasswordLead')}>
         <form className="auth-form" onSubmit={save}>
           <label className="field">
-            <span>New password</span>
+            <span>{t('auth.newPassword')}</span>
             <PasswordInput autoComplete="new-password" required value={password} onChange={(e) => setPassword(e.target.value)} />
             <PasswordMeter value={password} />
           </label>
           {error && <p className="form-error" role="alert">{error}</p>}
-          <button type="submit" className="btn btn-primary" disabled={busy}>{busy ? 'One moment' : 'Save password'}</button>
+          <button type="submit" className="btn btn-primary" disabled={busy}>{busy ? t('common.oneMoment') : t('auth.savePassword')}</button>
         </form>
       </AuthShell>
     );
@@ -52,8 +53,8 @@ export default function ResetPassword() {
 
   if (sent) {
     return (
-      <AuthShell icon={Mail} title="Check your inbox" lead={`If an account uses ${email}, a reset link is on its way. Open it on this device.`}>
-        <Link to="/sign-in" className="text-link">Back to sign in</Link>
+      <AuthShell icon={Mail} title={t('auth.inboxTitle')} lead={t('auth.resetInbox', { email })}>
+        <Link to="/sign-in" className="text-link">{t('common.backToSignIn')}</Link>
       </AuthShell>
     );
   }
@@ -75,17 +76,17 @@ export default function ResetPassword() {
   };
 
   return (
-    <AuthShell icon={KeyRound} title="Reset your password" lead="Enter the email of your account and we will send you a link">
+    <AuthShell icon={KeyRound} title={t('auth.resetTitle')} lead={t('auth.resetLead')}>
       <form className="auth-form" onSubmit={request}>
         <label className="field">
-          <span>Email</span>
+          <span>{t('common.email')}</span>
           <input type="email" autoComplete="email" required maxLength={254} value={email} onChange={(e) => setEmail(e.target.value)} />
         </label>
         {captcha.element}
         {error && <p className="form-error" role="alert">{error}</p>}
-        <button type="submit" className="btn btn-primary" disabled={busy}>{busy ? 'One moment' : 'Send reset link'}</button>
+        <button type="submit" className="btn btn-primary" disabled={busy}>{busy ? t('common.oneMoment') : t('auth.sendReset')}</button>
       </form>
-      <p className="auth-switch"><Link to="/sign-in">Back to sign in</Link></p>
+      <p className="auth-switch"><Link to="/sign-in">{t('common.backToSignIn')}</Link></p>
     </AuthShell>
   );
 }

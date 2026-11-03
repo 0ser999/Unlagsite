@@ -1,37 +1,29 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, ShieldCheck, History, Cpu } from 'lucide-react';
 import { PageHeader, Ledger, Steps, CtaBand } from '../components/Blocks.jsx';
-import { RISK_TOTAL, RISK_LABEL } from '../data.js';
-
-const RISK_TEXT = {
-  safe: 'Fits almost every PC. Most recommended tweaks are here',
-  moderate: 'Changes how a Windows feature behaves, so read the description first',
-  advanced: 'For people who know exactly what the setting does',
-};
+import { RISK_TOTAL } from '../data.js';
+import { t } from '../i18n/index.jsx';
 
 function RiskShare() {
-  const counts = RISK_TOTAL;
   return (
     <section className="section">
       <div className="wrap rev-grid">
         <div>
-          <h2>A risk level on every tweak</h2>
-          <p className="rev-lead">
-            Unlag never hides what a tweak does. Each one carries a risk level and an impact, and the ones that need a restart are marked.
-          </p>
+          <h2>{t('how.riskTitle')}</h2>
+          <p className="rev-lead">{t('how.riskLead')}</p>
         </div>
         <div className="risk-block">
           <div className="risk-bar" aria-hidden="true">
-            {Object.entries(counts).map(([risk, n]) => (
+            {Object.entries(RISK_TOTAL).map(([risk, n]) => (
               <span key={risk} className={`risk-seg seg-${risk}`} style={{ flexGrow: n }} />
             ))}
           </div>
           <dl className="risk-list">
-            {Object.entries(counts).map(([risk, n]) => (
+            {Object.entries(RISK_TOTAL).map(([risk, n]) => (
               <div className="risk-item" key={risk}>
-                <dt><span className={`risk risk-${risk}`}><i />{RISK_LABEL[risk]}</span></dt>
-                <dd className="mono">{n} tweaks</dd>
-                <dd className="risk-text">{RISK_TEXT[risk]}</dd>
+                <dt><span className={`risk risk-${risk}`}><i />{t(`risk.${risk}`)}</span></dt>
+                <dd className="mono">{t('how.tweaks', { n })}</dd>
+                <dd className="risk-text">{t(`risk.${risk}Text`)}</dd>
               </div>
             ))}
           </dl>
@@ -42,25 +34,24 @@ function RiskShare() {
 }
 
 function Engine() {
-  const items = [
-    [Cpu, 'A native engine', 'The interface talks to UnlagCore, a small engine written in C# that ships with the app. It applies each tweak and reverts it exactly.'],
-    [ShieldCheck, 'Administrator rights, on purpose', 'Tweaks change the registry, services and power plans. Without administrator rights the engine refuses every system change.'],
-    [History, 'Restore points on top', 'The Backups page creates Windows System Restore points, so you can roll the whole system back from Windows itself.'],
-  ];
+  const icons = [Cpu, ShieldCheck, History];
   return (
     <section className="section">
       <div className="wrap">
         <div className="section-head">
-          <h2>What runs on your PC</h2>
+          <h2>{t('how.engineTitle')}</h2>
         </div>
         <div className="engine-grid">
-          {items.map(([Icon, title, text]) => (
-            <div className="engine-item" key={title}>
-              <Icon size={18} strokeWidth={1.5} />
-              <h3>{title}</h3>
-              <p>{text}</p>
-            </div>
-          ))}
+          {t('how.engine').map(([title, text], i) => {
+            const Icon = icons[i];
+            return (
+              <div className="engine-item" key={title}>
+                <Icon size={18} strokeWidth={1.5} />
+                <h3>{title}</h3>
+                <p>{text}</p>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -70,14 +61,12 @@ function Engine() {
 export default function HowItWorks() {
   return (
     <main>
-      <PageHeader title="Every change is written down before it happens">
-        Unlag changes Windows for real. This is how it keeps each change reversible.
-      </PageHeader>
+      <PageHeader title={t('how.title')}>{t('how.lead')}</PageHeader>
       <section className="section section-tight">
         <div className="wrap rev-grid">
           <div>
-            <h2>Read, save, revert</h2>
-            <p className="rev-lead">The same three steps run for every tweak.</p>
+            <h2>{t('how.stepsTitle')}</h2>
+            <p className="rev-lead">{t('how.stepsLead')}</p>
             <Steps />
           </div>
           <Ledger />
@@ -87,8 +76,8 @@ export default function HowItWorks() {
       <Engine />
       <section className="section">
         <div className="wrap split-link">
-          <h2>See what each module covers</h2>
-          <Link to="/features" className="btn btn-secondary">See the features<ArrowRight size={18} strokeWidth={1.5} /></Link>
+          <h2>{t('how.seeModules')}</h2>
+          <Link to="/features" className="btn btn-secondary">{t('how.seeFeatures')}<ArrowRight size={18} strokeWidth={1.5} /></Link>
         </div>
       </section>
       <CtaBand />

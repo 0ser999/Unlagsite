@@ -2,15 +2,16 @@ import { useEffect, useState } from 'react';
 import Lenis from 'lenis';
 import { useReveal } from '../lib/reveal.js';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Globe, Menu, X } from 'lucide-react';
 import { useAuth } from '../lib/auth.jsx';
+import { LANGS, t, useLang } from '../i18n/index.jsx';
 
 
 export const LINKS = [
-  ['/features', 'Features'],
-  ['/how-it-works', 'How it works'],
-  ['/pricing', 'Pricing'],
-  ['/faq', 'FAQ'],
+  ['/features', 'nav.features'],
+  ['/how-it-works', 'nav.how'],
+  ['/pricing', 'nav.pricing'],
+  ['/faq', 'nav.faq'],
 ];
 
 export function Logo({ size = 28 }) {
@@ -25,10 +26,10 @@ export function Logo({ size = 28 }) {
 function AccountLink() {
   const { user, info, loading } = useAuth();
   if (loading) return <span className="nav-account" />;
-  if (!user) return <NavLink to="/sign-in" className="nav-account nav-signin">Sign in</NavLink>;
+  if (!user) return <NavLink to="/sign-in" className="nav-account nav-signin">{t('nav.signIn')}</NavLink>;
   const photo = info.photoUrl;
   return (
-    <NavLink to="/account" className="nav-account" aria-label="Account">
+    <NavLink to="/account" className="nav-account" aria-label={t('nav.account')}>
       {photo
         ? <img src={photo} alt="" width="28" height="28" referrerPolicy="no-referrer" />
         : <span className="nav-initial">{info.displayName.slice(0, 1).toUpperCase()}</span>}
@@ -45,19 +46,19 @@ export function Nav() {
     <header className={`nav${open ? ' is-open' : ''}`}>
       <div className="wrap nav-in">
         <Logo />
-        <nav className="nav-links" aria-label="Main">
+        <nav className="nav-links" aria-label={t('nav.main')}>
           {LINKS.map(([to, label]) => (
-            <NavLink key={to} to={to}>{label}</NavLink>
+            <NavLink key={to} to={to}>{t(label)}</NavLink>
           ))}
         </nav>
         <div className="nav-right">
           <AccountLink />
-          <NavLink to="/download" className="btn btn-primary btn-sm">Download</NavLink>
+          <NavLink to="/download" className="btn btn-primary btn-sm">{t('nav.download')}</NavLink>
         </div>
         <button
           type="button"
           className="nav-menu"
-          aria-label="Menu"
+          aria-label={t('nav.menu')}
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
         >
@@ -68,31 +69,51 @@ export function Nav() {
   );
 }
 
+function LanguagePicker() {
+  const { lang, setLang } = useLang();
+  return (
+    <label className="lang-pick">
+      <Globe size={16} strokeWidth={1.5} aria-hidden="true" />
+      <span className="sr-only">{t('footer.language')}</span>
+      <select value={lang} onChange={(e) => setLang(e.target.value)} aria-label={t('footer.language')}>
+        {LANGS.map(([code, name]) => <option key={code} value={code}>{name}</option>)}
+      </select>
+    </label>
+  );
+}
+
 function Footer() {
   return (
     <footer className="footer">
       <div className="wrap foot-in">
         <div className="foot-brand">
           <Logo size={24} />
-          <p>Windows 10 and 11 tuning, every change reversible</p>
+          <p>{t('footer.tagline')}</p>
+          <LanguagePicker />
         </div>
         <nav className="foot-cols" aria-label="Footer">
           <div>
-            <div className="foot-label">Product</div>
-            <Link to="/features">Features</Link>
-            <Link to="/how-it-works">How it works</Link>
-            <Link to="/pricing">Pricing</Link>
+            <div className="foot-label">{t('footer.product')}</div>
+            <Link to="/features">{t('nav.features')}</Link>
+            <Link to="/how-it-works">{t('nav.how')}</Link>
+            <Link to="/pricing">{t('nav.pricing')}</Link>
           </div>
           <div>
-            <div className="foot-label">Support</div>
-            <Link to="/faq">FAQ</Link>
-            <Link to="/download">Download</Link>
+            <div className="foot-label">{t('footer.support')}</div>
+            <Link to="/faq">{t('nav.faq')}</Link>
+            <Link to="/download">{t('nav.download')}</Link>
           </div>
           <div>
-            <div className="foot-label">Account</div>
-            <Link to="/sign-in">Sign in</Link>
-            <Link to="/sign-up">Create an account</Link>
-            <Link to="/account">Your account</Link>
+            <div className="foot-label">{t('footer.account')}</div>
+            <Link to="/sign-in">{t('footer.signIn')}</Link>
+            <Link to="/sign-up">{t('footer.createAccount')}</Link>
+            <Link to="/account">{t('footer.yourAccount')}</Link>
+          </div>
+          <div>
+            <div className="foot-label">{t('footer.legal')}</div>
+            <Link to="/terms">{t('footer.terms')}</Link>
+            <Link to="/privacy">{t('footer.privacy')}</Link>
+            <Link to="/legal">{t('footer.legalNotice')}</Link>
           </div>
         </nav>
       </div>
@@ -102,16 +123,19 @@ function Footer() {
 }
 
 const TITLES = {
-  '/': 'Unlag · Cut the lag out of Windows',
-  '/features': 'Features · Unlag',
-  '/how-it-works': 'How it works · Unlag',
-  '/pricing': 'Pricing · Unlag',
-  '/faq': 'FAQ · Unlag',
-  '/download': 'Download · Unlag',
-  '/sign-in': 'Sign in · Unlag',
-  '/sign-up': 'Create an account · Unlag',
-  '/reset-password': 'Reset password · Unlag',
-  '/account': 'Account · Unlag',
+  '/': 'meta.home',
+  '/features': 'meta.features',
+  '/how-it-works': 'meta.how',
+  '/pricing': 'meta.pricing',
+  '/faq': 'meta.faq',
+  '/download': 'meta.download',
+  '/sign-in': 'meta.signIn',
+  '/sign-up': 'meta.signUp',
+  '/reset-password': 'meta.reset',
+  '/account': 'meta.account',
+  '/terms': 'meta.terms',
+  '/privacy': 'meta.privacy',
+  '/legal': 'meta.legal',
 };
 
 // Smooth scrolling on every page. It stays on with Windows animations turned off, which
@@ -134,7 +158,7 @@ export default function Layout() {
   useReveal(pathname);
 
   useEffect(() => {
-    document.title = TITLES[pathname] ?? 'Page not found · Unlag';
+    document.title = t(TITLES[pathname] ?? 'meta.notFound');
     const target = hash && document.getElementById(hash.slice(1));
     if (lenis) lenis.scrollTo(target || 0, { offset: target ? -24 : 0, immediate: true, force: true });
     else if (target) target.scrollIntoView();

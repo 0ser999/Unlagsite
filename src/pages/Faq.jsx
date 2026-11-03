@@ -1,6 +1,6 @@
 import { Plus } from 'lucide-react';
 import { PageHeader, CtaBand } from '../components/Blocks.jsx';
-import { FAQ } from '../data.js';
+import { t } from '../i18n/index.jsx';
 
 export function FaqList({ items, openFirst = true }) {
   return (
@@ -18,10 +18,8 @@ export function FaqList({ items, openFirst = true }) {
 export default function Faq() {
   return (
     <main>
-      <PageHeader title="Questions and answers">
-        What to know before you install Unlag.
-      </PageHeader>
-      {FAQ.map((group, i) => (
+      <PageHeader title={t('faq.title')}>{t('faq.lead')}</PageHeader>
+      {t('faq.groups').map((group, i) => (
         <section className={`section${i === 0 ? ' section-tight' : ''}`} key={group.group}>
           <div className="wrap faq">
             <div className="section-head"><h2>{group.group}</h2></div>

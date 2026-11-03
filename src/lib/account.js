@@ -2,6 +2,7 @@
 // the app always agree on who is signed in and which plan they have.
 import { supabase, scratchClient } from './supabase.js';
 import { passwordProblem } from './password.js';
+import { t } from '../i18n/index.jsx';
 
 export const PLAN_NAME = { free: 'Free', premium: 'Premium', ultra: 'Ultimate' };
 export const AI_LIMIT = { free: 3, premium: 7, ultra: 20 };
@@ -49,25 +50,6 @@ export function userInfo(user) {
   };
 }
 
-const MESSAGES = {
-  'auth/invalid-credential': 'Wrong email or password',
-  'auth/email-not-confirmed': 'Confirm your email first. The link is in your inbox',
-  'auth/email-already-in-use': 'An account already uses this email',
-  'auth/weak-password': 'Use at least 8 characters, with letters and numbers',
-  'auth/captcha': 'We could not check that you are human. Reload the page and try again',
-  'auth/code-invalid': 'This code is wrong or has expired. Ask for a new one',
-  'auth/mfa-invalid': 'Wrong code. Use the current code from your authenticator app',
-  'auth/mfa-required': 'Enter the code from your authenticator app first',
-  'auth/email-code-required': 'Sign in again with the code sent by email to change this',
-  'auth/same-password': 'The new password must differ from the current one',
-  'auth/wrong-password': 'The current password is wrong',
-  'auth/too-many-requests': 'Too many attempts. Wait a minute and try again',
-  'auth/operation-not-allowed': 'New accounts are closed for now',
-  'auth/social-not-configured': 'This sign-in method is not available yet',
-  'auth/requires-login': 'Your session ended. Sign in again',
-  'auth/invalid-display-name': 'Use 1 to 32 characters, without < or >',
-  'auth/service-unavailable': 'Unlag accounts cannot be reached. Try again in a moment',
-};
 
 // Mirror of resultError() in the app.
 export function errorCode(error) {
@@ -87,7 +69,7 @@ export function errorCode(error) {
   return codes[error?.code] || (error?.status === 429 ? 'auth/too-many-requests' : 'auth/service-unavailable');
 }
 
-export const authMessage = (error) => MESSAGES[errorCode(error)];
+export const authMessage = (error) => t(`errors.${errorCode(error)}`);
 
 function checked(result) { if (result.error) throw result.error; return result.data; }
 
@@ -159,9 +141,9 @@ export async function readQuota(plan) {
 // Same function the app's "Rate unlag" uses: verified accounts, 3 reviews a day.
 export async function submitReview(rating, comment) {
   const text = typeof comment === 'string' ? comment.trim() : '';
-  if (!Number.isInteger(rating) || rating < 1 || rating > 5) throw new Error('Pick a rating from 1 to 5');
-  if (text.length > 2000) throw new Error('Your review is too long, 2000 characters at most');
+  if (!Number.isInteger(rating) || rating < 1 || rating > 5) throw new Error(t('errors.ratingRange'));
+  if (text.length > 2000) throw new Error(t('errors.reviewTooLong'));
   const result = await supabase.rpc('submit_review', { p_rating: rating, p_comment: text, p_version: 'website' });
-  if (result.error?.code === 'P0429') throw new Error('You already sent several reviews today. Try again tomorrow');
-  if (result.error) throw new Error('Your review could not be sent. Try again later');
+  if (result.error?.code === 'P0429') throw new Error(t('errors.reviewLimit'));
+  if (result.error) throw new Error(t('errors.reviewFailed'));
 }

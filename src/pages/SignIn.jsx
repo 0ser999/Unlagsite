@@ -7,6 +7,7 @@ import { useAuth } from '../lib/auth.jsx';
 import { useCaptcha } from '../lib/captcha.jsx';
 import { passwordProblem } from '../lib/password.js';
 import { GoogleIcon, DiscordIcon } from '../components/BrandIcons.jsx';
+import { t } from '../i18n/index.jsx';
 import { CodeInput, PasswordInput, PasswordMeter } from '../components/AuthBits.jsx';
 
 // Only same-site paths, so a crafted link cannot send people elsewhere after sign-in.
@@ -48,14 +49,14 @@ export function MfaPrompt({ onDone }) {
     }
   };
   return (
-    <AuthShell icon={ShieldCheck} title="Two-factor authentication" lead="Enter the 6-digit code from your authenticator app">
+    <AuthShell icon={ShieldCheck} title={t('auth.mfaTitle')} lead={t('auth.mfaLead')}>
       <form className="auth-form" onSubmit={submit}>
         <CodeInput value={code} onChange={setCode} length={6} />
         {error && <p className="form-error" role="alert">{error}</p>}
-        <button type="submit" className="btn btn-primary" disabled={busy || code.length !== 6}>{busy ? 'Checking' : 'Verify'}</button>
+        <button type="submit" className="btn btn-primary" disabled={busy || code.length !== 6}>{busy ? t('auth.checking') : t('auth.verifyShort')}</button>
       </form>
       <p className="auth-switch">
-        Wrong account? <button type="button" className="link-btn" onClick={() => supabase.auth.signOut({ scope: 'local' })}>Sign out</button>
+        {t('auth.wrongAccount')} <button type="button" className="link-btn" onClick={() => supabase.auth.signOut({ scope: 'local' })}>{t('auth.signOut')}</button>
       </p>
     </AuthShell>
   );
@@ -91,13 +92,13 @@ export default function SignIn({ mode = 'sign-in' }) {
   if (!loading && user) return <Navigate to={next} replace />;
 
   if (!supabaseReady) {
-    return <AuthShell title="Accounts are not set up" lead="Add VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY to .env, then rebuild the site" />;
+    return <AuthShell title={t('auth.notSetUp')} lead={t('auth.notSetUpLead')} />;
   }
 
   if (sent) {
     return (
-      <AuthShell icon={Mail} title="Check your inbox" lead={`We sent a confirmation link to ${email}. Open it on this device to finish creating your account.`}>
-        <Link to="/sign-in" className="text-link">Back to sign in</Link>
+      <AuthShell icon={Mail} title={t('auth.inboxTitle')} lead={t('auth.inboxLead', { email })}>
+        <Link to="/sign-in" className="text-link">{t('common.backToSignIn')}</Link>
       </AuthShell>
     );
   }
@@ -162,30 +163,29 @@ export default function SignIn({ mode = 'sign-in' }) {
   };
 
   const switchTo = `${isSignUp ? '/sign-in' : '/sign-up'}${params.get('next') ? `?next=${encodeURIComponent(next)}` : ''}`;
-  const submitLabel = busy ? 'One moment'
-    : method === 'code' ? (codeSent ? 'Verify and continue' : 'Email me a code')
-      : isSignUp ? 'Create account' : 'Sign in';
+  const submitLabel = busy ? t('common.oneMoment')
+    : method === 'code' ? (codeSent ? t('auth.verify') : t('auth.sendCode'))
+      : isSignUp ? t('auth.createAccount') : t('auth.signIn');
 
   return (
     <AuthShell
       icon={twoStep ? Mail : undefined}
-      title={twoStep ? 'Check your email' : isSignUp ? 'Create your Unlag account' : 'Welcome back'}
-      lead={twoStep ? 'Two-step sign-in is on for this account. Enter the code we just emailed you.'
-        : isSignUp ? 'One account for the app and the site. The Free plan is included.' : 'Sign in to manage your plan, your PC and the assistant'}
+      title={twoStep ? t('auth.twoStepTitle') : isSignUp ? t('auth.signUpTitle') : t('auth.signInTitle')}
+      lead={twoStep ? t('auth.twoStepLead') : isSignUp ? t('auth.signUpLead') : t('auth.signInLead')}
     >
       {!twoStep && <>
       <div className="auth-social">
         <button type="button" className="btn btn-secondary" onClick={() => social('google')} disabled={busy}><GoogleIcon />Google</button>
         <button type="button" className="btn btn-secondary" onClick={() => social('discord')} disabled={busy}><DiscordIcon />Discord</button>
       </div>
-      <div className="auth-or"><span>or with your email</span></div>
+      <div className="auth-or"><span>{t('auth.orEmail')}</span></div>
 
-      <div className="auth-tabs" role="tablist" aria-label="Sign-in method">
+      <div className="auth-tabs" role="tablist" aria-label={t('auth.method')}>
         <button type="button" role="tab" aria-selected={method === 'password'} className={method === 'password' ? 'is-on' : ''} onClick={() => switchMethod('password')}>
-          <KeyRound size={15} strokeWidth={1.5} />Password
+          <KeyRound size={15} strokeWidth={1.5} />{t('auth.password')}
         </button>
         <button type="button" role="tab" aria-selected={method === 'code'} className={method === 'code' ? 'is-on' : ''} onClick={() => switchMethod('code')}>
-          <Mail size={15} strokeWidth={1.5} />Email code
+          <Mail size={15} strokeWidth={1.5} />{t('auth.emailCode')}
         </button>
       </div>
       </>}
@@ -194,16 +194,16 @@ export default function SignIn({ mode = 'sign-in' }) {
         {method === 'code' && codeSent ? (
           <>
             <div className="code-sent">
-              <p>We sent a code to <b>{email.trim()}</b>. It expires in a few minutes.</p>
+              <p>{t('auth.codeSent', { email: email.trim() })}</p>
               <button type="button" className="link-btn" onClick={() => { setCodeSent(false); setTwoStep(false); setMethod(twoStep ? 'password' : method); setCode(''); setError(''); }}>
-                <ArrowLeft size={14} strokeWidth={1.5} />{twoStep ? 'Back' : 'Use another email'}
+                <ArrowLeft size={14} strokeWidth={1.5} />{twoStep ? t('auth.back') : t('auth.otherEmail')}
               </button>
             </div>
             <CodeInput value={code} onChange={setCode} />
           </>
         ) : (
           <label className="field">
-            <span>Email</span>
+            <span>{t('common.email')}</span>
             <input type="email" autoComplete="email" required maxLength={254} value={email} onChange={(e) => setEmail(e.target.value)} />
           </label>
         )}
@@ -211,8 +211,8 @@ export default function SignIn({ mode = 'sign-in' }) {
         {method === 'password' && (
           <label className="field">
             <span className="field-row">
-              Password
-              {!isSignUp && <Link to="/reset-password" className="field-link">Forgot it</Link>}
+              {t('auth.password')}
+              {!isSignUp && <Link to="/reset-password" className="field-link">{t('auth.forgot')}</Link>}
             </span>
             <PasswordInput
               autoComplete={isSignUp ? 'new-password' : 'current-password'}
@@ -225,7 +225,7 @@ export default function SignIn({ mode = 'sign-in' }) {
         )}
 
         {method === 'code' && !codeSent && (
-          <p className="auth-hint">No password needed. We email you a one-time code{isSignUp ? ' and create your account' : ''}.</p>
+          <p className="auth-hint">{isSignUp ? t('auth.noPasswordSignUp') : t('auth.noPassword')}</p>
         )}
 
         {captcha.element}
@@ -234,18 +234,18 @@ export default function SignIn({ mode = 'sign-in' }) {
 
         {method === 'code' && codeSent && (
           <button type="button" className="link-btn center" onClick={sendCode} disabled={busy || cooldown > 0}>
-            {cooldown > 0 ? `Send a new code in ${cooldown} s` : 'Send a new code'}
+            {cooldown > 0 ? t('auth.resendIn', { s: cooldown }) : t('auth.resend')}
           </button>
         )}
       </form>
 
       <p className="auth-switch">
-        {isSignUp ? 'Already have an account? ' : 'New to Unlag? '}
-        <Link to={switchTo}>{isSignUp ? 'Sign in' : 'Create an account'}</Link>
+        {isSignUp ? t('auth.haveAccount') : t('auth.newHere')}{' '}
+        <Link to={switchTo}>{isSignUp ? t('auth.signIn') : t('auth.createLink')}</Link>
       </p>
       <p className="auth-fine">
         <ShieldCheck size={14} strokeWidth={1.5} />
-        Turn on two-step sign-in in Account settings: a code by email after your password.
+        {t('auth.fine')}
       </p>
     </AuthShell>
   );

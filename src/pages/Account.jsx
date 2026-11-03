@@ -9,15 +9,18 @@ import { PasswordInput, PasswordMeter } from '../components/AuthBits.jsx';
 import { supabase } from '../lib/supabase.js';
 import { useAuth } from '../lib/auth.jsx';
 import {
-  PLAN_NAME, AI_LIMIT, hasPlan, authMessage, changePassword, readQuota, resendConfirmation, submitReview, updateDisplayName,
+  AI_LIMIT, hasPlan, authMessage, changePassword, readQuota, resendConfirmation, submitReview, updateDisplayName,
 } from '../lib/account.js';
 import { PLANS, PLAN_MATRIX, DOWNLOAD_URL, VERSION } from '../data.js';
+import { t, currentLang } from '../i18n/index.jsx';
 
-const PROVIDER = { email: 'Email', google: 'Google', discord: 'Discord' };
+const provider = (p) => { const name = t(`account.providers.${p}`); return name.startsWith('account.') ? p : name; };
+const providerList = (info) => info.providers.map(provider).join(` ${t('common.and')} `);
+const planName = (id) => t(`plans.names.${id}`);
 const TABS = [
-  ['overview', 'Overview', LayoutGrid],
-  ['settings', 'Settings', Settings],
-  ['feedback', 'Feedback', MessageSquare],
+  ['overview', 'account.tabs.overview', LayoutGrid],
+  ['settings', 'account.tabs.settings', Settings],
+  ['feedback', 'account.tabs.feedback', MessageSquare],
 ];
 
 function Status({ value, done }) {
@@ -59,14 +62,14 @@ function LicenseCard({ info, hwid, refresh }) {
     setStatus('busy');
     try {
       const next = await refresh();
-      setStatus(next.plan === info.plan ? `Still ${PLAN_NAME[next.plan]}` : 'Updated');
+      setStatus(next.plan === info.plan ? t('account.still', { plan: planName(next.plan) }) : 'updated');
     } catch (error) {
       setStatus(authMessage(error));
     }
   };
   const paid = info.plan !== 'free';
   return (
-    <section className="lic-wrap" aria-label="Your plan">
+    <section className="lic-wrap" aria-label={t('account.yourPlan')}>
       <div className={`lic lic-${info.plan}`}>
         <pre className="lic-hex mono" aria-hidden="true">{texture}</pre>
         <div className="lic-top">
@@ -74,18 +77,18 @@ function LicenseCard({ info, hwid, refresh }) {
           <span className="lic-brand">Unlag</span>
           <span className="lic-ver mono">v{VERSION}</span>
         </div>
-        <div className="lic-plan">{PLAN_NAME[info.plan]}</div>
+        <div className="lic-plan">{planName(info.plan)}</div>
         <div className="lic-meta">
           <div>
-            <span className="lic-k">Holder</span>
+            <span className="lic-k">{t('account.holder')}</span>
             <span className="lic-v">{info.displayName}</span>
           </div>
           <div>
-            <span className="lic-k">PC</span>
-            <span className="lic-v mono">{!paid ? 'Any PC' : hwid ? shortId(hwid) : 'Not claimed yet'}</span>
+            <span className="lic-k">{t('account.pc')}</span>
+            <span className="lic-v mono">{!paid ? t('account.anyPc') : hwid ? shortId(hwid) : t('account.notClaimed')}</span>
           </div>
           <div>
-            <span className="lic-k">Account</span>
+            <span className="lic-k">{t('account.account')}</span>
             <span className="lic-v mono">{shortId(info.uid.replace(/-/g, ''))}</span>
           </div>
         </div>
@@ -94,15 +97,15 @@ function LicenseCard({ info, hwid, refresh }) {
         <p className="lic-note">
           <Monitor size={16} strokeWidth={1.5} />
           {!paid
-            ? 'Free works on every PC you sign in to'
+            ? t('account.noteFree')
             : hwid
-              ? 'This plan is tied to one PC. On any other PC the app falls back to Free'
-              : 'The first PC that opens the app with this account takes the plan'}
+              ? t('account.noteTied')
+              : t('account.noteFirst')}
         </p>
         <button type="button" className="btn-quiet" onClick={onRefresh} disabled={status === 'busy'}>
-          <RefreshCw size={16} strokeWidth={1.5} className={status === 'busy' ? 'spin' : ''} />Refresh plan
+          <RefreshCw size={16} strokeWidth={1.5} className={status === 'busy' ? 'spin' : ''} />{t('account.refresh')}
         </button>
-        {status && status !== 'busy' && <span className={status === 'Updated' ? 'acct-ok' : 'acct-muted'}>{status}</span>}
+        {status && status !== 'busy' && <span className={status === 'updated' ? 'acct-ok' : 'acct-muted'}>{status === 'updated' ? t('account.updated') : status}</span>}
       </div>
     </section>
   );
@@ -116,7 +119,7 @@ function useCountdown(target) {
   }, []);
   if (!target) return null;
   const mins = Math.max(0, Math.round((target - now) / 60000));
-  return `${Math.floor(mins / 60)} h ${String(mins % 60).padStart(2, '0')} min`;
+  return t('account.hours', { h: Math.floor(mins / 60), m: String(mins % 60).padStart(2, '0') });
 }
 
 function QuotaStat({ info }) {
@@ -133,13 +136,13 @@ function QuotaStat({ info }) {
   const used = quota?.used ?? 0;
   return (
     <div className="stat">
-      <div className="stat-label">Assistant messages today</div>
+      <div className="stat-label">{t('account.aiToday')}</div>
       <div className="stat-figure mono">{quota ? used : '–'}<span> / {limit}</span></div>
       <div className="meter" aria-hidden="true"><span style={{ width: `${Math.min(100, (used / limit) * 100)}%` }} /></div>
       <div className="stat-note">
-        {!info.emailVerified ? 'Confirm your email to use the assistant'
-          : failed ? 'Cannot be read right now'
-          : left ? `Resets in ${left}` : 'Resets at midnight, Paris time'}
+        {!info.emailVerified ? t('account.confirmForAi')
+          : failed ? t('account.cannotRead')
+          : left ? t('account.resetsIn', { t: left }) : t('account.resetsMidnight')}
       </div>
     </div>
   );
@@ -151,22 +154,21 @@ function Stats({ info }) {
     <div className="stats">
       <QuotaStat info={info} />
       <div className="stat">
-        <div className="stat-label">Member for</div>
-        <div className="stat-figure mono">{days}<span> {days === 1 ? 'day' : 'days'}</span></div>
-        <div className="stat-note">Since {new Date(info.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
+        <div className="stat-label">{t('account.memberFor')}</div>
+        <div className="stat-figure mono">{days}<span> {days === 1 ? t('account.day') : t('account.days')}</span></div>
+        <div className="stat-note">{t('account.since', { date: new Date(info.createdAt).toLocaleDateString(currentLang(), { day: 'numeric', month: 'long', year: 'numeric' }) })}</div>
       </div>
       <div className="stat">
-        <div className="stat-label">Email</div>
+        <div className="stat-label">{t('common.email')}</div>
         <div className={`stat-state${info.emailVerified ? ' is-ok' : ' is-warn'}`}>
-          <i />{info.emailVerified ? 'Confirmed' : 'Not confirmed'}
+          <i />{info.emailVerified ? t('account.confirmed') : t('account.notConfirmed')}
         </div>
-        <div className="stat-note">Signed in with {info.providers.map((p) => (p === 'email' ? 'email' : PROVIDER[p] || p)).join(' and ')}</div>
+        <div className="stat-note">{t('account.signedInWith', { list: providerList(info) })}</div>
       </div>
     </div>
   );
 }
 
-const MIN_PLAN = { free: 'Free', premium: 'Premium', ultra: 'Ultimate' };
 
 function Unlocks({ info }) {
   const next = PLANS.find((p) => !hasPlan(info, p.id));
@@ -174,19 +176,19 @@ function Unlocks({ info }) {
     <section className="dash-block">
       <div className="dash-block-head">
         <div>
-          <h2>In the app</h2>
-          <p>The pages {PLAN_NAME[info.plan]} opens on your PC</p>
+          <h2>{t('account.inApp')}</h2>
+          <p>{t('account.pagesOpen', { plan: planName(info.plan) })}</p>
         </div>
-        {next && <Link to="/pricing" className="btn btn-primary btn-sm">Get {next.name}</Link>}
+        {next && <Link to="/pricing" className="btn btn-primary btn-sm">{t('plans.get', { plan: planName(next.id) })}</Link>}
       </div>
       <ul className="unlocks">
-        {PLAN_MATRIX.map(([page, min]) => {
+        {PLAN_MATRIX.map(([page, min], i) => {
           const open = hasPlan(info, min);
           return (
             <li key={page} className={open ? 'is-open' : 'is-locked'}>
               {open ? <Check size={16} strokeWidth={1.5} /> : <Lock size={16} strokeWidth={1.5} />}
-              <span className="unlock-name">{page}</span>
-              {!open && <span className="unlock-plan mono">{MIN_PLAN[min]}</span>}
+              <span className="unlock-name">{t('plans.matrix')[i] || page}</span>
+              {!open && <span className="unlock-plan mono">{planName(min)}</span>}
             </li>
           );
         })}
@@ -200,10 +202,10 @@ function AppStrip() {
     <section className="dash-strip">
       <img src="/logo.png" alt="" width="40" height="40" />
       <div>
-        <div className="dash-strip-title">Unlag for Windows</div>
-        <div className="dash-strip-meta mono">v{VERSION} · Windows 10 and 11 x64 · sign in with this account</div>
+        <div className="dash-strip-title">{t('account.appTitle')}</div>
+        <div className="dash-strip-meta mono">{t('account.appMeta', { v: VERSION })}</div>
       </div>
-      <a href={DOWNLOAD_URL} className="btn btn-secondary btn-sm"><Download size={16} strokeWidth={1.5} />Download</a>
+      <a href={DOWNLOAD_URL} className="btn btn-secondary btn-sm"><Download size={16} strokeWidth={1.5} />{t('account.download')}</a>
     </section>
   );
 }
@@ -244,12 +246,12 @@ function NameRow({ info }) {
     try { await updateDisplayName(name); setStatus('done'); } catch (error) { setStatus(authMessage(error)); }
   };
   return (
-    <Row label="Display name" hint="Shown in the app, in Settings and next to your chats">
+    <Row label={t('account.displayName')} hint={t('account.displayNameHint')}>
       <form className="set-form" onSubmit={save}>
-        <input className="input" aria-label="Display name" value={name} maxLength={32} onChange={(e) => { setName(e.target.value); setStatus(''); }} />
+        <input className="input" aria-label={t('account.displayName')} value={name} maxLength={32} onChange={(e) => { setName(e.target.value); setStatus(''); }} />
         <div className="set-actions">
-          <button type="submit" className="btn btn-secondary btn-sm" disabled={status === 'busy' || name.trim() === info.displayName}>Save</button>
-          <Status value={status} done="Saved" />
+          <button type="submit" className="btn btn-secondary btn-sm" disabled={status === 'busy' || name.trim() === info.displayName}>{t('account.save')}</button>
+          <Status value={status} done={t('account.saved')} />
         </div>
       </form>
     </Row>
@@ -263,8 +265,8 @@ function PasswordRow({ info }) {
   const captcha = useCaptcha();
   if (!info.providers.includes('email')) {
     return (
-      <Row label="Password" hint="Managed by your sign-in provider">
-        <p className="set-text">You sign in with {info.providers.map((p) => PROVIDER[p] || p).join(' and ')}, so there is no Unlag password to change.</p>
+      <Row label={t('account.password')} hint={t('account.managedBy')}>
+        <p className="set-text">{t('account.noPassword', { list: providerList(info) })}</p>
       </Row>
     );
   }
@@ -282,15 +284,15 @@ function PasswordRow({ info }) {
     }
   };
   return (
-    <Row label="Password" hint="The app asks for your current password too">
+    <Row label={t('account.password')} hint={t('account.passwordHint')}>
       <form className="set-form" onSubmit={save}>
-        <PasswordInput className="input" aria-label="Current password" placeholder="Current password" autoComplete="current-password" required value={current} onChange={(e) => { setCurrent(e.target.value); setStatus(''); }} />
-        <PasswordInput className="input" aria-label="New password" placeholder="New password" autoComplete="new-password" required value={password} onChange={(e) => { setPassword(e.target.value); setStatus(''); }} />
+        <PasswordInput className="input" aria-label={t('account.currentPassword')} placeholder={t('account.currentPassword')} autoComplete="current-password" required value={current} onChange={(e) => { setCurrent(e.target.value); setStatus(''); }} />
+        <PasswordInput className="input" aria-label={t('account.newPassword')} placeholder={t('account.newPassword')} autoComplete="new-password" required value={password} onChange={(e) => { setPassword(e.target.value); setStatus(''); }} />
         <PasswordMeter value={password} />
         {captcha.element}
         <div className="set-actions">
-          <button type="submit" className="btn btn-secondary btn-sm" disabled={status === 'busy'}>Change password</button>
-          <Status value={status} done="Changed" />
+          <button type="submit" className="btn btn-secondary btn-sm" disabled={status === 'busy'}>{t('account.changePassword')}</button>
+          <Status value={status} done={t('account.changed')} />
         </div>
       </form>
     </Row>
@@ -303,8 +305,8 @@ function EmailCodeRow({ info }) {
   const [status, setStatus] = useState('');
   if (!info.providers.includes('email')) {
     return (
-      <Row label="Two-step sign-in" hint="A code by email after your password">
-        <p className="set-text">You sign in with {info.providers.map((p) => PROVIDER[p] || p).join(' and ')}, which already protects your account.</p>
+      <Row label={t('account.twoStep')} hint={t('account.twoStepShort')}>
+        <p className="set-text">{t('account.twoStepProvider', { list: providerList(info) })}</p>
       </Row>
     );
   }
@@ -319,16 +321,16 @@ function EmailCodeRow({ info }) {
     } catch (error) { setStatus(authMessage(error)); }
   };
   return (
-    <Row label="Two-step sign-in" hint="After your password, a code is sent to your email. Asked on the site and in the app">
+    <Row label={t('account.twoStep')} hint={t('account.twoStepHint')}>
       <div className="set-form">
         <div className="set-static">
-          <span className={`stat-state${on ? ' is-ok' : ''}`}><i />{on ? 'On' : 'Off'}</span>
-          <span className="set-text">{on ? `Codes go to ${info.email}.` : 'Your password alone opens your account.'}</span>
+          <span className={`stat-state${on ? ' is-ok' : ''}`}><i />{on ? t('account.on') : t('account.off')}</span>
+          <span className="set-text">{on ? t('account.codesTo', { email: info.email }) : t('account.passwordAlone')}</span>
         </div>
         <div className="set-actions">
-          <button type="button" className="btn btn-secondary btn-sm" onClick={toggle} disabled={status === 'busy'}>{on ? 'Turn off' : 'Turn on'}</button>
-          {status === 'on' && <span className="acct-ok"><Check size={14} strokeWidth={1.5} />Turned on</span>}
-          {status === 'off' && <span className="acct-muted">Turned off</span>}
+          <button type="button" className="btn btn-secondary btn-sm" onClick={toggle} disabled={status === 'busy'}>{on ? t('account.turnOff') : t('account.turnOn')}</button>
+          {status === 'on' && <span className="acct-ok"><Check size={14} strokeWidth={1.5} />{t('account.turnedOn')}</span>}
+          {status === 'off' && <span className="acct-muted">{t('account.turnedOff')}</span>}
           {status && !['busy', 'on', 'off'].includes(status) && <span className="form-error">{status}</span>}
         </div>
       </div>
@@ -340,22 +342,22 @@ function SettingsView({ info }) {
   return (
     <section className="dash-block settings">
       <NameRow info={info} />
-      <Row label="Email" hint="Used to sign in and to reset your password">
+      <Row label={t('common.email')} hint={t('account.emailHint')}>
         <div className="set-static">
           <span className="mono">{info.email}</span>
-          <span className={`stat-state${info.emailVerified ? ' is-ok' : ' is-warn'}`}><i />{info.emailVerified ? 'Confirmed' : 'Not confirmed'}</span>
+          <span className={`stat-state${info.emailVerified ? ' is-ok' : ' is-warn'}`}><i />{info.emailVerified ? t('account.confirmed') : t('account.notConfirmed')}</span>
         </div>
       </Row>
-      <Row label="Sign-in methods">
+      <Row label={t('account.methods')}>
         <ul className="providers">
-          {info.providers.map((p) => <li key={p}>{PROVIDER[p] || p}</li>)}
+          {info.providers.map((p) => <li key={p}>{provider(p)}</li>)}
         </ul>
       </Row>
       <PasswordRow info={info} />
       <EmailCodeRow info={info} />
-      <Row label="Sign out" hint="Signs out this browser only. The app on your PC stays signed in">
+      <Row label={t('account.signOut')} hint={t('account.signOutHint')}>
         <button type="button" className="btn btn-secondary btn-sm" onClick={() => supabase.auth.signOut({ scope: 'local' })}>
-          <LogOut size={16} strokeWidth={1.5} />Sign out
+          <LogOut size={16} strokeWidth={1.5} />{t('account.signOut')}
         </button>
       </Row>
     </section>
@@ -364,7 +366,6 @@ function SettingsView({ info }) {
 
 /* ---------- Feedback ---------- */
 
-const RATING_WORDS = ['', 'Not for me', 'Needs work', 'Fine', 'Good', 'Great'];
 
 function FeedbackView({ info }) {
   const [rating, setRating] = useState(0);
@@ -387,19 +388,19 @@ function FeedbackView({ info }) {
     <form className="dash-block feedback" onSubmit={send}>
       <div className="dash-block-head">
         <div>
-          <h2>Rate Unlag</h2>
-          <p>Reviews go straight to the team. Up to 3 a day</p>
+          <h2>{t('account.rateTitle')}</h2>
+          <p>{t('account.rateLead')}</p>
         </div>
       </div>
       <div className="rate">
-        <div className="stars" role="radiogroup" aria-label="Rating" onMouseLeave={() => setHover(0)}>
+        <div className="stars" role="radiogroup" aria-label={t('account.rating')} onMouseLeave={() => setHover(0)}>
           {[1, 2, 3, 4, 5].map((n) => (
             <button
               key={n}
               type="button"
               role="radio"
               aria-checked={rating === n}
-              aria-label={`${n} of 5`}
+              aria-label={t('account.ofFive', { n })}
               className={`star${n <= shown ? ' is-on' : ''}`}
               onMouseEnter={() => setHover(n)}
               onClick={() => { setRating(n); setStatus(''); }}
@@ -408,17 +409,17 @@ function FeedbackView({ info }) {
             </button>
           ))}
         </div>
-        <span className="rate-word">{RATING_WORDS[shown] || 'Pick a rating'}</span>
+        <span className="rate-word">{t('account.ratingWords')[shown] || t('account.pickRating')}</span>
       </div>
       <label className="field">
-        <span>What works, what does not</span>
+        <span>{t('account.whatWorks')}</span>
         <textarea rows={5} maxLength={2000} value={comment} onChange={(e) => { setComment(e.target.value); setStatus(''); }} />
         <span className="field-count mono">{comment.length} / 2000</span>
       </label>
       <div className="set-actions">
-        <button type="submit" className="btn btn-primary btn-sm" disabled={!rating || !info.emailVerified || status === 'busy'}>Send review</button>
-        {!info.emailVerified && <span className="acct-muted">Confirm your email to send a review</span>}
-        <Status value={status} done="Sent. Thank you" />
+        <button type="submit" className="btn btn-primary btn-sm" disabled={!rating || !info.emailVerified || status === 'busy'}>{t('account.sendReview')}</button>
+        {!info.emailVerified && <span className="acct-muted">{t('account.confirmForReview')}</span>}
+        <Status value={status} done={t('account.sent')} />
       </div>
     </form>
   );
@@ -436,9 +437,9 @@ function VerifyNotice({ info }) {
   return (
     <div className="acct-notice">
       <MailWarning size={16} strokeWidth={1.5} />
-      <span>Confirm your email to use the assistant and send reviews.</span>
+      <span>{t('account.confirmNotice')}</span>
       <button type="button" className="btn-quiet" onClick={resend} disabled={status === 'busy' || status === 'done'}>
-        {status === 'done' ? 'Link sent' : 'Send the link again'}
+        {status === 'done' ? t('account.linkSent') : t('account.sendAgain')}
       </button>
       {status && !['busy', 'done'].includes(status) && <span className="form-error">{status}</span>}
       {captcha.element}
@@ -455,7 +456,7 @@ export default function Account() {
   if (!info || mfaRequired) return <Navigate to="/sign-in?next=/account" replace />;
 
   const hwid = typeof user?.app_metadata?.hwid === 'string' ? user.app_metadata.hwid : null;
-  const title = TABS.find(([id]) => id === tab)[1];
+  const title = t(TABS.find(([id]) => id === tab)[1]);
 
   return (
     <main className="dash">
@@ -465,10 +466,10 @@ export default function Account() {
             <Avatar info={info} />
             <div className="dash-who-text">
               <div className="dash-who-name">{info.displayName}</div>
-              <div className="dash-who-plan">{PLAN_NAME[info.plan]}</div>
+              <div className="dash-who-plan">{planName(info.plan)}</div>
             </div>
           </div>
-          <nav className="dash-nav" aria-label="Account">
+          <nav className="dash-nav" aria-label={t('account.account')}>
             {TABS.map(([id, label, Icon]) => (
               <button
                 key={id}
@@ -477,17 +478,17 @@ export default function Account() {
                 aria-current={tab === id ? 'page' : undefined}
                 onClick={() => setParams(id === 'overview' ? {} : { tab: id }, { replace: true })}
               >
-                <Icon size={16} strokeWidth={1.5} />{label}
+                <Icon size={16} strokeWidth={1.5} />{t(label)}
               </button>
             ))}
           </nav>
-          <Link to="/pricing" className="dash-side-link">Compare plans<ArrowRight size={14} strokeWidth={1.5} /></Link>
+          <Link to="/pricing" className="dash-side-link">{t('account.comparePlans')}<ArrowRight size={14} strokeWidth={1.5} /></Link>
         </aside>
 
         <div className="dash-main">
           <header className="dash-head">
             <h1>{title}</h1>
-            {!verified && <span className="acct-muted">Last known state. Unlag accounts cannot be reached right now</span>}
+            {!verified && <span className="acct-muted">{t('account.offline')}</span>}
           </header>
           {!info.emailVerified && <VerifyNotice info={info} />}
           {tab === 'overview' && <Overview info={info} hwid={hwid} refresh={refresh} />}
