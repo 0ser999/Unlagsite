@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useSearchParams } from 'react-router-dom';
 import {
-  Check, Lock, Monitor, LogOut, RefreshCw, Star, MailWarning, LayoutGrid, Settings, MessageSquare, Download, ArrowRight,
+  Check, Lock, Monitor, LogOut, Tag, RefreshCw, Star, MailWarning, LayoutGrid, Settings, MessageSquare, Download, ArrowRight,
 } from 'lucide-react';
 import { useCaptcha } from '../lib/captcha.jsx';
 import { passwordProblem } from '../lib/password.js';
@@ -32,6 +32,26 @@ function Status({ value, done }) {
 function Avatar({ info, size = 40 }) {
   if (info.photoUrl) return <img src={info.photoUrl} alt="" className="avatar" width={size} height={size} referrerPolicy="no-referrer" />;
   return <span className="avatar avatar-initials" style={{ width: size, height: size }} aria-hidden="true">{info.displayName.slice(0, 1).toUpperCase()}</span>;
+}
+
+const reducedMotion = () => typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+// A figure that rolls up to its value when it first shows.
+function CountUp({ value, duration = 700 }) {
+  const [shown, setShown] = useState(() => (reducedMotion() ? value : 0));
+  useEffect(() => {
+    if (reducedMotion()) { setShown(value); return undefined; }
+    let frame;
+    const start = performance.now();
+    const tick = (now) => {
+      const k = Math.min(1, (now - start) / duration);
+      setShown(Math.round(value * (1 - (1 - k) ** 3)));
+      if (k < 1) frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [value, duration]);
+  return shown;
 }
 
 /* ---------- Overview ---------- */
@@ -68,9 +88,25 @@ function LicenseCard({ info, hwid, refresh }) {
     }
   };
   const paid = info.plan !== 'free';
+  // The card leans a few degrees toward the pointer and catches the light where it points.
+  const tilt = (event) => {
+    if (reducedMotion() || event.pointerType === 'touch') return;
+    const el = event.currentTarget;
+    const r = el.getBoundingClientRect();
+    const x = (event.clientX - r.left) / r.width;
+    const y = (event.clientY - r.top) / r.height;
+    el.style.setProperty('--ry', `${(x - 0.5) * 6}deg`);
+    el.style.setProperty('--rx', `${(0.5 - y) * 6}deg`);
+    el.style.setProperty('--mx', `${x * 100}%`);
+    el.style.setProperty('--my', `${y * 100}%`);
+  };
+  const untilt = (event) => {
+    event.currentTarget.style.setProperty('--rx', '0deg');
+    event.currentTarget.style.setProperty('--ry', '0deg');
+  };
   return (
     <section className="lic-wrap" aria-label={t('account.yourPlan')}>
-      <div className={`lic lic-${info.plan}`}>
+      <div className={`lic lic-${info.plan}`} onPointerMove={tilt} onPointerLeave={untilt}>
         <pre className="lic-hex mono" aria-hidden="true">{texture}</pre>
         <div className="lic-top">
           <img src="/logo.png" alt="" width="28" height="28" />
@@ -137,8 +173,8 @@ function QuotaStat({ info }) {
   return (
     <div className="stat">
       <div className="stat-label">{t('account.aiToday')}</div>
-      <div className="stat-figure mono">{quota ? used : '–'}<span> / {limit}</span></div>
-      <div className="meter" aria-hidden="true"><span style={{ width: `${Math.min(100, (used / limit) * 100)}%` }} /></div>
+      <div className="stat-figure mono">{quota ? <CountUp value={used} duration={500} /> : '–'}<span> / {limit}</span></div>
+      <div className="meter" aria-hidden="true"><span style={{ transform: `scaleX(${quota ? Math.min(1, used / limit) : 0})` }} /></div>
       <div className="stat-note">
         {!info.emailVerified ? t('account.confirmForAi')
           : failed ? t('account.cannotRead')
@@ -172,9 +208,9 @@ function TweakBar({ plan }) {
   const rank = TIERS.indexOf(plan);
   return (
     <div className="tier">
-      <div className="tier-figure"><b className="mono">{PLAN_TWEAKS[plan]}</b><span>{t('account.tweaksOf', { total: PLAN_TWEAKS.ultra })}</span></div>
+      <div className="tier-figure"><b className="mono"><CountUp value={PLAN_TWEAKS[plan]} /></b><span>{t('account.tweaksOf', { total: PLAN_TWEAKS.ultra })}</span></div>
       <div className="tier-bar" aria-hidden="true">
-        {TIERS.map((id, n) => <span key={id} className={rank >= n ? 'is-on' : ''} style={{ flexGrow: tierSize(id, n) }} />)}
+        {TIERS.map((id, n) => <span key={id} className={rank >= n ? 'is-on' : ''} style={{ flexGrow: tierSize(id, n), '--d': `${120 + n * 140}ms` }} />)}
       </div>
       <div className="tier-legend mono" aria-hidden="true">
         {TIERS.map((id, n) => <span key={id} style={{ flexGrow: tierSize(id, n) }} className={id === plan ? 'is-current' : ''}>{planName(id)}</span>)}
@@ -468,10 +504,74 @@ function VerifyNotice({ info }) {
   );
 }
 
+function Sidebar({ info, tab, onTab }) {
+  const nav = useRef(null);
+  const [ind, setInd] = useState(null);
+  const next = PLANS.find((p) => !hasPlan(info, p.id));
+  // The highlight slides to the active button: down a column on desktop, along a row on phones.
+  const place = useCallback(() => {
+    const btn = nav.current?.querySelector('.side-link.is-on');
+    if (btn) setInd({ x: btn.offsetLeft, y: btn.offsetTop, w: btn.offsetWidth, h: btn.offsetHeight });
+  }, []);
+  useLayoutEffect(place, [tab, place]);
+  useEffect(() => {
+    const ro = new ResizeObserver(place);
+    if (nav.current) ro.observe(nav.current);
+    return () => ro.disconnect();
+  }, [place]);
+  // 1, 2 and 3 switch tabs while no field has focus.
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.metaKey || e.ctrlKey || e.altKey || /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName || '')) return;
+      const hit = TABS[Number(e.key) - 1];
+      if (hit) onTab(hit[0]);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onTab]);
+  return (
+    <aside className={`dash-side side-${info.plan}`}>
+      <div className="side-who">
+        <span className="side-avatar"><Avatar info={info} size={44} /></span>
+        <div className="side-who-text">
+          <div className="side-name">{info.displayName}</div>
+          <div className="side-mail">{info.email}</div>
+        </div>
+      </div>
+      <div className="side-plan">
+        <div className="side-plan-row">
+          <span className="side-plan-name">{planName(info.plan)}</span>
+          <span className="side-plan-count mono"><CountUp value={PLAN_TWEAKS[info.plan]} /> / {PLAN_TWEAKS.ultra}</span>
+        </div>
+        <div className="side-plan-bar" aria-hidden="true"><span style={{ transform: `scaleX(${PLAN_TWEAKS[info.plan] / PLAN_TWEAKS.ultra})` }} /></div>
+        {next && (
+          <Link to={`/checkout?plan=${next.id}`} className="side-upgrade">
+            <span>{t('plans.get', { plan: planName(next.id) })}</span><ArrowRight size={16} strokeWidth={1.5} />
+          </Link>
+        )}
+      </div>
+      <nav className="side-nav" ref={nav} aria-label={t('account.account')}>
+        {ind && <span className="side-ind" aria-hidden="true" style={{ transform: `translate(${ind.x}px, ${ind.y}px)`, width: ind.w, height: ind.h }} />}
+        {TABS.map(([id, label, Icon], i) => (
+          <button key={id} type="button" className={`side-link${tab === id ? ' is-on' : ''}`} aria-current={tab === id ? 'page' : undefined} onClick={() => onTab(id)}>
+            <Icon size={16} strokeWidth={1.5} /><span>{t(label)}</span><kbd>{i + 1}</kbd>
+          </button>
+        ))}
+      </nav>
+      <div className="side-foot">
+        <Link to="/pricing" className="side-foot-link"><Tag size={16} strokeWidth={1.5} /><span>{t('account.comparePlans')}</span></Link>
+        <a href={DOWNLOAD_URL} className="side-foot-link"><Download size={16} strokeWidth={1.5} /><span>{t('account.download')}</span></a>
+        <button type="button" className="side-foot-link" onClick={() => supabase.auth.signOut({ scope: 'local' })}><LogOut size={16} strokeWidth={1.5} /><span>{t('account.signOut')}</span></button>
+      </div>
+    </aside>
+  );
+}
+
 export default function Account() {
   const { user, info, loading, verified, refresh, mfaRequired } = useAuth();
   const [params, setParams] = useSearchParams();
   const tab = TABS.some(([id]) => id === params.get('tab')) ? params.get('tab') : 'overview';
+  const setTab = useCallback((id) => setParams(id === 'overview' ? {} : { tab: id }, { replace: true }), [setParams]);
 
   if (loading) return <main className="dash" aria-busy="true" />;
   if (!info || mfaRequired) return <Navigate to="/sign-in?next=/account" replace />;
@@ -482,29 +582,7 @@ export default function Account() {
   return (
     <main className="dash">
       <div className="wrap dash-in">
-        <aside className="dash-side">
-          <div className="dash-who">
-            <Avatar info={info} />
-            <div className="dash-who-text">
-              <div className="dash-who-name">{info.displayName}</div>
-              <div className="dash-who-plan">{planName(info.plan)}</div>
-            </div>
-          </div>
-          <nav className="dash-nav" aria-label={t('account.account')}>
-            {TABS.map(([id, label, Icon]) => (
-              <button
-                key={id}
-                type="button"
-                className={`dash-link${tab === id ? ' is-on' : ''}`}
-                aria-current={tab === id ? 'page' : undefined}
-                onClick={() => setParams(id === 'overview' ? {} : { tab: id }, { replace: true })}
-              >
-                <Icon size={16} strokeWidth={1.5} />{t(label)}
-              </button>
-            ))}
-          </nav>
-          <Link to="/pricing" className="dash-side-link">{t('account.comparePlans')}<ArrowRight size={14} strokeWidth={1.5} /></Link>
-        </aside>
+        <Sidebar info={info} tab={tab} onTab={setTab} />
 
         <div className="dash-main">
           <header className="dash-head">
@@ -512,9 +590,11 @@ export default function Account() {
             {!verified && <span className="acct-muted">{t('account.offline')}</span>}
           </header>
           {!info.emailVerified && <VerifyNotice info={info} />}
-          {tab === 'overview' && <Overview info={info} hwid={hwid} refresh={refresh} />}
-          {tab === 'settings' && <SettingsView info={info} />}
-          {tab === 'feedback' && <FeedbackView info={info} />}
+          <div className="dash-view" key={tab}>
+            {tab === 'overview' && <Overview info={info} hwid={hwid} refresh={refresh} />}
+            {tab === 'settings' && <SettingsView info={info} />}
+            {tab === 'feedback' && <FeedbackView info={info} />}
+          </div>
         </div>
       </div>
     </main>
