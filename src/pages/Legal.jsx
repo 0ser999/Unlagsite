@@ -4,16 +4,16 @@ import { currentLang, t } from '../i18n/index.jsx';
 
 /* ---- Fill these in. They appear on the three legal pages. ---- */
 const OWNER = {
-  name: '[Nom et prénom, ou nom de la société]',
+  name: 'Hachem Hanouna',
   status: '[Entrepreneur individuel (micro-entreprise) / SAS…]',
   address: '[Adresse postale complète]',
   siret: '[Numéro SIRET]',
   email: '[contact@unlag.pro]',
-  director: '[Nom du directeur de la publication]',
+  director: 'Hachem Hanouna',
   mediator: '[Nom et site du médiateur de la consommation]',
 };
 const HOST = 'Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, USA (vercel.com)';
-const UPDATED = '2026-11-02';
+const UPDATED = '2026-11-03';
 const PRICES = 'Premium 14,99 €, Ultimate 29,99 €';
 
 /* Legal texts exist in English and French. Other languages read the English version. */
