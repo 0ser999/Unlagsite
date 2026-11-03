@@ -257,6 +257,11 @@ export default {
     }
   },
   account: {
+    tweaksOf: "réglages sur {total}",
+    tweaksLead: "Ce que {plan} ouvre dans l’application sur votre PC",
+    included: "Inclus",
+    withPlan: "Avec {plan}",
+    allIncluded: "Toutes les pages et tous les réglages sont inclus",
     tabs: { overview: 'Vue d’ensemble', settings: 'Réglages', feedback: 'Avis' },
     providers: { email: 'Email', google: 'Google', discord: 'Discord' },
     still: 'Toujours {plan}', updated: 'Mis à jour', yourPlan: 'Votre offre', holder: 'Titulaire', pc: 'PC', account: 'Compte',

@@ -366,6 +366,11 @@ export default {
     }
   },
   account: {
+    tweaksOf: "of {total} tweaks",
+    tweaksLead: "What {plan} opens in the app on your PC",
+    included: "Included",
+    withPlan: "With {plan}",
+    allIncluded: "Every page and tweak is included",
     tabs: { overview: 'Overview', settings: 'Settings', feedback: 'Feedback' },
     providers: { email: 'Email', google: 'Google', discord: 'Discord' },
     still: 'Still {plan}',

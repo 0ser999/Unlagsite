@@ -180,6 +180,11 @@ export default {
     }
   },
   account: {
+    tweaksOf: "/ {total} ayar",
+    tweaksLead: "{plan} planının bilgisayarında uygulamada açtıkları",
+    included: "Dahil",
+    withPlan: "{plan} ile",
+    allIncluded: "Tüm sayfalar ve ayarlar dahil",
     tabs: { overview: 'Genel bakış', settings: 'Ayarlar', feedback: 'Geri bildirim' }, providers: { email: 'E-posta', google: 'Google', discord: 'Discord' },
     still: 'Hâlâ {plan}', updated: 'Güncellendi', yourPlan: 'Planın', holder: 'Sahibi', pc: 'PC', account: 'Hesap', anyPc: 'Herhangi bir PC', notClaimed: 'Henüz bağlanmadı',
     noteFree: 'Free, giriş yaptığın her bilgisayarda çalışır', noteTied: 'Bu plan tek bir bilgisayara bağlı. Başka bir bilgisayarda uygulama Free’ye döner',

@@ -180,6 +180,11 @@ export default {
     }
   },
   account: {
+    tweaksOf: "из {total} настроек",
+    tweaksLead: "Что {plan} открывает в приложении на вашем ПК",
+    included: "Включено",
+    withPlan: "С планом {plan}",
+    allIncluded: "Все страницы и настройки включены",
     tabs: { overview: 'Обзор', settings: 'Настройки', feedback: 'Отзыв' }, providers: { email: 'Почта', google: 'Google', discord: 'Discord' },
     still: 'По-прежнему {plan}', updated: 'Обновлено', yourPlan: 'Ваш тариф', holder: 'Владелец', pc: 'ПК', account: 'Аккаунт', anyPc: 'Любой ПК', notClaimed: 'Ещё не привязан',
     noteFree: 'Free работает на любом ПК, где вы входите', noteTied: 'Этот тариф привязан к одному ПК. На другом ПК приложение вернётся к Free',

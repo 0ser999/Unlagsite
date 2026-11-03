@@ -180,6 +180,11 @@ export default {
     }
   },
   account: {
+    tweaksOf: "von {total} Tweaks",
+    tweaksLead: "Was {plan} in der App auf deinem PC freischaltet",
+    included: "Enthalten",
+    withPlan: "Mit {plan}",
+    allIncluded: "Alle Seiten und Tweaks sind enthalten",
     tabs: { overview: 'Übersicht', settings: 'Einstellungen', feedback: 'Feedback' }, providers: { email: 'E-Mail', google: 'Google', discord: 'Discord' },
     still: 'Weiterhin {plan}', updated: 'Aktualisiert', yourPlan: 'Dein Plan', holder: 'Inhaber', pc: 'PC', account: 'Konto', anyPc: 'Jeder PC', notClaimed: 'Noch nicht verknüpft',
     noteFree: 'Free funktioniert auf jedem PC, an dem du dich anmeldest', noteTied: 'Dieser Plan ist an einen PC gebunden. Auf jedem anderen PC fällt die App auf Free zurück',

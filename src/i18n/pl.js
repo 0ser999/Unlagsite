@@ -180,6 +180,11 @@ export default {
     }
   },
   account: {
+    tweaksOf: "z {total} ustawień",
+    tweaksLead: "Co {plan} otwiera w aplikacji na twoim PC",
+    included: "W planie",
+    withPlan: "Z planem {plan}",
+    allIncluded: "Wszystkie strony i ustawienia są w planie",
     tabs: { overview: 'Przegląd', settings: 'Ustawienia', feedback: 'Opinia' }, providers: { email: 'E-mail', google: 'Google', discord: 'Discord' },
     still: 'Nadal {plan}', updated: 'Zaktualizowano', yourPlan: 'Twój plan', holder: 'Właściciel', pc: 'PC', account: 'Konto', anyPc: 'Dowolny PC', notClaimed: 'Jeszcze nieprzypisany',
     noteFree: 'Free działa na każdym komputerze, na którym się zalogujesz', noteTied: 'Ten plan jest przypisany do jednego komputera. Na innym aplikacja wraca do Free',

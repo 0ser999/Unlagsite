@@ -11,7 +11,7 @@ import { useAuth } from '../lib/auth.jsx';
 import {
   AI_LIMIT, hasPlan, authMessage, changePassword, readQuota, resendConfirmation, submitReview, updateDisplayName,
 } from '../lib/account.js';
-import { PLANS, PLAN_MATRIX, DOWNLOAD_URL, VERSION } from '../data.js';
+import { PLANS, PLAN_MATRIX, PLAN_TWEAKS, DOWNLOAD_URL, VERSION } from '../data.js';
 import { t, currentLang } from '../i18n/index.jsx';
 
 const provider = (p) => { const name = t(`account.providers.${p}`); return name.startsWith('account.') ? p : name; };
@@ -88,8 +88,8 @@ function LicenseCard({ info, hwid, refresh }) {
             <span className="lic-v mono">{!paid ? t('account.anyPc') : hwid ? shortId(hwid) : t('account.notClaimed')}</span>
           </div>
           <div>
-            <span className="lic-k">{t('account.account')}</span>
-            <span className="lic-v mono">{shortId(info.uid.replace(/-/g, ''))}</span>
+            <span className="lic-k">{t('account.memberFor')}</span>
+            <span className="lic-v">{new Date(info.createdAt).toLocaleDateString(currentLang(), { day: 'numeric', month: 'short', year: 'numeric' })}</span>
           </div>
         </div>
       </div>
@@ -149,15 +149,9 @@ function QuotaStat({ info }) {
 }
 
 function Stats({ info }) {
-  const days = Math.max(1, Math.round((Date.now() - Date.parse(info.createdAt)) / 86400000));
   return (
     <div className="stats">
       <QuotaStat info={info} />
-      <div className="stat">
-        <div className="stat-label">{t('account.memberFor')}</div>
-        <div className="stat-figure mono">{days}<span> {days === 1 ? t('account.day') : t('account.days')}</span></div>
-        <div className="stat-note">{t('account.since', { date: new Date(info.createdAt).toLocaleDateString(currentLang(), { day: 'numeric', month: 'long', year: 'numeric' }) })}</div>
-      </div>
       <div className="stat">
         <div className="stat-label">{t('common.email')}</div>
         <div className={`stat-state${info.emailVerified ? ' is-ok' : ' is-warn'}`}>
@@ -169,30 +163,57 @@ function Stats({ info }) {
   );
 }
 
+// Pages and perks of the plan matrix. The three tweak rows are shown by the bar instead.
+const PAGE_ROWS = PLAN_MATRIX.map(([page, min], i) => ({ page, min, i })).filter(({ page }) => !['Essential tweaks', 'Moderate tweaks', 'Advanced tweaks'].includes(page));
+const TIERS = ['free', 'premium', 'ultra'];
+const tierSize = (id, n) => PLAN_TWEAKS[id] - (n ? PLAN_TWEAKS[TIERS[n - 1]] : 0);
+
+function TweakBar({ plan }) {
+  const rank = TIERS.indexOf(plan);
+  return (
+    <div className="tier">
+      <div className="tier-figure"><b className="mono">{PLAN_TWEAKS[plan]}</b><span>{t('account.tweaksOf', { total: PLAN_TWEAKS.ultra })}</span></div>
+      <div className="tier-bar" aria-hidden="true">
+        {TIERS.map((id, n) => <span key={id} className={rank >= n ? 'is-on' : ''} style={{ flexGrow: tierSize(id, n) }} />)}
+      </div>
+      <div className="tier-legend mono" aria-hidden="true">
+        {TIERS.map((id, n) => <span key={id} style={{ flexGrow: tierSize(id, n) }} className={id === plan ? 'is-current' : ''}>{planName(id)}</span>)}
+      </div>
+    </div>
+  );
+}
 
 function Unlocks({ info }) {
   const next = PLANS.find((p) => !hasPlan(info, p.id));
+  const label = (row) => t('plans.matrix')[row.i] || row.page;
+  const open = PAGE_ROWS.filter((r) => hasPlan(info, r.min));
+  const locked = PAGE_ROWS.filter((r) => !hasPlan(info, r.min));
   return (
     <section className="dash-block">
       <div className="dash-block-head">
         <div>
           <h2>{t('account.inApp')}</h2>
-          <p>{t('account.pagesOpen', { plan: planName(info.plan) })}</p>
+          <p>{t('account.tweaksLead', { plan: planName(info.plan) })}</p>
         </div>
         {next && <Link to={`/checkout?plan=${next.id}`} className="btn btn-primary btn-sm">{t('plans.get', { plan: planName(next.id) })}</Link>}
       </div>
-      <ul className="unlocks">
-        {PLAN_MATRIX.map(([page, min], i) => {
-          const open = hasPlan(info, min);
-          return (
-            <li key={page} className={open ? 'is-open' : 'is-locked'}>
-              {open ? <Check size={16} strokeWidth={1.5} /> : <Lock size={16} strokeWidth={1.5} />}
-              <span className="unlock-name">{t('plans.matrix')[i] || page}</span>
-              {!open && <span className="unlock-plan mono">{planName(min)}</span>}
-            </li>
-          );
-        })}
-      </ul>
+      <TweakBar plan={info.plan} />
+      <div className="unlock-cols">
+        <div>
+          <h3 className="unlock-head">{locked.length ? t('account.included') : t('account.allIncluded')}</h3>
+          <ul className="unlock-list">
+            {open.map((r) => <li key={r.page}><Check size={16} strokeWidth={1.5} /><span>{label(r)}</span></li>)}
+          </ul>
+        </div>
+        {locked.length > 0 && (
+          <div>
+            <h3 className="unlock-head">{t('account.withPlan', { plan: [...new Set(locked.map((r) => planName(r.min)))].join(' · ') })}</h3>
+            <ul className="unlock-list is-locked">
+              {locked.map((r) => <li key={r.page}><Lock size={16} strokeWidth={1.5} /><span>{label(r)}</span><em className="mono">{planName(r.min)}</em></li>)}
+            </ul>
+          </div>
+        )}
+      </div>
     </section>
   );
 }
