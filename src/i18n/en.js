@@ -14,7 +14,7 @@ export default {
     terms: 'Terms of service · Unlag',
     privacy: 'Privacy policy · Unlag',
     legal: 'Legal notice · Unlag',
-    notFound: 'Page not found · Unlag',
+    notFound: 'Page not found · Unlag', checkout: "Checkout · Unlag",
   },
   nav: {
     features: 'Features',
@@ -191,7 +191,7 @@ export default {
     download: 'Download',
     get: 'Get {plan}',
     free: { line: 'Clean up Windows and take back your privacy', pages: ['Home', 'General', 'Privacy', 'Cleaner', 'Debloat', 'Backups'], perks: ['34 essential tweaks'] },
-    premium: { line: 'Lower latency in games and online', pages: ['Performance', 'Game Mode', 'Network'], perks: ['103 tweaks, moderate ones included', 'Priority support'] },
+    premium: { line: 'Lower latency in games and online', pages: ['Performance', 'Game Mode', 'Network'], perks: ['143 tweaks, moderate ones included', 'Priority support'] },
     ultra: { line: 'Tune the motherboard firmware too', pages: ['Unlock BIOS tweaks'], perks: ['Every tweak, advanced ones included', 'Priority access to new tweaks', 'Personal help to set up your PC'] },
     matrix: ['Home', 'General', 'Privacy', 'Cleaner', 'Debloat', 'Backups', 'Performance', 'Game Mode', 'Network', 'BIOS', 'Essential tweaks', 'Moderate tweaks', 'Advanced tweaks', 'Priority support', 'Priority access to new tweaks', 'Personal help'],
   },
@@ -337,7 +337,7 @@ export default {
     reviewFailed: 'Your review could not be sent. Try again later',
   },
   checkout: {
-    "title": "Get {plan}",
+    "switchLabel": "Plan", "title": "Get {plan}",
     "lead": "One payment, no subscription. Your plan is active a few seconds after paying.",
     "order": "Your order",
     "total": "Total",

@@ -138,6 +138,7 @@ const TITLES = {
   '/terms': 'meta.terms',
   '/privacy': 'meta.privacy',
   '/legal': 'meta.legal',
+  '/checkout': 'meta.checkout',
 };
 
 // Smooth scrolling on every page. It stays on with Windows animations turned off, which
@@ -160,7 +161,7 @@ export default function Layout() {
   useReveal(pathname);
 
   useEffect(() => {
-    document.title = t(TITLES[pathname] ?? 'meta.notFound');
+    document.title = t(TITLES[pathname.replace(/(.)\/+$/, '$1')] ?? 'meta.notFound');
     const target = hash && document.getElementById(hash.slice(1));
     if (lenis) lenis.scrollTo(target || 0, { offset: target ? -24 : 0, immediate: true, force: true });
     else if (target) target.scrollIntoView();

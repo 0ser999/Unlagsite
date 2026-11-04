@@ -3,7 +3,7 @@ export default {
     home: "Unlag · Windows'taki gecikmeyi yok edin", features: 'Özellikler · Unlag', how: 'Nasıl çalışır · Unlag', pricing: 'Fiyatlar · Unlag',
     faq: 'SSS · Unlag', download: 'İndir · Unlag', signIn: 'Giriş yap · Unlag', signUp: 'Hesap oluştur · Unlag',
     reset: 'Şifreyi sıfırla · Unlag', account: 'Hesap · Unlag', terms: 'Hizmet şartları · Unlag', privacy: 'Gizlilik · Unlag',
-    legal: 'Yasal bilgiler · Unlag', notFound: 'Sayfa bulunamadı · Unlag',
+    legal: 'Yasal bilgiler · Unlag', notFound: 'Sayfa bulunamadı · Unlag', checkout: "Ödeme · Unlag",
   },
   nav: { features: 'Özellikler', how: 'Nasıl çalışır', pricing: 'Fiyatlar', faq: 'SSS', download: 'İndir', signIn: 'Giriş yap', menu: 'Menü', main: 'Ana', account: 'Hesap' },
   footer: {
@@ -74,7 +74,7 @@ export default {
     names: { free: 'Free', premium: 'Premium', ultra: 'Ultimate' }, forGaming: 'Oyun için', forever: 'süresiz', oneTime: 'tek seferlik · 1 PC',
     everythingIn: "{plan} planındaki her şey", assistant: 'Asistan, günde {n} mesaj', yourPlan: 'Planın', download: 'İndir', get: "{plan} al",
     free: { line: "Windows'u temizle ve gizliliğini geri al", pages: ['Ana sayfa', 'Genel', 'Gizlilik', 'Temizleyici', 'Debloat', 'Yedekler'], perks: ['34 temel ayar'] },
-    premium: { line: 'Oyunlarda ve internette daha az gecikme', pages: ['Performans', 'Oyun modu', 'Ağ'], perks: ['103 ayar, orta seviyeler dahil', 'Öncelikli destek'] },
+    premium: { line: 'Oyunlarda ve internette daha az gecikme', pages: ['Performans', 'Oyun modu', 'Ağ'], perks: ['143 ayar, orta seviyeler dahil', 'Öncelikli destek'] },
     ultra: { line: 'Anakart firmware’ini de ayarla', pages: ['BIOS ayarlarının kilidi açık'], perks: ['Her ayar, ileri seviyeler dahil', 'Yeni ayarlara öncelikli erişim', 'Bilgisayarını ayarlamak için kişisel yardım'] },
     matrix: ['Ana sayfa', 'Genel', 'Gizlilik', 'Temizleyici', 'Debloat', 'Yedekler', 'Performans', 'Oyun modu', 'Ağ', 'BIOS', 'Temel ayarlar', 'Orta ayarlar', 'İleri ayarlar', 'Öncelikli destek', 'Yeni ayarlara öncelikli erişim', 'Kişisel yardım'],
   },
@@ -151,7 +151,7 @@ export default {
     reviewLimit: 'Bugün zaten birkaç yorum gönderdin. Yarın tekrar dene', reviewFailed: 'Yorumun gönderilemedi. Daha sonra tekrar dene',
   },
   checkout: {
-    "title": "{plan} al",
+    "switchLabel": "Plan", "title": "{plan} al",
     "lead": "Tek ödeme, abonelik yok. Planın ödemeden birkaç saniye sonra aktif olur.",
     "order": "Siparişin",
     "total": "Toplam",

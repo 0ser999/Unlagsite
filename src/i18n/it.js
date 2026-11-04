@@ -3,7 +3,7 @@ export default {
     home: 'Unlag · Elimina il lag da Windows', features: 'Funzioni · Unlag', how: 'Come funziona · Unlag', pricing: 'Prezzi · Unlag',
     faq: 'Domande frequenti · Unlag', download: 'Download · Unlag', signIn: 'Accedi · Unlag', signUp: 'Crea un account · Unlag',
     reset: 'Reimposta la password · Unlag', account: 'Account · Unlag', terms: 'Termini di servizio · Unlag', privacy: 'Privacy · Unlag',
-    legal: 'Note legali · Unlag', notFound: 'Pagina non trovata · Unlag',
+    legal: 'Note legali · Unlag', notFound: 'Pagina non trovata · Unlag', checkout: "Pagamento · Unlag",
   },
   nav: { features: 'Funzioni', how: 'Come funziona', pricing: 'Prezzi', faq: 'FAQ', download: 'Download', signIn: 'Accedi', menu: 'Menu', main: 'Principale', account: 'Account' },
   footer: {
@@ -74,7 +74,7 @@ export default {
     names: { free: 'Free', premium: 'Premium', ultra: 'Ultimate' }, forGaming: 'Per il gaming', forever: 'per sempre', oneTime: 'pagamento unico · 1 PC',
     everythingIn: 'Tutto quello di {plan}', assistant: 'Assistente, {n} messaggi al giorno', yourPlan: 'Il tuo piano', download: 'Scarica', get: 'Prendi {plan}',
     free: { line: 'Ripulisci Windows e riprenditi la privacy', pages: ['Home', 'Generale', 'Privacy', 'Pulizia', 'Debloat', 'Backup'], perks: ['34 ottimizzazioni essenziali'] },
-    premium: { line: 'Meno latenza nei giochi e online', pages: ['Prestazioni', 'Modalità gioco', 'Rete'], perks: ['103 ottimizzazioni, moderate incluse', 'Assistenza prioritaria'] },
+    premium: { line: 'Meno latenza nei giochi e online', pages: ['Prestazioni', 'Modalità gioco', 'Rete'], perks: ['143 ottimizzazioni, moderate incluse', 'Assistenza prioritaria'] },
     ultra: { line: 'Ottimizza anche il firmware della scheda madre', pages: ['Ottimizzazioni BIOS sbloccate'], perks: ['Tutte le ottimizzazioni, avanzate incluse', 'Accesso prioritario alle nuove ottimizzazioni', 'Aiuto personale per configurare il PC'] },
     matrix: ['Home', 'Generale', 'Privacy', 'Pulizia', 'Debloat', 'Backup', 'Prestazioni', 'Modalità gioco', 'Rete', 'BIOS', 'Ottimizzazioni essenziali', 'Ottimizzazioni moderate', 'Ottimizzazioni avanzate', 'Assistenza prioritaria', 'Accesso prioritario alle nuove ottimizzazioni', 'Aiuto personale'],
   },
@@ -151,7 +151,7 @@ export default {
     reviewLimit: 'Hai già inviato diverse recensioni oggi. Riprova domani', reviewFailed: 'Non è stato possibile inviare la recensione. Riprova più tardi',
   },
   checkout: {
-    "title": "Ottieni {plan}",
+    "switchLabel": "Piano", "title": "Ottieni {plan}",
     "lead": "Un solo pagamento, nessun abbonamento. Il piano è attivo pochi secondi dopo il pagamento.",
     "order": "Il tuo ordine",
     "total": "Totale",

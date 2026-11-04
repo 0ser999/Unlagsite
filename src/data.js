@@ -154,7 +154,7 @@ export const PLANS = [
     line: 'Lower latency in games and online',
     inherits: 'Free',
     pages: ['Performance', 'Game Mode', 'Network'],
-    perks: ['103 tweaks, moderate ones included', 'Priority support'],
+    perks: ['143 tweaks, moderate ones included', 'Priority support'],
     ai: 7,
   },
   {

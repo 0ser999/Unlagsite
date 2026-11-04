@@ -3,7 +3,7 @@ export default {
     home: 'Unlag · Schluss mit Lag unter Windows', features: 'Funktionen · Unlag', how: 'So funktioniert es · Unlag', pricing: 'Preise · Unlag',
     faq: 'FAQ · Unlag', download: 'Download · Unlag', signIn: 'Anmelden · Unlag', signUp: 'Konto erstellen · Unlag',
     reset: 'Passwort zurücksetzen · Unlag', account: 'Konto · Unlag', terms: 'Nutzungsbedingungen · Unlag', privacy: 'Datenschutz · Unlag',
-    legal: 'Impressum · Unlag', notFound: 'Seite nicht gefunden · Unlag',
+    legal: 'Impressum · Unlag', notFound: 'Seite nicht gefunden · Unlag', checkout: "Kasse · Unlag",
   },
   nav: { features: 'Funktionen', how: 'So funktioniert es', pricing: 'Preise', faq: 'FAQ', download: 'Download', signIn: 'Anmelden', menu: 'Menü', main: 'Hauptmenü', account: 'Konto' },
   footer: {
@@ -74,7 +74,7 @@ export default {
     names: { free: 'Free', premium: 'Premium', ultra: 'Ultimate' }, forGaming: 'Fürs Gaming', forever: 'für immer', oneTime: 'Einmalzahlung · 1 PC',
     everythingIn: 'Alles aus {plan}', assistant: 'Assistent, {n} Nachrichten pro Tag', yourPlan: 'Dein Plan', download: 'Herunterladen', get: '{plan} holen',
     free: { line: 'Windows aufräumen und deine Privatsphäre zurückholen', pages: ['Start', 'Allgemein', 'Datenschutz', 'Bereinigung', 'Debloat', 'Sicherungen'], perks: ['34 wichtige Tweaks'] },
-    premium: { line: 'Weniger Latenz in Spielen und online', pages: ['Leistung', 'Spielmodus', 'Netzwerk'], perks: ['103 Tweaks, mittlere inklusive', 'Bevorzugter Support'] },
+    premium: { line: 'Weniger Latenz in Spielen und online', pages: ['Leistung', 'Spielmodus', 'Netzwerk'], perks: ['143 Tweaks, mittlere inklusive', 'Bevorzugter Support'] },
     ultra: { line: 'Auch die Mainboard-Firmware optimieren', pages: ['BIOS-Tweaks freigeschaltet'], perks: ['Jeder Tweak, fortgeschrittene inklusive', 'Bevorzugter Zugang zu neuen Tweaks', 'Persönliche Hilfe bei der PC-Einrichtung'] },
     matrix: ['Start', 'Allgemein', 'Datenschutz', 'Bereinigung', 'Debloat', 'Sicherungen', 'Leistung', 'Spielmodus', 'Netzwerk', 'BIOS', 'Wichtige Tweaks', 'Mittlere Tweaks', 'Fortgeschrittene Tweaks', 'Bevorzugter Support', 'Bevorzugter Zugang zu neuen Tweaks', 'Persönliche Hilfe'],
   },
@@ -151,7 +151,7 @@ export default {
     reviewLimit: 'Du hast heute schon mehrere Bewertungen gesendet. Versuche es morgen', reviewFailed: 'Deine Bewertung konnte nicht gesendet werden. Versuche es später',
   },
   checkout: {
-    "title": "{plan} holen",
+    "switchLabel": "Plan", "title": "{plan} holen",
     "lead": "Eine Zahlung, kein Abo. Dein Plan ist wenige Sekunden nach der Zahlung aktiv.",
     "order": "Deine Bestellung",
     "total": "Gesamt",

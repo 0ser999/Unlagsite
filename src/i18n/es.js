@@ -3,7 +3,7 @@ export default {
     home: 'Unlag · Elimina el lag de Windows', features: 'Funciones · Unlag', how: 'Cómo funciona · Unlag', pricing: 'Precios · Unlag',
     faq: 'Preguntas frecuentes · Unlag', download: 'Descargar · Unlag', signIn: 'Iniciar sesión · Unlag', signUp: 'Crear una cuenta · Unlag',
     reset: 'Restablecer contraseña · Unlag', account: 'Cuenta · Unlag', terms: 'Términos del servicio · Unlag', privacy: 'Privacidad · Unlag',
-    legal: 'Aviso legal · Unlag', notFound: 'Página no encontrada · Unlag',
+    legal: 'Aviso legal · Unlag', notFound: 'Página no encontrada · Unlag', checkout: "Pago · Unlag",
   },
   nav: { features: 'Funciones', how: 'Cómo funciona', pricing: 'Precios', faq: 'FAQ', download: 'Descargar', signIn: 'Iniciar sesión', menu: 'Menú', main: 'Principal', account: 'Cuenta' },
   footer: {
@@ -74,7 +74,7 @@ export default {
     names: { free: 'Free', premium: 'Premium', ultra: 'Ultimate' }, forGaming: 'Para jugar', forever: 'para siempre', oneTime: 'pago único · 1 PC',
     everythingIn: 'Todo lo de {plan}', assistant: 'Asistente, {n} mensajes al día', yourPlan: 'Tu plan', download: 'Descargar', get: 'Obtener {plan}',
     free: { line: 'Limpia Windows y recupera tu privacidad', pages: ['Inicio', 'General', 'Privacidad', 'Limpieza', 'Debloat', 'Copias'], perks: ['34 ajustes esenciales'] },
-    premium: { line: 'Menos latencia en juegos y en línea', pages: ['Rendimiento', 'Modo juego', 'Red'], perks: ['103 ajustes, moderados incluidos', 'Soporte prioritario'] },
+    premium: { line: 'Menos latencia en juegos y en línea', pages: ['Rendimiento', 'Modo juego', 'Red'], perks: ['143 ajustes, moderados incluidos', 'Soporte prioritario'] },
     ultra: { line: 'Ajusta también el firmware de la placa base', pages: ['Ajustes de BIOS desbloqueados'], perks: ['Todos los ajustes, avanzados incluidos', 'Acceso prioritario a nuevos ajustes', 'Ayuda personal para configurar tu PC'] },
     matrix: ['Inicio', 'General', 'Privacidad', 'Limpieza', 'Debloat', 'Copias', 'Rendimiento', 'Modo juego', 'Red', 'BIOS', 'Ajustes esenciales', 'Ajustes moderados', 'Ajustes avanzados', 'Soporte prioritario', 'Acceso prioritario a nuevos ajustes', 'Ayuda personal'],
   },
@@ -151,7 +151,7 @@ export default {
     reviewLimit: 'Ya enviaste varias opiniones hoy. Inténtalo mañana', reviewFailed: 'No se pudo enviar tu opinión. Inténtalo más tarde',
   },
   checkout: {
-    "title": "Obtener {plan}",
+    "switchLabel": "Plan", "title": "Obtener {plan}",
     "lead": "Un solo pago, sin suscripción. Tu plan se activa unos segundos después de pagar.",
     "order": "Tu pedido",
     "total": "Total",

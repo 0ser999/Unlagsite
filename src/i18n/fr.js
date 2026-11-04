@@ -13,7 +13,7 @@ export default {
     terms: 'Conditions générales · Unlag',
     privacy: 'Confidentialité · Unlag',
     legal: 'Mentions légales · Unlag',
-    notFound: 'Page introuvable · Unlag',
+    notFound: 'Page introuvable · Unlag', checkout: "Paiement · Unlag",
   },
   nav: { features: 'Fonctionnalités', how: 'Fonctionnement', pricing: 'Tarifs', faq: 'FAQ', download: 'Télécharger', signIn: 'Connexion', menu: 'Menu', main: 'Principal', account: 'Compte' },
   footer: {
@@ -127,7 +127,7 @@ export default {
     everythingIn: 'Tout ce qu’il y a dans {plan}', assistant: 'Assistant, {n} messages par jour',
     yourPlan: 'Votre offre', download: 'Télécharger', get: 'Prendre {plan}',
     free: { line: 'Nettoyez Windows et reprenez votre vie privée', pages: ['Accueil', 'Général', 'Confidentialité', 'Nettoyage', 'Debloat', 'Sauvegardes'], perks: ['34 réglages essentiels'] },
-    premium: { line: 'Moins de latence en jeu et en ligne', pages: ['Performances', 'Mode jeu', 'Réseau'], perks: ['103 réglages, modérés compris', 'Support prioritaire'] },
+    premium: { line: 'Moins de latence en jeu et en ligne', pages: ['Performances', 'Mode jeu', 'Réseau'], perks: ['143 réglages, modérés compris', 'Support prioritaire'] },
     ultra: { line: 'Réglez aussi le firmware de la carte mère', pages: ['Réglages du BIOS débloqués'], perks: ['Tous les réglages, avancés compris', 'Accès prioritaire aux nouveaux réglages', 'Aide personnelle pour régler votre PC'] },
     matrix: ['Accueil', 'Général', 'Confidentialité', 'Nettoyage', 'Debloat', 'Sauvegardes', 'Performances', 'Mode jeu', 'Réseau', 'BIOS', 'Réglages essentiels', 'Réglages modérés', 'Réglages avancés', 'Support prioritaire', 'Accès prioritaire aux nouveaux réglages', 'Aide personnelle'],
   },
@@ -228,7 +228,7 @@ export default {
     reviewFailed: 'Votre avis n’a pas pu être envoyé. Réessayez plus tard',
   },
   checkout: {
-    "title": "Obtenir {plan}",
+    "switchLabel": "Plan", "title": "Obtenir {plan}",
     "lead": "Un seul paiement, sans abonnement. Votre plan est actif quelques secondes après le paiement.",
     "order": "Votre commande",
     "total": "Total",

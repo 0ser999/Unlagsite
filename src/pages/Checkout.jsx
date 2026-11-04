@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, Navigate, useSearchParams } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { Check, Lock, Loader2, ArrowRight, Download, ShieldCheck } from 'lucide-react';
 import { loadStripe } from '@stripe/stripe-js';
 import { PageHeader } from '../components/Blocks.jsx';
@@ -41,10 +41,15 @@ const APPEARANCE = {
     '.Label': { color: '#a3a9b8', fontWeight: '500', fontSize: '13px', marginBottom: '8px' },
     '.Tab': { backgroundColor: '#11141c', border: '1px solid rgba(238, 240, 245, 0.12)', boxShadow: 'none' },
     '.Tab:hover': { borderColor: 'rgba(238, 240, 245, 0.22)', color: '#eef0f5' },
-    '.Tab--selected': { backgroundColor: '#1a1e28', borderColor: '#5b8cff', boxShadow: '0 0 0 1px #5b8cff' },
+    '.Tab--selected': { backgroundColor: '#1a1e28', borderColor: '#5b8cff', boxShadow: '0 0 0 1px #5b8cff', color: '#eef0f5' },
+    '.Tab--selected:hover': { color: '#eef0f5' },
+    '.TabLabel': { fontWeight: '500' },
+    '.TabIcon--selected': { fill: '#eef0f5', color: '#eef0f5' },
     '.Tab--selected:focus': { boxShadow: '0 0 0 1px #5b8cff, 0 0 0 4px rgba(91, 140, 255, 0.18)' },
     '.Block': { backgroundColor: '#11141c', borderColor: 'rgba(238, 240, 245, 0.08)', boxShadow: 'none' },
     '.Error': { fontSize: '13px' },
+    '.Input:disabled': { color: '#a3a9b8' },
+    '.PickerItem': { backgroundColor: '#11141c', borderColor: 'rgba(238, 240, 245, 0.12)', boxShadow: 'none' },
   },
 };
 const FONTS = [{ cssSrc: 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap' }];
@@ -52,6 +57,7 @@ const FONTS = [{ cssSrc: 'https://fonts.googleapis.com/css2?family=Poppins:wght@
 // Same prices as api/_shared.js PRICE, for the summary lines; the server decides what is charged.
 const FULL = { free: 0, premium: 1499, ultra: 2999 };
 const ERRORS = ['signin', 'unverified', 'owned', 'invalid', 'unavailable'];
+const RANK = { free: 0, premium: 1, ultra: 2 };
 const euros = (cents) => `${(cents / 100).toFixed(2).replace('.', ',')} €`;
 const planName = (id) => t(`plans.names.${id}`);
 
@@ -67,13 +73,31 @@ async function createIntent(plan) {
   return body;
 }
 
-function Summary({ plan, order, email }) {
+function PlanSwitch({ plan, current }) {
+  const navigate = useNavigate();
+  const choices = ['premium', 'ultra'].filter((id) => id === plan || RANK[id] > RANK[current]);
+  if (choices.length < 2) return null;
+  return (
+    <div className="co-switch" role="radiogroup" aria-label={t('checkout.switchLabel')}>
+      {choices.map((id) => (
+        <button key={id} type="button" role="radio" aria-checked={id === plan} className={id === plan ? 'is-on' : ''}
+          onClick={() => id !== plan && navigate(`/checkout?plan=${id}`, { replace: true })}>
+          <span>{planName(id)}</span>
+          <span className="mono">{euros(FULL[id] - (FULL[current] || 0))}</span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function Summary({ plan, order, email, current }) {
   const p = PLANS.find((x) => x.id === plan);
   const upgrade = order?.from && order.from !== 'free';
   return (
     <aside className={`co-summary co-${plan}`}>
       <div className="co-summary-top">
         <span className="co-eyebrow mono">{t('checkout.order')}</span>
+        <PlanSwitch plan={plan} current={current} />
         <h2>unlag {planName(plan)}</h2>
         <p>{t(`plans.${plan}.line`)}</p>
       </div>
@@ -94,7 +118,7 @@ function Summary({ plan, order, email }) {
   );
 }
 
-function PaymentForm({ order, plan, onPaid }) {
+function PaymentForm({ order, plan, email, onPaid }) {
   const mount = useRef(null);
   const [stripe, setStripe] = useState(null);
   const elements = useRef(null);
@@ -109,7 +133,12 @@ function PaymentForm({ order, plan, onPaid }) {
       if (!alive || !s) return;
       setStripe(s);
       elements.current = s.elements({ clientSecret: order.clientSecret, appearance: APPEARANCE, fonts: FONTS, locale: currentLang() });
-      element = elements.current.create('payment', { layout: { type: 'tabs' }, business: { name: 'unlag' } });
+      // The account email is filled in, so Link does not ask for it again.
+      element = elements.current.create('payment', {
+        layout: { type: 'tabs' },
+        business: { name: 'unlag' },
+        defaultValues: email ? { billingDetails: { email } } : undefined,
+      });
       element.on('ready', () => alive && setReady(true));
       element.mount(mount.current);
     }).catch(() => alive && setError(t('checkout.errors.unavailable')));
@@ -225,12 +254,12 @@ export default function Checkout() {
             {error === 'unverified' && <Link to="/account" className="btn btn-secondary btn-sm">{t('checkout.toAccount')}</Link>}
           </div>
         ) : order ? (
-          <PaymentForm order={order} plan={plan} onPaid={() => setPaid(true)} />
+          <PaymentForm order={order} plan={plan} email={info?.email} onPaid={() => setPaid(true)} />
         ) : (
           <div className="co-pay"><div className="co-pay-head"><h2>{t('checkout.payment')}</h2></div><div className="co-skeleton" aria-hidden="true"><i /><i /><span><i /><i /></span></div></div>
         )}
       </div>
-      <Summary plan={plan} order={order} email={info?.email} />
+      <Summary plan={plan} order={order} email={info?.email} current={info?.plan || 'free'} />
     </div>
   );
 

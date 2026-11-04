@@ -3,7 +3,7 @@ export default {
     home: 'Unlag · Tire o lag do Windows', features: 'Recursos · Unlag', how: 'Como funciona · Unlag', pricing: 'Preços · Unlag',
     faq: 'Perguntas frequentes · Unlag', download: 'Download · Unlag', signIn: 'Entrar · Unlag', signUp: 'Criar uma conta · Unlag',
     reset: 'Redefinir senha · Unlag', account: 'Conta · Unlag', terms: 'Termos de serviço · Unlag', privacy: 'Privacidade · Unlag',
-    legal: 'Aviso legal · Unlag', notFound: 'Página não encontrada · Unlag',
+    legal: 'Aviso legal · Unlag', notFound: 'Página não encontrada · Unlag', checkout: "Pagamento · Unlag",
   },
   nav: { features: 'Recursos', how: 'Como funciona', pricing: 'Preços', faq: 'FAQ', download: 'Download', signIn: 'Entrar', menu: 'Menu', main: 'Principal', account: 'Conta' },
   footer: {
@@ -74,7 +74,7 @@ export default {
     names: { free: 'Free', premium: 'Premium', ultra: 'Ultimate' }, forGaming: 'Para jogos', forever: 'para sempre', oneTime: 'pagamento único · 1 PC',
     everythingIn: 'Tudo do {plan}', assistant: 'Assistente, {n} mensagens por dia', yourPlan: 'Seu plano', download: 'Baixar', get: 'Obter {plan}',
     free: { line: 'Limpe o Windows e recupere sua privacidade', pages: ['Início', 'Geral', 'Privacidade', 'Limpeza', 'Debloat', 'Backups'], perks: ['34 ajustes essenciais'] },
-    premium: { line: 'Menos latência nos jogos e online', pages: ['Desempenho', 'Modo jogo', 'Rede'], perks: ['103 ajustes, moderados incluídos', 'Suporte prioritário'] },
+    premium: { line: 'Menos latência nos jogos e online', pages: ['Desempenho', 'Modo jogo', 'Rede'], perks: ['143 ajustes, moderados incluídos', 'Suporte prioritário'] },
     ultra: { line: 'Ajuste também o firmware da placa-mãe', pages: ['Ajustes de BIOS liberados'], perks: ['Todos os ajustes, avançados incluídos', 'Acesso prioritário a novos ajustes', 'Ajuda pessoal para configurar seu PC'] },
     matrix: ['Início', 'Geral', 'Privacidade', 'Limpeza', 'Debloat', 'Backups', 'Desempenho', 'Modo jogo', 'Rede', 'BIOS', 'Ajustes essenciais', 'Ajustes moderados', 'Ajustes avançados', 'Suporte prioritário', 'Acesso prioritário a novos ajustes', 'Ajuda pessoal'],
   },
@@ -151,7 +151,7 @@ export default {
     reviewLimit: 'Você já enviou várias avaliações hoje. Tente amanhã', reviewFailed: 'Não foi possível enviar sua avaliação. Tente mais tarde',
   },
   checkout: {
-    "title": "Obter {plan}",
+    "switchLabel": "Plano", "title": "Obter {plan}",
     "lead": "Um único pagamento, sem assinatura. Seu plano fica ativo segundos após pagar.",
     "order": "Seu pedido",
     "total": "Total",

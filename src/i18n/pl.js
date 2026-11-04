@@ -3,7 +3,7 @@ export default {
     home: 'Unlag · Pozbądź się lagów w Windows', features: 'Funkcje · Unlag', how: 'Jak to działa · Unlag', pricing: 'Cennik · Unlag',
     faq: 'FAQ · Unlag', download: 'Pobierz · Unlag', signIn: 'Logowanie · Unlag', signUp: 'Załóż konto · Unlag',
     reset: 'Resetowanie hasła · Unlag', account: 'Konto · Unlag', terms: 'Regulamin · Unlag', privacy: 'Prywatność · Unlag',
-    legal: 'Informacje prawne · Unlag', notFound: 'Nie znaleziono strony · Unlag',
+    legal: 'Informacje prawne · Unlag', notFound: 'Nie znaleziono strony · Unlag', checkout: "Płatność · Unlag",
   },
   nav: { features: 'Funkcje', how: 'Jak to działa', pricing: 'Cennik', faq: 'FAQ', download: 'Pobierz', signIn: 'Zaloguj się', menu: 'Menu', main: 'Główne', account: 'Konto' },
   footer: {
@@ -74,7 +74,7 @@ export default {
     names: { free: 'Free', premium: 'Premium', ultra: 'Ultimate' }, forGaming: 'Dla graczy', forever: 'na zawsze', oneTime: 'jednorazowo · 1 PC',
     everythingIn: 'Wszystko z {plan}', assistant: 'Asystent, {n} wiadomości dziennie', yourPlan: 'Twój plan', download: 'Pobierz', get: 'Wybierz {plan}',
     free: { line: 'Wyczyść Windows i odzyskaj prywatność', pages: ['Start', 'Ogólne', 'Prywatność', 'Czyszczenie', 'Debloat', 'Kopie'], perks: ['34 kluczowych ustawień'] },
-    premium: { line: 'Mniejsze opóźnienia w grach i online', pages: ['Wydajność', 'Tryb gry', 'Sieć'], perks: ['103 ustawienia, z umiarkowanymi', 'Priorytetowe wsparcie'] },
+    premium: { line: 'Mniejsze opóźnienia w grach i online', pages: ['Wydajność', 'Tryb gry', 'Sieć'], perks: ['143 ustawienia, z umiarkowanymi', 'Priorytetowe wsparcie'] },
     ultra: { line: 'Dostrój też firmware płyty głównej', pages: ['Odblokowane ustawienia BIOS'], perks: ['Wszystkie ustawienia, z zaawansowanymi', 'Priorytetowy dostęp do nowych ustawień', 'Osobista pomoc w konfiguracji komputera'] },
     matrix: ['Start', 'Ogólne', 'Prywatność', 'Czyszczenie', 'Debloat', 'Kopie', 'Wydajność', 'Tryb gry', 'Sieć', 'BIOS', 'Kluczowe ustawienia', 'Umiarkowane ustawienia', 'Zaawansowane ustawienia', 'Priorytetowe wsparcie', 'Priorytetowy dostęp do nowych ustawień', 'Osobista pomoc'],
   },
@@ -151,7 +151,7 @@ export default {
     reviewLimit: 'Wysłałeś już dziś kilka opinii. Spróbuj jutro', reviewFailed: 'Nie udało się wysłać opinii. Spróbuj później',
   },
   checkout: {
-    "title": "Kup {plan}",
+    "switchLabel": "Plan", "title": "Kup {plan}",
     "lead": "Jedna płatność, bez subskrypcji. Plan działa kilka sekund po zapłacie.",
     "order": "Twoje zamówienie",
     "total": "Razem",
