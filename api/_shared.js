@@ -23,9 +23,10 @@ export function stripeClient() {
 
 let admin;
 export function supabaseAdmin() {
-  const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
+  // The repo .env only reaches the build, not the functions, so the public project URL is the fallback.
+  const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || 'https://pajjpqegqkvwacnzcgtm.supabase.co';
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) throw new Error('SUPABASE_SERVICE_ROLE_KEY or VITE_SUPABASE_URL is not set');
+  if (!url || !key) throw new Error('SUPABASE_SERVICE_ROLE_KEY is not set');
   return (admin ||= createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } }));
 }
 
