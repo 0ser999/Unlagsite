@@ -118,6 +118,7 @@ function Footer() {
         </nav>
       </div>
       <div className="wrap foot-base mono">© 2026 Unlag</div>
+      <div className="foot-mark" aria-hidden="true">Unlag</div>
     </footer>
   );
 }

@@ -358,6 +358,9 @@ a.cat:hover .cat-bar span { background: var(--text-2); }
 .foot-cols a { font-size: 14px; color: var(--text-2); transition: color var(--fast) var(--ease); }
 .foot-cols a:hover { color: var(--text); }
 .foot-base { margin-top: 40px; font-size: 12px; }
+.footer { overflow: hidden; padding-bottom: 0; }
+/* Big brand word under the footer, fading into the page and cropped at the bottom edge. */
+.foot-mark { margin-top: 32px; margin-bottom: -0.2em; text-align: center; font-family: var(--font); font-weight: 700; font-size: clamp(88px, 25vw, 400px); line-height: 0.82; letter-spacing: -0.06em; white-space: nowrap; user-select: none; pointer-events: none; background: linear-gradient(180deg, rgba(238, 240, 245, 0.13) 0%, rgba(91, 140, 255, 0.07) 55%, rgba(238, 240, 245, 0) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
 /* Nav account */
 .nav-right { margin-left: auto; display: flex; align-items: center; gap: 20px; }

@@ -73,7 +73,7 @@ export default {
   plans: {
     names: { free: 'Free', premium: 'Premium', ultra: 'Ultimate' }, forGaming: 'Oyun için', forever: 'süresiz', oneTime: 'tek seferlik · 1 PC',
     everythingIn: "{plan} planındaki her şey", assistant: 'Asistan, günde {n} mesaj', yourPlan: 'Planın', download: 'İndir', get: "{plan} al",
-    free: { line: "Windows'u temizle ve gizliliğini geri al", pages: ['Ana sayfa', 'Genel', 'Gizlilik', 'Temizleyici', 'Debloat', 'Yedekler'], perks: ['30 temel ayar'] },
+    free: { line: "Windows'u temizle ve gizliliğini geri al", pages: ['Ana sayfa', 'Genel', 'Gizlilik', 'Temizleyici', 'Debloat', 'Yedekler'], perks: ['34 temel ayar'] },
     premium: { line: 'Oyunlarda ve internette daha az gecikme', pages: ['Performans', 'Oyun modu', 'Ağ'], perks: ['103 ayar, orta seviyeler dahil', 'Öncelikli destek'] },
     ultra: { line: 'Anakart firmware’ini de ayarla', pages: ['BIOS ayarlarının kilidi açık'], perks: ['Her ayar, ileri seviyeler dahil', 'Yeni ayarlara öncelikli erişim', 'Bilgisayarını ayarlamak için kişisel yardım'] },
     matrix: ['Ana sayfa', 'Genel', 'Gizlilik', 'Temizleyici', 'Debloat', 'Yedekler', 'Performans', 'Oyun modu', 'Ağ', 'BIOS', 'Temel ayarlar', 'Orta ayarlar', 'İleri ayarlar', 'Öncelikli destek', 'Yeni ayarlara öncelikli erişim', 'Kişisel yardım'],

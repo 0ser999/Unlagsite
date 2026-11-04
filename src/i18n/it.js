@@ -73,7 +73,7 @@ export default {
   plans: {
     names: { free: 'Free', premium: 'Premium', ultra: 'Ultimate' }, forGaming: 'Per il gaming', forever: 'per sempre', oneTime: 'pagamento unico · 1 PC',
     everythingIn: 'Tutto quello di {plan}', assistant: 'Assistente, {n} messaggi al giorno', yourPlan: 'Il tuo piano', download: 'Scarica', get: 'Prendi {plan}',
-    free: { line: 'Ripulisci Windows e riprenditi la privacy', pages: ['Home', 'Generale', 'Privacy', 'Pulizia', 'Debloat', 'Backup'], perks: ['30 ottimizzazioni essenziali'] },
+    free: { line: 'Ripulisci Windows e riprenditi la privacy', pages: ['Home', 'Generale', 'Privacy', 'Pulizia', 'Debloat', 'Backup'], perks: ['34 ottimizzazioni essenziali'] },
     premium: { line: 'Meno latenza nei giochi e online', pages: ['Prestazioni', 'Modalità gioco', 'Rete'], perks: ['103 ottimizzazioni, moderate incluse', 'Assistenza prioritaria'] },
     ultra: { line: 'Ottimizza anche il firmware della scheda madre', pages: ['Ottimizzazioni BIOS sbloccate'], perks: ['Tutte le ottimizzazioni, avanzate incluse', 'Accesso prioritario alle nuove ottimizzazioni', 'Aiuto personale per configurare il PC'] },
     matrix: ['Home', 'Generale', 'Privacy', 'Pulizia', 'Debloat', 'Backup', 'Prestazioni', 'Modalità gioco', 'Rete', 'BIOS', 'Ottimizzazioni essenziali', 'Ottimizzazioni moderate', 'Ottimizzazioni avanzate', 'Assistenza prioritaria', 'Accesso prioritario alle nuove ottimizzazioni', 'Aiuto personale'],

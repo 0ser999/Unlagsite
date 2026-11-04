@@ -73,7 +73,7 @@ export default {
   plans: {
     names: { free: 'Free', premium: 'Premium', ultra: 'Ultimate' }, forGaming: 'Fürs Gaming', forever: 'für immer', oneTime: 'Einmalzahlung · 1 PC',
     everythingIn: 'Alles aus {plan}', assistant: 'Assistent, {n} Nachrichten pro Tag', yourPlan: 'Dein Plan', download: 'Herunterladen', get: '{plan} holen',
-    free: { line: 'Windows aufräumen und deine Privatsphäre zurückholen', pages: ['Start', 'Allgemein', 'Datenschutz', 'Bereinigung', 'Debloat', 'Sicherungen'], perks: ['30 wichtige Tweaks'] },
+    free: { line: 'Windows aufräumen und deine Privatsphäre zurückholen', pages: ['Start', 'Allgemein', 'Datenschutz', 'Bereinigung', 'Debloat', 'Sicherungen'], perks: ['34 wichtige Tweaks'] },
     premium: { line: 'Weniger Latenz in Spielen und online', pages: ['Leistung', 'Spielmodus', 'Netzwerk'], perks: ['103 Tweaks, mittlere inklusive', 'Bevorzugter Support'] },
     ultra: { line: 'Auch die Mainboard-Firmware optimieren', pages: ['BIOS-Tweaks freigeschaltet'], perks: ['Jeder Tweak, fortgeschrittene inklusive', 'Bevorzugter Zugang zu neuen Tweaks', 'Persönliche Hilfe bei der PC-Einrichtung'] },
     matrix: ['Start', 'Allgemein', 'Datenschutz', 'Bereinigung', 'Debloat', 'Sicherungen', 'Leistung', 'Spielmodus', 'Netzwerk', 'BIOS', 'Wichtige Tweaks', 'Mittlere Tweaks', 'Fortgeschrittene Tweaks', 'Bevorzugter Support', 'Bevorzugter Zugang zu neuen Tweaks', 'Persönliche Hilfe'],

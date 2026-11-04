@@ -1,7 +1,7 @@
 // Everything on the site comes from the Unlag app itself (src/data.js, core/Tweaks.cs, README).
 
 export const DOWNLOAD_URL = 'https://github.com/0ser999/unlag/releases/latest/download/unlag.exe';
-export const VERSION = '1.0.5';
+export const VERSION = '1.0.6';
 
 // One-time prices per PC (a plan is bound to one HWID), same as the app's Plans page.
 export const PRICES = {
@@ -169,7 +169,7 @@ export const PLANS = [
 ];
 
 // Tweaks each plan can enable in the app (unlag/src/data.js FREE_TWEAKS and tweakTier).
-export const PLAN_TWEAKS = { free: 30, premium: 103, ultra: 117 };
+export const PLAN_TWEAKS = { free: 34, premium: 143, ultra: 160 };
 
 // Pricing comparison, in the order of the app's sidebar
 export const PLAN_MATRIX = [

@@ -126,7 +126,7 @@ export default {
     forGaming: 'Pour le jeu', forever: 'pour toujours', oneTime: 'paiement unique · 1 PC',
     everythingIn: 'Tout ce qu’il y a dans {plan}', assistant: 'Assistant, {n} messages par jour',
     yourPlan: 'Votre offre', download: 'Télécharger', get: 'Prendre {plan}',
-    free: { line: 'Nettoyez Windows et reprenez votre vie privée', pages: ['Accueil', 'Général', 'Confidentialité', 'Nettoyage', 'Debloat', 'Sauvegardes'], perks: ['30 réglages essentiels'] },
+    free: { line: 'Nettoyez Windows et reprenez votre vie privée', pages: ['Accueil', 'Général', 'Confidentialité', 'Nettoyage', 'Debloat', 'Sauvegardes'], perks: ['34 réglages essentiels'] },
     premium: { line: 'Moins de latence en jeu et en ligne', pages: ['Performances', 'Mode jeu', 'Réseau'], perks: ['103 réglages, modérés compris', 'Support prioritaire'] },
     ultra: { line: 'Réglez aussi le firmware de la carte mère', pages: ['Réglages du BIOS débloqués'], perks: ['Tous les réglages, avancés compris', 'Accès prioritaire aux nouveaux réglages', 'Aide personnelle pour régler votre PC'] },
     matrix: ['Accueil', 'Général', 'Confidentialité', 'Nettoyage', 'Debloat', 'Sauvegardes', 'Performances', 'Mode jeu', 'Réseau', 'BIOS', 'Réglages essentiels', 'Réglages modérés', 'Réglages avancés', 'Support prioritaire', 'Accès prioritaire aux nouveaux réglages', 'Aide personnelle'],

@@ -73,7 +73,7 @@ export default {
   plans: {
     names: { free: 'Free', premium: 'Premium', ultra: 'Ultimate' }, forGaming: 'Para jogos', forever: 'para sempre', oneTime: 'pagamento único · 1 PC',
     everythingIn: 'Tudo do {plan}', assistant: 'Assistente, {n} mensagens por dia', yourPlan: 'Seu plano', download: 'Baixar', get: 'Obter {plan}',
-    free: { line: 'Limpe o Windows e recupere sua privacidade', pages: ['Início', 'Geral', 'Privacidade', 'Limpeza', 'Debloat', 'Backups'], perks: ['30 ajustes essenciais'] },
+    free: { line: 'Limpe o Windows e recupere sua privacidade', pages: ['Início', 'Geral', 'Privacidade', 'Limpeza', 'Debloat', 'Backups'], perks: ['34 ajustes essenciais'] },
     premium: { line: 'Menos latência nos jogos e online', pages: ['Desempenho', 'Modo jogo', 'Rede'], perks: ['103 ajustes, moderados incluídos', 'Suporte prioritário'] },
     ultra: { line: 'Ajuste também o firmware da placa-mãe', pages: ['Ajustes de BIOS liberados'], perks: ['Todos os ajustes, avançados incluídos', 'Acesso prioritário a novos ajustes', 'Ajuda pessoal para configurar seu PC'] },
     matrix: ['Início', 'Geral', 'Privacidade', 'Limpeza', 'Debloat', 'Backups', 'Desempenho', 'Modo jogo', 'Rede', 'BIOS', 'Ajustes essenciais', 'Ajustes moderados', 'Ajustes avançados', 'Suporte prioritário', 'Acesso prioritário a novos ajustes', 'Ajuda pessoal'],
