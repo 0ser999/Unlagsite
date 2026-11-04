@@ -337,6 +337,7 @@ export default {
     reviewFailed: 'Your review could not be sent. Try again later',
   },
   checkout: {
+      pendingText: 'Your bank is still processing the payment. Your plan will activate after confirmation. Check your account later; do not pay again.',
     "switchLabel": "Plan", "title": "Get {plan}",
     "lead": "One payment, no subscription. Your plan is active a few seconds after paying.",
     "order": "Your order",

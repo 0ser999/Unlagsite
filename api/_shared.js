@@ -5,7 +5,8 @@
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 
-// Prices in cents, set here and only here: the browser never decides what it pays.
+// Prices in cents; keep the reservation RPC in supabase/migrations in sync.
+// The browser never decides what it pays.
 export const PRICE = { premium: 1499, ultra: 2999 };
 export const RANK = { free: 0, premium: 1, ultra: 2 };
 export const PLAN_NAME = { premium: 'Premium', ultra: 'Ultimate' };

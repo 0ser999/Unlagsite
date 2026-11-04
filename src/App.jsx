@@ -1,23 +1,28 @@
+import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { t } from './i18n/index.jsx';
 import Layout from './components/Layout.jsx';
 import Home from './pages/Home.jsx';
-import Features from './pages/Features.jsx';
-import HowItWorks from './pages/HowItWorks.jsx';
-import Pricing from './pages/Pricing.jsx';
-import Faq from './pages/Faq.jsx';
-import Download from './pages/Download.jsx';
+const Features = lazy(() => import('./pages/Features.jsx'));
+const HowItWorks = lazy(() => import('./pages/HowItWorks.jsx'));
+const Pricing = lazy(() => import('./pages/Pricing.jsx'));
+const Faq = lazy(() => import('./pages/Faq.jsx'));
+const Download = lazy(() => import('./pages/Download.jsx'));
 import NotFound from './pages/NotFound.jsx';
-import SignIn from './pages/SignIn.jsx';
-import ResetPassword from './pages/ResetPassword.jsx';
-import Account from './pages/Account.jsx';
-import Checkout from './pages/Checkout.jsx';
-import { Terms, Privacy, LegalNotice } from './pages/Legal.jsx';
+const SignIn = lazy(() => import('./pages/SignIn.jsx'));
+const ResetPassword = lazy(() => import('./pages/ResetPassword.jsx'));
+const Account = lazy(() => import('./pages/Account.jsx'));
+const Checkout = lazy(() => import('./pages/Checkout.jsx'));
+const Terms = lazy(() => import('./pages/Legal.jsx').then((m) => ({ default: m.Terms })));
+const Privacy = lazy(() => import('./pages/Legal.jsx').then((m) => ({ default: m.Privacy })));
+const LegalNotice = lazy(() => import('./pages/Legal.jsx').then((m) => ({ default: m.LegalNotice })));
 import { AuthProvider } from './lib/auth.jsx';
 
 export default function App() {
   return (
     <AuthProvider>
     <BrowserRouter>
+      <Suspense fallback={<main className="wrap section" role="status" aria-busy="true">{t('common.oneMoment')}…</main>}>
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<Home />} />
@@ -37,6 +42,7 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
+      </Suspense>
     </BrowserRouter>
     </AuthProvider>
   );

@@ -228,6 +228,7 @@ export default {
     reviewFailed: 'Votre avis n’a pas pu être envoyé. Réessayez plus tard',
   },
   checkout: {
+      pendingText: 'Votre banque traite encore le paiement. Votre offre sera activée après confirmation. Consultez votre compte plus tard ; ne payez pas une seconde fois.',
     "switchLabel": "Plan", "title": "Obtenir {plan}",
     "lead": "Un seul paiement, sans abonnement. Votre plan est actif quelques secondes après le paiement.",
     "order": "Votre commande",

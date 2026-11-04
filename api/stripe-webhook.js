@@ -1,7 +1,7 @@
 // POST /api/stripe-webhook  (Stripe > Developers > Webhooks, event payment_intent.succeeded)
 // Verifies Stripe's signature, then writes the plan into the account's app_metadata, which only the
 // service role can change. Repeated deliveries are harmless: a plan is only ever raised.
-import { RANK, PRICE, amountFor, planOf, stripeClient, supabaseAdmin, send } from './_shared.js';
+import { RANK, PRICE, amountFor, stripeClient, supabaseAdmin, send } from './_shared.js';
 
 export const config = { api: { bodyParser: false } };
 
@@ -26,19 +26,16 @@ export default async function handler(req, res) {
 
   const intent = event.data.object;
   const { user_id: uid, plan, from = 'free' } = intent.metadata || {};
-  if (!uid || !PRICE[plan] || intent.currency !== 'eur' || intent.amount_received < amountFor(plan, from)) {
+  if (!uid || !Object.hasOwn(PRICE, plan) || !Object.hasOwn(RANK, from) || RANK[from] >= RANK[plan] ||
+      intent.currency !== 'eur' || !Number.isInteger(intent.amount_received) || intent.amount_received < amountFor(plan, from)) {
     console.error('[webhook] payment does not match a plan:', intent.id);
     return send(res, 200, { received: true, ignored: true });
   }
 
   try {
     const db = supabaseAdmin();
-    const { data, error } = await db.auth.admin.getUserById(uid);
-    if (error || !data?.user) throw error || new Error('user not found');
-    const user = data.user;
-    if (RANK[planOf(user)] >= RANK[plan]) return send(res, 200, { received: true, already: true });
-    const { error: updateError } = await db.auth.admin.updateUserById(uid, {
-      app_metadata: { ...user.app_metadata, plan, paid_at: new Date().toISOString(), payment_id: intent.id },
+    const { error: updateError } = await db.rpc('site_grant_paid_plan', {
+      p_user_id: uid, p_plan: plan, p_payment_id: intent.id,
     });
     if (updateError) throw updateError;
     console.log(`[webhook] ${uid} is now ${plan} (${intent.id})`);

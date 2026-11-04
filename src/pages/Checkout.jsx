@@ -8,6 +8,7 @@ import { useAuth } from '../lib/auth.jsx';
 import { hasPlan } from '../lib/account.js';
 import { supabase } from '../lib/supabase.js';
 import { t, currentLang } from '../i18n/index.jsx';
+import { paymentState } from '../lib/payment-status.js';
 
 // Public key only (pk_live_ / pk_test_). The secret key lives in the server functions under /api.
 const PK = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
@@ -61,12 +62,12 @@ const RANK = { free: 0, premium: 1, ultra: 2 };
 const euros = (cents) => `${(cents / 100).toFixed(2).replace('.', ',')} €`;
 const planName = (id) => t(`plans.names.${id}`);
 
-async function createIntent(plan) {
+async function createIntent(plan, paymentIntent) {
   const { data } = await supabase.auth.getSession();
   const res = await fetch('/api/checkout', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${data.session?.access_token || ''}` },
-    body: JSON.stringify({ plan }),
+    body: JSON.stringify({ plan, paymentIntent }),
   });
   const body = await res.json().catch(() => ({}));
   if (!res.ok) throw { code: body.error || 'unavailable' };
@@ -150,17 +151,22 @@ function PaymentForm({ order, plan, email, onPaid }) {
     if (!stripe || !elements.current || paying) return;
     setPaying(true);
     setError('');
-    const { error: err, paymentIntent } = await stripe.confirmPayment({
-      elements: elements.current,
-      redirect: 'if_required',
-      confirmParams: { return_url: `${window.location.origin}/checkout?plan=${plan}&done=1` },
-    });
-    if (err) {
-      setError(err.type === 'card_error' || err.type === 'validation_error' ? err.message : t('checkout.errors.unavailable'));
+    try {
+      const { error: err, paymentIntent } = await stripe.confirmPayment({
+        elements: elements.current,
+        redirect: 'if_required',
+        confirmParams: { return_url: `${window.location.origin}/checkout?plan=${plan}` },
+      });
+      if (err) {
+        setError(err.type === 'card_error' || err.type === 'validation_error' ? err.message : t('checkout.errors.unavailable'));
+        setPaying(false);
+      } else if (paymentIntent && ['succeeded', 'processing'].includes(paymentIntent.status)) {
+        onPaid(paymentState(paymentIntent.status));
+      } else setPaying(false);
+    } catch {
+      setError(t('checkout.errors.unavailable'));
       setPaying(false);
-    } else if (paymentIntent && ['succeeded', 'processing'].includes(paymentIntent.status)) {
-      onPaid();
-    } else setPaying(false);
+    }
   };
 
   return (
@@ -183,7 +189,7 @@ function PaymentForm({ order, plan, email, onPaid }) {
   );
 }
 
-function Success({ plan }) {
+function Success({ plan, status }) {
   const { info, refresh } = useAuth();
   const active = hasPlan(info, plan);
   const [late, setLate] = useState(false);
@@ -203,8 +209,8 @@ function Success({ plan }) {
   return (
     <div className="co-done">
       <span className={`co-done-icon${active ? ' is-on' : ''}`}>{active ? <Check size={28} strokeWidth={2} /> : <Loader2 size={28} strokeWidth={1.75} className="spin" />}</span>
-      <h2>{active ? t('checkout.doneTitle', { plan: planName(plan) }) : t('checkout.activating')}</h2>
-      <p>{active ? t('checkout.doneText') : late ? t('checkout.late') : t('checkout.activatingText')}</p>
+      <h2>{active ? t('checkout.doneTitle', { plan: planName(plan) }) : t(status === 'processing' ? 'checkout.paying' : 'checkout.activating')}</h2>
+      <p>{active ? t('checkout.doneText') : status === 'processing' ? t('checkout.pendingText') : late ? t('checkout.late') : t('checkout.activatingText')}</p>
       {active && (
         <div className="co-done-actions">
           <a href={DOWNLOAD_URL} className="btn btn-primary"><Download size={18} strokeWidth={1.5} />{t('checkout.download')}</a>
@@ -215,28 +221,31 @@ function Success({ plan }) {
   );
 }
 
-export default function Checkout() {
-  const [params] = useSearchParams();
-  const plan = ['premium', 'ultra'].includes(params.get('plan')) ? params.get('plan') : 'premium';
-  const { user, info, loading } = useAuth();
+function CheckoutPage({ plan, returnedIntent }) {
+  const { user, info, loading, mfaRequired, verified } = useAuth();
   const [order, setOrder] = useState(null);
   const [error, setError] = useState(null);
-  const [paid, setPaid] = useState(params.get('done') === '1' || params.get('redirect_status') === 'succeeded');
+  const [paid, setPaid] = useState(null);
   const owned = hasPlan(info, plan);
 
   useEffect(() => {
-    if (loading || !user || paid || owned || !PK) return;
+    if (loading || !user || !verified || mfaRequired || paid || owned || !PK) return;
     let alive = true;
     setOrder(null);
     setError(null);
-    createIntent(plan).then((o) => alive && setOrder(o)).catch((e) => alive && setError(e.code));
+    createIntent(plan, returnedIntent).then((o) => {
+      if (!alive) return;
+      setOrder(o);
+      setPaid(paymentState(o.status));
+    }).catch((e) => alive && setError(e.code));
     return () => { alive = false; };
-  }, [loading, user?.id, plan, paid, owned]);
+  }, [loading, user?.id, verified, mfaRequired, plan, returnedIntent, paid, owned]);
 
   if (!loading && !user) return <Navigate to={`/sign-up?next=${encodeURIComponent(`/checkout?plan=${plan}`)}`} replace />;
+  if (!loading && mfaRequired) return <Navigate to={`/sign-in?next=${encodeURIComponent(`/checkout?plan=${plan}`)}`} replace />;
 
   let body;
-  if (paid) body = <Success plan={plan} />;
+  if (paid) body = <Success plan={plan} status={paid} />;
   else if (owned) body = (
     <div className="co-done">
       <span className="co-done-icon is-on"><Check size={28} strokeWidth={2} /></span>
@@ -254,7 +263,7 @@ export default function Checkout() {
             {error === 'unverified' && <Link to="/account" className="btn btn-secondary btn-sm">{t('checkout.toAccount')}</Link>}
           </div>
         ) : order ? (
-          <PaymentForm order={order} plan={plan} email={info?.email} onPaid={() => setPaid(true)} />
+          <PaymentForm key={order.clientSecret} order={order} plan={plan} email={info?.email} onPaid={setPaid} />
         ) : (
           <div className="co-pay"><div className="co-pay-head"><h2>{t('checkout.payment')}</h2></div><div className="co-skeleton" aria-hidden="true"><i /><i /><span><i /><i /></span></div></div>
         )}
@@ -271,4 +280,12 @@ export default function Checkout() {
       </section>
     </main>
   );
+}
+
+export default function Checkout() {
+  const [params] = useSearchParams();
+  const { user } = useAuth();
+  const plan = ['premium', 'ultra'].includes(params.get('plan')) ? params.get('plan') : 'premium';
+  const returnedIntent = params.get('payment_intent') || undefined;
+  return <CheckoutPage key={`${user?.id || 'guest'}:${plan}:${returnedIntent || ''}`} plan={plan} returnedIntent={returnedIntent} />;
 }
