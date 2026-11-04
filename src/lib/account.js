@@ -61,6 +61,8 @@ export function errorCode(error) {
     signup_disabled: 'auth/operation-not-allowed', provider_disabled: 'auth/social-not-configured',
     validation_failed: 'auth/invalid-credential', reauthentication_needed: 'auth/requires-login',
     captcha_failed: 'auth/captcha', otp_expired: 'auth/code-invalid', otp_disabled: 'auth/operation-not-allowed',
+    identity_already_exists: 'auth/identity-in-use', manual_linking_disabled: 'auth/linking-disabled',
+    single_identity_not_deletable: 'auth/last-method', email_conflict_identity_not_deletable: 'auth/last-method',
     mfa_verification_failed: 'auth/mfa-invalid', mfa_challenge_expired: 'auth/mfa-invalid', insufficient_aal: 'auth/mfa-required',
   };
   if (error?.code?.startsWith?.('auth/')) return error.code;
@@ -103,6 +105,24 @@ export async function changePassword(currentPassword, password, captchaToken) {
   await scratch.auth.signOut({ scope: 'local' }).catch(() => {});
   if (verified.data.user.id !== user.id) throw { code: 'auth/requires-login' };
   checked(await supabase.auth.updateUser({ password }));
+}
+
+// Adds Google or Discord to the signed-in account (Supabase manual linking). The browser leaves for the
+// provider and comes back to Settings. The Discord bot reads the discord identity to give plan roles.
+export const LINKABLE = ['discord', 'google'];
+export async function linkProvider(provider) {
+  if (!LINKABLE.includes(provider)) throw { code: 'auth/operation-not-allowed' };
+  checked(await supabase.auth.linkIdentity({ provider, options: { redirectTo: `${window.location.origin}/account?tab=settings` } }));
+}
+
+export async function unlinkProvider(provider) {
+  if (!LINKABLE.includes(provider)) throw { code: 'auth/operation-not-allowed' };
+  const { identities } = checked(await supabase.auth.getUserIdentities());
+  if (identities.length < 2) throw { code: 'auth/last-method' };
+  const identity = identities.find((i) => i.provider === provider);
+  if (!identity) return;
+  checked(await supabase.auth.unlinkIdentity(identity));
+  checked(await supabase.auth.refreshSession());
 }
 
 export async function resendConfirmation(email, captchaToken) {

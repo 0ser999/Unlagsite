@@ -9,10 +9,11 @@ import { PasswordInput, PasswordMeter } from '../components/AuthBits.jsx';
 import { supabase } from '../lib/supabase.js';
 import { useAuth } from '../lib/auth.jsx';
 import {
-  AI_LIMIT, hasPlan, authMessage, changePassword, readQuota, resendConfirmation, submitReview, updateDisplayName,
+  AI_LIMIT, LINKABLE, hasPlan, authMessage, changePassword, linkProvider, unlinkProvider, readQuota, resendConfirmation, submitReview, updateDisplayName,
 } from '../lib/account.js';
 import { PLANS, PLAN_MATRIX, PLAN_TWEAKS, DOWNLOAD_URL, VERSION } from '../data.js';
 import { t, currentLang } from '../i18n/index.jsx';
+import { GoogleIcon, DiscordIcon } from '../components/BrandIcons.jsx';
 
 const provider = (p) => { const name = t(`account.providers.${p}`); return name.startsWith('account.') ? p : name; };
 const providerList = (info) => info.providers.map(provider).join(` ${t('common.and')} `);
@@ -395,6 +396,69 @@ function EmailCodeRow({ info }) {
   );
 }
 
+const BRAND_ICON = { google: GoogleIcon, discord: DiscordIcon };
+
+// The error Supabase puts in the URL when a link comes back refused (for example the Discord account
+// already belongs to another Unlag account). Read once, then removed from the address bar.
+function returnedLinkError() {
+  if (typeof window === 'undefined') return '';
+  const query = new URLSearchParams(window.location.search);
+  const hash = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+  const code = query.get('error_code') || hash.get('error_code');
+  if (!code && !query.get('error') && !hash.get('error')) return '';
+  const url = new URL(window.location.href);
+  ['error', 'error_code', 'error_description'].forEach((k) => url.searchParams.delete(k));
+  window.history.replaceState(window.history.state, '', url.pathname + url.search);
+  return authMessage({ code });
+}
+
+function MethodsRow({ info }) {
+  const { recheck } = useAuth();
+  const [status, setStatus] = useState(returnedLinkError);
+  const [busy, setBusy] = useState('');
+  const missing = LINKABLE.filter((p) => !info.providers.includes(p));
+  const link = async (p) => {
+    setBusy(p);
+    setStatus('');
+    try { await linkProvider(p); } catch (error) { setStatus(authMessage(error)); setBusy(''); }
+  };
+  const unlink = async (p) => {
+    setBusy(p);
+    setStatus('');
+    try { await unlinkProvider(p); await recheck(); setStatus('done'); } catch (error) { setStatus(authMessage(error)); }
+    setBusy('');
+  };
+  return (
+    <Row label={t('account.methods')} hint={t('account.methodsHint')}>
+      <div className="set-form">
+        <ul className="providers">
+          {info.providers.map((p) => (
+            <li key={p}>
+              {provider(p)}
+              {LINKABLE.includes(p) && info.providers.length > 1 && (
+                <button type="button" className="provider-remove" onClick={() => unlink(p)} disabled={Boolean(busy)}>{t('account.unlink')}</button>
+              )}
+            </li>
+          ))}
+        </ul>
+        {missing.length > 0 && (
+          <div className="set-actions">
+            {missing.map((p) => {
+              const Icon = BRAND_ICON[p];
+              return (
+                <button key={p} type="button" className="btn btn-secondary btn-sm" onClick={() => link(p)} disabled={Boolean(busy)}>
+                  <Icon />{t('account.linkWith', { name: provider(p) })}
+                </button>
+              );
+            })}
+          </div>
+        )}
+        <Status value={status} done={t('account.unlinked')} />
+      </div>
+    </Row>
+  );
+}
+
 function SettingsView({ info }) {
   return (
     <section className="dash-block settings">
@@ -405,11 +469,7 @@ function SettingsView({ info }) {
           <span className={`stat-state${info.emailVerified ? ' is-ok' : ' is-warn'}`}><i />{info.emailVerified ? t('account.confirmed') : t('account.notConfirmed')}</span>
         </div>
       </Row>
-      <Row label={t('account.methods')}>
-        <ul className="providers">
-          {info.providers.map((p) => <li key={p}>{provider(p)}</li>)}
-        </ul>
-      </Row>
+      <MethodsRow info={info} />
       <PasswordRow info={info} />
       <EmailCodeRow info={info} />
       <Row label={t('account.signOut')} hint={t('account.signOutHint')}>
