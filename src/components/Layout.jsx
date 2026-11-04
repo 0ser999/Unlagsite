@@ -102,6 +102,7 @@ function Footer() {
             <div className="foot-label">{t('footer.support')}</div>
             <Link to="/faq">{t('nav.faq')}</Link>
             <Link to="/download">{t('nav.download')}</Link>
+            <a href="/discord" target="_blank" rel="noopener noreferrer">Discord</a>
           </div>
           <div>
             <div className="foot-label">{t('footer.account')}</div>

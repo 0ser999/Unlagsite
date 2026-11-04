@@ -1,1 +1,4 @@
-{ "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }] }
+{
+  "redirects": [{ "source": "/discord", "destination": "https://discord.gg/8eMpzNCErW", "permanent": false }],
+  "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }]
+}
