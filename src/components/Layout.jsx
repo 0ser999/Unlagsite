@@ -5,6 +5,7 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { Globe, Menu, X } from 'lucide-react';
 import { useAuth } from '../lib/auth.jsx';
 import { LANGS, t, useLang } from '../i18n/index.jsx';
+import { WWW, onDashboard } from '../lib/host.js';
 
 
 export const LINKS = [
@@ -16,10 +17,17 @@ export const LINKS = [
 
 export function Logo({ size = 28 }) {
   return (
-    <Link to="/" className="logo">
-      <img src="/logo.png" alt="" width={size} height={size} style={{ borderRadius: size / 4 }} />
-      Unlag
-    </Link>
+    onDashboard ? (
+      <a href={WWW} className="logo">
+        <img src="/logo.png" alt="" width={size} height={size} style={{ borderRadius: size / 4 }} />
+        Unlag
+      </a>
+    ) : (
+      <Link to="/" className="logo">
+        <img src="/logo.png" alt="" width={size} height={size} style={{ borderRadius: size / 4 }} />
+        Unlag
+      </Link>
+    )
   );
 }
 
@@ -161,7 +169,7 @@ export default function Layout() {
   useReveal(pathname);
 
   useEffect(() => {
-    document.title = t(TITLES[pathname.replace(/(.)\/+$/, '$1')] ?? 'meta.notFound');
+    document.title = t(onDashboard && pathname === '/' ? 'meta.account' : TITLES[pathname.replace(/(.)\/+$/, '$1')] ?? 'meta.notFound');
     const target = hash && document.getElementById(hash.slice(1));
     if (lenis) lenis.scrollTo(target || 0, { offset: target ? -24 : 0, immediate: true, force: true });
     else if (target) target.scrollIntoView();

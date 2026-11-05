@@ -10,17 +10,6 @@
       "has": [
         {
           "type": "host",
-          "value": "dashboard.unlag.pro"
-        }
-      ],
-      "destination": "https://www.unlag.pro/account",
-      "permanent": false
-    },
-    {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "host",
           "value": "download.unlag.pro"
         }
       ],

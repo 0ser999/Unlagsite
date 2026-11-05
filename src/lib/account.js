@@ -1,3 +1,4 @@
+import { siteUrl } from './host.js';
 // Same rules as the app (unlag/supabase-client.js and session-monitor.js), so the site and
 // the app always agree on who is signed in and which plan they have.
 import { supabase, scratchClient } from './supabase.js';
@@ -112,7 +113,7 @@ export async function changePassword(currentPassword, password, captchaToken) {
 export const LINKABLE = ['discord', 'google'];
 export async function linkProvider(provider) {
   if (!LINKABLE.includes(provider)) throw { code: 'auth/operation-not-allowed' };
-  checked(await supabase.auth.linkIdentity({ provider, options: { redirectTo: `${window.location.origin}/account?tab=settings` } }));
+  checked(await supabase.auth.linkIdentity({ provider, options: { redirectTo: siteUrl('/account?tab=settings') } }));
 }
 
 export async function unlinkProvider(provider) {
@@ -126,7 +127,7 @@ export async function unlinkProvider(provider) {
 }
 
 export async function resendConfirmation(email, captchaToken) {
-  checked(await supabase.auth.resend({ type: 'signup', email, options: { emailRedirectTo: `${window.location.origin}/account`, captchaToken } }));
+  checked(await supabase.auth.resend({ type: 'signup', email, options: { emailRedirectTo: siteUrl('/account'), captchaToken } }));
 }
 
 // Two-factor (TOTP authenticator apps)

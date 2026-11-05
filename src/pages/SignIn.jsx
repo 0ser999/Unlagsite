@@ -1,3 +1,4 @@
+import { siteUrl } from '../lib/host.js';
 import { useEffect, useState } from 'react';
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, KeyRound, Mail, ShieldCheck } from 'lucide-react';
@@ -111,14 +112,14 @@ export default function SignIn({ mode = 'sign-in' }) {
   const fail = (result) => { if (result.error) throw result.error; return result.data; };
 
   const social = (provider) => run(async () => {
-    fail(await supabase.auth.signInWithOAuth({ provider, options: { redirectTo: `${window.location.origin}${next}` } }));
+    fail(await supabase.auth.signInWithOAuth({ provider, options: { redirectTo: siteUrl(next) } }));
   });
 
   const sendCode = () => run(async () => {
     const captchaToken = await captcha.getToken();
     fail(await supabase.auth.signInWithOtp({
       email: email.trim(),
-      options: { shouldCreateUser: true, emailRedirectTo: `${window.location.origin}${next}`, captchaToken },
+      options: { shouldCreateUser: true, emailRedirectTo: siteUrl(next), captchaToken },
     }));
     setCodeSent(true);
     setCode('');
@@ -136,7 +137,7 @@ export default function SignIn({ mode = 'sign-in' }) {
     return run(async () => {
       const captchaToken = await captcha.getToken();
       const data = fail(isSignUp
-        ? await supabase.auth.signUp({ email: email.trim(), password, options: { emailRedirectTo: `${window.location.origin}/account`, captchaToken } })
+        ? await supabase.auth.signUp({ email: email.trim(), password, options: { emailRedirectTo: siteUrl('/account'), captchaToken } })
         : await supabase.auth.signInWithPassword({ email: email.trim(), password, options: { captchaToken } }));
       if (isSignUp && !data.session) setSent(true);
       // Two-step sign-in is on: the password session is dropped and a code is emailed instead.
