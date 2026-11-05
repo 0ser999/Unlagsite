@@ -178,7 +178,7 @@ export default function Layout() {
 
   return (
     <>
-      {pathname !== '/' && <Nav />}
+      {(pathname !== '/' || onDashboard) && <Nav />}
       <div className="route" key={pathname}><Outlet /></div>
       <Footer />
     </>
