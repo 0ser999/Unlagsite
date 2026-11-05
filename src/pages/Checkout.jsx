@@ -1,3 +1,4 @@
+import { AccountHref } from '../components/Layout.jsx';
 import { useEffect, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { Check, Lock, Loader2, ArrowRight, Download, ShieldCheck } from 'lucide-react';
@@ -214,7 +215,7 @@ function Success({ plan, status }) {
       {active && (
         <div className="co-done-actions">
           <a href={DOWNLOAD_URL} className="btn btn-primary"><Download size={18} strokeWidth={1.5} />{t('checkout.download')}</a>
-          <Link to="/account" className="btn btn-secondary">{t('checkout.toAccount')}<ArrowRight size={16} strokeWidth={1.5} /></Link>
+          <AccountHref className="btn btn-secondary">{t('checkout.toAccount')}<ArrowRight size={16} strokeWidth={1.5} /></AccountHref>
         </div>
       )}
     </div>
@@ -250,7 +251,7 @@ function CheckoutPage({ plan, returnedIntent }) {
     <div className="co-done">
       <span className="co-done-icon is-on"><Check size={28} strokeWidth={2} /></span>
       <h2>{t('checkout.owned', { plan: planName(info.plan) })}</h2>
-      <Link to="/account" className="btn btn-secondary">{t('checkout.toAccount')}<ArrowRight size={16} strokeWidth={1.5} /></Link>
+      <AccountHref className="btn btn-secondary">{t('checkout.toAccount')}<ArrowRight size={16} strokeWidth={1.5} /></AccountHref>
     </div>
   );
   else body = (
@@ -260,7 +261,7 @@ function CheckoutPage({ plan, returnedIntent }) {
           <div className="co-pay co-pay-error">
             <h2>{t('checkout.payment')}</h2>
             <p>{t(`checkout.errors.${PK && ERRORS.includes(error) ? error : 'unavailable'}`)}</p>
-            {error === 'unverified' && <Link to="/account" className="btn btn-secondary btn-sm">{t('checkout.toAccount')}</Link>}
+            {error === 'unverified' && <AccountHref className="btn btn-secondary btn-sm">{t('checkout.toAccount')}</AccountHref>}
           </div>
         ) : order ? (
           <PaymentForm key={order.clientSecret} order={order} plan={plan} email={info?.email} onPaid={setPaid} />

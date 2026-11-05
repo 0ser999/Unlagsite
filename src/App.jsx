@@ -44,6 +44,20 @@ function AccountRoute() {
   return <Leave to={`${DASHBOARD}/${rest ? `?${rest}` : ''}${hash}`} />;
 }
 
+// Page chunks: fetched while the browser is idle (the dashboard's own page at once), so a
+// click never waits on a download and never shows the loading screen.
+const PAGES = [
+  () => import('./pages/Account.jsx'), () => import('./pages/SignIn.jsx'), () => import('./pages/Checkout.jsx'),
+  () => import('./pages/Pricing.jsx'), () => import('./pages/Features.jsx'), () => import('./pages/HowItWorks.jsx'),
+  () => import('./pages/Faq.jsx'), () => import('./pages/Download.jsx'), () => import('./pages/ResetPassword.jsx'),
+  () => import('./pages/Legal.jsx'),
+];
+if (typeof window !== 'undefined') {
+  if (onDashboard) PAGES[0]();
+  const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 1500));
+  window.addEventListener('load', () => idle(() => PAGES.forEach((load) => load().catch(() => {}))), { once: true });
+}
+
 export default function App() {
   return (
     <AuthProvider>

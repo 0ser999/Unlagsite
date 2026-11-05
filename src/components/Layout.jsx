@@ -5,7 +5,13 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { Globe, Menu, X } from 'lucide-react';
 import { useAuth } from '../lib/auth.jsx';
 import { LANGS, t, useLang } from '../i18n/index.jsx';
-import { WWW, onDashboard } from '../lib/host.js';
+import { DASHBOARD, WWW, onDashboard, onUnlag } from '../lib/host.js';
+
+// The dashboard is its own host on unlag.pro: link to it directly so no in-between page shows.
+export function AccountHref({ children, ...props }) {
+  if (onUnlag && !onDashboard) return <a href={`${DASHBOARD}/`} {...props}>{children}</a>;
+  return <NavLink to={onDashboard ? '/' : '/account'} end {...props}>{children}</NavLink>;
+}
 
 
 export const LINKS = [
@@ -33,15 +39,15 @@ export function Logo({ size = 28 }) {
 
 function AccountLink() {
   const { user, info, loading } = useAuth();
-  if (loading) return <span className="nav-account" />;
+  if (loading && !user) return <span className="nav-account" />;
   if (!user) return <NavLink to="/sign-in" className="nav-account nav-signin">{t('nav.signIn')}</NavLink>;
   const photo = info.photoUrl;
   return (
-    <NavLink to="/account" className="nav-account" aria-label={t('nav.account')}>
+    <AccountHref className="nav-account" aria-label={t('nav.account')}>
       {photo
         ? <img src={photo} alt="" width="28" height="28" referrerPolicy="no-referrer" />
         : <span className="nav-initial">{info.displayName.slice(0, 1).toUpperCase()}</span>}
-    </NavLink>
+    </AccountHref>
   );
 }
 
@@ -116,7 +122,7 @@ function Footer() {
             <div className="foot-label">{t('footer.account')}</div>
             <Link to="/sign-in">{t('footer.signIn')}</Link>
             <Link to="/sign-up">{t('footer.createAccount')}</Link>
-            <Link to="/account">{t('footer.yourAccount')}</Link>
+            <AccountHref>{t('footer.yourAccount')}</AccountHref>
           </div>
           <div>
             <div className="foot-label">{t('footer.legal')}</div>
@@ -154,7 +160,7 @@ const TITLES = {
 let lenis = null;
 function useLenis() {
   useEffect(() => {
-    lenis = new Lenis({ lerp: 0.075, wheelMultiplier: 0.9, smoothWheel: true, anchors: { offset: -24 } });
+    lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1, smoothWheel: true, anchors: { offset: -24 } });
     let raf = requestAnimationFrame(function frame(time) {
       lenis.raf(time);
       raf = requestAnimationFrame(frame);

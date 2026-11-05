@@ -12,7 +12,7 @@ function Hero() {
   return (
     <section className="hero">
       <div className="hero-scene">
-        <HexScene src="/hero-mouse.png" focusX={0.8} alt={t('hero.alt')} />
+        <HexScene src="/hero-mouse.webp" focusX={0.8} alt={t('hero.alt')} />
       </div>
       <Nav />
       <div className="wrap hero-copy">

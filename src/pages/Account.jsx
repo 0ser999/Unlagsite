@@ -633,7 +633,8 @@ export default function Account() {
   const tab = TABS.some(([id]) => id === params.get('tab')) ? params.get('tab') : 'overview';
   const setTab = useCallback((id) => setParams(id === 'overview' ? {} : { tab: id }, { replace: true }), [setParams]);
 
-  if (loading) return <main className="dash" aria-busy="true" />;
+  // The cached session shows at once; the server check (useAuth.verify) updates it after.
+  if (loading && !info) return <main className="dash" aria-busy="true" />;
   if (!info || mfaRequired) return <Navigate to="/sign-in?next=/account" replace />;
 
   const hwid = typeof user?.app_metadata?.hwid === 'string' ? user.app_metadata.hwid : null;
@@ -647,7 +648,7 @@ export default function Account() {
         <div className="dash-main">
           <header className="dash-head">
             <h1>{title}</h1>
-            {!verified && <span className="acct-muted">{t('account.offline')}</span>}
+            {!verified && !loading && <span className="acct-muted">{t('account.offline')}</span>}
           </header>
           {!info.emailVerified && <VerifyNotice info={info} />}
           <div className="dash-view" key={tab}>
