@@ -1,7 +1,37 @@
 {
   "redirects": [
-    { "source": "/discord", "destination": "https://discord.gg/8eMpzNCErW", "permanent": false },
-    { "source": "/(.*)", "has": [{ "type": "host", "value": "download.unlag.pro" }], "destination": "https://github.com/0ser999/unlag/releases/latest/download/unlag.exe", "permanent": false }
+    {
+      "source": "/discord",
+      "destination": "https://discord.gg/8eMpzNCErW",
+      "permanent": false
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "dashboard.unlag.pro"
+        }
+      ],
+      "destination": "https://www.unlag.pro/account",
+      "permanent": false
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "download.unlag.pro"
+        }
+      ],
+      "destination": "https://github.com/0ser999/unlag/releases/latest/download/unlag.exe",
+      "permanent": false
+    }
   ],
-  "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }]
+  "rewrites": [
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
+    }
+  ]
 }
