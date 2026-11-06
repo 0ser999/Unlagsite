@@ -1,9 +1,9 @@
 export default {
   meta: {
-    home: "Unlag · Otimizador de PC para jogos, menos lag no Windows", features: 'Recursos · Unlag', how: 'Como funciona · Unlag', pricing: 'Preços · Unlag',
-    faq: 'Perguntas frequentes · Unlag', download: 'Download · Unlag', signIn: 'Entrar · Unlag', signUp: 'Criar uma conta · Unlag',
-    reset: 'Redefinir senha · Unlag', account: 'Conta · Unlag', terms: 'Termos de serviço · Unlag', privacy: 'Privacidade · Unlag',
-    legal: 'Aviso legal · Unlag', notFound: 'Página não encontrada · Unlag', checkout: "Pagamento · Unlag",
+    home: "Unlag - Otimizador de PC para jogos, menos lag no Windows", features: 'Recursos - Unlag', how: 'Como funciona - Unlag', pricing: 'Preços - Unlag',
+    faq: 'Perguntas frequentes - Unlag', download: 'Download - Unlag', signIn: 'Entrar - Unlag', signUp: 'Criar uma conta - Unlag',
+    reset: 'Redefinir senha - Unlag', account: 'Conta - Unlag', terms: 'Termos de serviço - Unlag', privacy: 'Privacidade - Unlag',
+    legal: 'Aviso legal - Unlag', notFound: 'Página não encontrada - Unlag', checkout: "Pagamento - Unlag",
   },
   nav: { features: 'Recursos', how: 'Como funciona', pricing: 'Preços', faq: 'FAQ', download: 'Download', signIn: 'Entrar', menu: 'Menu', main: 'Principal', account: 'Conta' },
   footer: {

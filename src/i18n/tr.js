@@ -1,9 +1,9 @@
 export default {
   meta: {
-    home: "Unlag · Oyun için PC optimizasyonu, Windows'ta daha az gecikme", features: 'Özellikler · Unlag', how: 'Nasıl çalışır · Unlag', pricing: 'Fiyatlar · Unlag',
-    faq: 'SSS · Unlag', download: 'İndir · Unlag', signIn: 'Giriş yap · Unlag', signUp: 'Hesap oluştur · Unlag',
-    reset: 'Şifreyi sıfırla · Unlag', account: 'Hesap · Unlag', terms: 'Hizmet şartları · Unlag', privacy: 'Gizlilik · Unlag',
-    legal: 'Yasal bilgiler · Unlag', notFound: 'Sayfa bulunamadı · Unlag', checkout: "Ödeme · Unlag",
+    home: "Unlag - Oyun için PC optimizasyonu, Windows'ta daha az gecikme", features: 'Özellikler - Unlag', how: 'Nasıl çalışır - Unlag', pricing: 'Fiyatlar - Unlag',
+    faq: 'SSS - Unlag', download: 'İndir - Unlag', signIn: 'Giriş yap - Unlag', signUp: 'Hesap oluştur - Unlag',
+    reset: 'Şifreyi sıfırla - Unlag', account: 'Hesap - Unlag', terms: 'Hizmet şartları - Unlag', privacy: 'Gizlilik - Unlag',
+    legal: 'Yasal bilgiler - Unlag', notFound: 'Sayfa bulunamadı - Unlag', checkout: "Ödeme - Unlag",
   },
   nav: { features: 'Özellikler', how: 'Nasıl çalışır', pricing: 'Fiyatlar', faq: 'SSS', download: 'İndir', signIn: 'Giriş yap', menu: 'Menü', main: 'Ana', account: 'Hesap' },
   footer: {

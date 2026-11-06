@@ -1,9 +1,9 @@
 export default {
   meta: {
-    home: "Unlag · Оптимизатор ПК для игр, меньше лагов в Windows", features: 'Возможности · Unlag', how: 'Как это работает · Unlag', pricing: 'Цены · Unlag',
-    faq: 'Вопросы · Unlag', download: 'Скачать · Unlag', signIn: 'Вход · Unlag', signUp: 'Создать аккаунт · Unlag',
-    reset: 'Сброс пароля · Unlag', account: 'Аккаунт · Unlag', terms: 'Условия использования · Unlag', privacy: 'Конфиденциальность · Unlag',
-    legal: 'Правовая информация · Unlag', notFound: 'Страница не найдена · Unlag', checkout: "Оплата · Unlag",
+    home: "Unlag - Оптимизатор ПК для игр, меньше лагов в Windows", features: 'Возможности - Unlag', how: 'Как это работает - Unlag', pricing: 'Цены - Unlag',
+    faq: 'Вопросы - Unlag', download: 'Скачать - Unlag', signIn: 'Вход - Unlag', signUp: 'Создать аккаунт - Unlag',
+    reset: 'Сброс пароля - Unlag', account: 'Аккаунт - Unlag', terms: 'Условия использования - Unlag', privacy: 'Конфиденциальность - Unlag',
+    legal: 'Правовая информация - Unlag', notFound: 'Страница не найдена - Unlag', checkout: "Оплата - Unlag",
   },
   nav: { features: 'Возможности', how: 'Как это работает', pricing: 'Цены', faq: 'Вопросы', download: 'Скачать', signIn: 'Войти', menu: 'Меню', main: 'Главное', account: 'Аккаунт' },
   footer: {

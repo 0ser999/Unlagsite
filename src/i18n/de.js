@@ -1,9 +1,9 @@
 export default {
   meta: {
-    home: "Unlag · PC-Optimierer für Gaming, weniger Input-Lag", features: 'Funktionen · Unlag', how: 'So funktioniert es · Unlag', pricing: 'Preise · Unlag',
-    faq: 'FAQ · Unlag', download: 'Download · Unlag', signIn: 'Anmelden · Unlag', signUp: 'Konto erstellen · Unlag',
-    reset: 'Passwort zurücksetzen · Unlag', account: 'Konto · Unlag', terms: 'Nutzungsbedingungen · Unlag', privacy: 'Datenschutz · Unlag',
-    legal: 'Impressum · Unlag', notFound: 'Seite nicht gefunden · Unlag', checkout: "Kasse · Unlag",
+    home: "Unlag - PC-Optimierer für Gaming, weniger Input-Lag", features: 'Funktionen - Unlag', how: 'So funktioniert es - Unlag', pricing: 'Preise - Unlag',
+    faq: 'FAQ - Unlag', download: 'Download - Unlag', signIn: 'Anmelden - Unlag', signUp: 'Konto erstellen - Unlag',
+    reset: 'Passwort zurücksetzen - Unlag', account: 'Konto - Unlag', terms: 'Nutzungsbedingungen - Unlag', privacy: 'Datenschutz - Unlag',
+    legal: 'Impressum - Unlag', notFound: 'Seite nicht gefunden - Unlag', checkout: "Kasse - Unlag",
   },
   nav: { features: 'Funktionen', how: 'So funktioniert es', pricing: 'Preise', faq: 'FAQ', download: 'Download', signIn: 'Anmelden', menu: 'Menü', main: 'Hauptmenü', account: 'Konto' },
   footer: {
