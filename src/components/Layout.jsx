@@ -25,12 +25,12 @@ export function Logo({ size = 28 }) {
   return (
     onDashboard ? (
       <a href={WWW} className="logo">
-        <img src="/logo.png" alt="" width={size} height={size} style={{ borderRadius: size / 4 }} />
+        <img src="/logo-64.webp" alt="" width={size} height={size} style={{ borderRadius: size / 4 }} />
         Unlag
       </a>
     ) : (
       <Link to="/" className="logo">
-        <img src="/logo.png" alt="" width={size} height={size} style={{ borderRadius: size / 4 }} />
+        <img src="/logo-64.webp" alt="" width={size} height={size} style={{ borderRadius: size / 4 }} />
         Unlag
       </Link>
     )

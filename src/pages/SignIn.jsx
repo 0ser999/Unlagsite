@@ -21,7 +21,7 @@ export function AuthShell({ title, lead, icon: Icon, children }) {
     <main className="auth">
       <div className="auth-card">
         {Icon ? <span className="auth-icon"><Icon size={22} strokeWidth={1.5} /></span>
-          : <img src="/logo.png" alt="" width="48" height="48" className="auth-logo" />}
+          : <img src="/logo.webp" alt="" width="48" height="48" className="auth-logo" />}
         <h1>{title}</h1>
         {lead && <p className="auth-lead">{lead}</p>}
         {children}

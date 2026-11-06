@@ -11,7 +11,7 @@ export default function Download() {
       <section className="section section-tight">
         <div className="wrap download-grid">
           <div className="download-card">
-            <img src="/logo.png" alt="" width="64" height="64" className="download-logo" />
+            <img src="/logo.webp" alt="" width="64" height="64" className="download-logo" />
             <div>
               <h2>{t('download.card')}</h2>
               <p className="mono">{t('download.meta', { v: VERSION })}</p>
@@ -31,7 +31,7 @@ export default function Download() {
               {t('download.install').map(([title, text], i) => (
                 <li key={title}>
                   <span className="step-n mono">{i + 1}</span>
-                  <div><h4>{title}</h4><p>{text}</p></div>
+                  <div><h3>{title}</h3><p>{text}</p></div>
                 </li>
               ))}
             </ol>

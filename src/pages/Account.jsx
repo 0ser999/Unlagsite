@@ -110,7 +110,7 @@ function LicenseCard({ info, hwid, refresh }) {
       <div className={`lic lic-${info.plan}`} onPointerMove={tilt} onPointerLeave={untilt}>
         <pre className="lic-hex mono" aria-hidden="true">{texture}</pre>
         <div className="lic-top">
-          <img src="/logo.png" alt="" width="28" height="28" />
+          <img src="/logo-64.webp" alt="" width="28" height="28" />
           <span className="lic-brand">Unlag</span>
           <span className="lic-ver mono">v{VERSION}</span>
         </div>
@@ -258,7 +258,7 @@ function Unlocks({ info }) {
 function AppStrip() {
   return (
     <section className="dash-strip">
-      <img src="/logo.png" alt="" width="40" height="40" />
+      <img src="/logo-64.webp" alt="" width="40" height="40" />
       <div>
         <div className="dash-strip-title">{t('account.appTitle')}</div>
         <div className="dash-strip-meta mono">{t('account.appMeta', { v: VERSION })}</div>

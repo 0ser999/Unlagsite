@@ -34,7 +34,7 @@
       ]
     },
     {
-      "source": "/(hero-mouse.webp|logo.png|og.jpg|app-home.png)",
+      "source": "/(hero-mouse.webp|logo.png|logo.webp|logo-64.webp|og.jpg|app-home.png|app-home.webp|app-home-720.webp)",
       "headers": [
         {
           "key": "Cache-Control",

@@ -20,7 +20,7 @@ export default function AppWindow() {
   return (
     <div className="window" aria-label="Preview of the Unlag app, Network page">
       <div className="titlebar">
-        <img src="/logo.png" alt="" width="16" height="16" />
+        <img src="/logo-64.webp" alt="" width="16" height="16" />
         <span>unlag</span>
         <div className="win-ctrl" aria-hidden="true"><i /><i /><i /></div>
       </div>

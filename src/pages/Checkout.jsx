@@ -2,7 +2,7 @@ import { AccountHref } from '../components/Layout.jsx';
 import { useEffect, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { Check, Lock, Loader2, ArrowRight, Download, ShieldCheck } from 'lucide-react';
-import { loadStripe } from '@stripe/stripe-js';
+import { loadStripe } from '@stripe/stripe-js/pure';
 import { PageHeader } from '../components/Blocks.jsx';
 import { PLANS, DOWNLOAD_URL } from '../data.js';
 import { useAuth } from '../lib/auth.jsx';

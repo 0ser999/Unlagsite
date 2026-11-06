@@ -28,7 +28,7 @@ function Hero() {
       </div>
       <div className="wrap hero-product enter">
         <LaserFlow x={0.82} hit={260} />
-        <img className="hero-shot" src="/app-home.png" width="1320" height="840" alt={t('hero.shotAlt')} />
+        <img className="hero-shot" src="/app-home.webp" srcSet="/app-home-720.webp 720w, /app-home.webp 1320w" sizes="(max-width: 760px) 100vw, 1320px" width="1320" height="840" alt={t('hero.shotAlt')} />
       </div>
     </section>
   );

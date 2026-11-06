@@ -49,9 +49,9 @@ export function Ledger() {
 export function Steps() {
   return (
     <ol className="steps">
-      <li><span className="step-n mono">1</span><div><h4>{t('steps.read')}</h4><p>{t('steps.readText')}</p></div></li>
-      <li><span className="step-n mono">2</span><div><h4>{t('steps.save')}</h4><p>{t('steps.saveText')} <span className="mono path">%ProgramData%\unlag\tweaks.json</span></p></div></li>
-      <li><span className="step-n mono">3</span><div><h4>{t('steps.revert')}</h4><p>{t('steps.revertText')}</p></div></li>
+      <li><span className="step-n mono">1</span><div><h3>{t('steps.read')}</h3><p>{t('steps.readText')}</p></div></li>
+      <li><span className="step-n mono">2</span><div><h3>{t('steps.save')}</h3><p>{t('steps.saveText')} <span className="mono path">%ProgramData%\unlag\tweaks.json</span></p></div></li>
+      <li><span className="step-n mono">3</span><div><h3>{t('steps.revert')}</h3><p>{t('steps.revertText')}</p></div></li>
     </ol>
   );
 }
@@ -103,7 +103,7 @@ export function CtaBand() {
   return (
     <section className="cta">
       <div className="wrap cta-in">
-        <img src="/logo.png" alt="" width="96" height="96" className="cta-logo" />
+        <img src="/logo.webp" alt="" width="96" height="96" className="cta-logo" />
         <div className="cta-text">
           <h2>{t('cta.title')}</h2>
           <p>{t('cta.text')}</p>
