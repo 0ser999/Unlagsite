@@ -1,6 +1,6 @@
 export default {
   meta: {
-    home: 'Unlag · Pozbądź się lagów w Windows', features: 'Funkcje · Unlag', how: 'Jak to działa · Unlag', pricing: 'Cennik · Unlag',
+    home: "Unlag · Optymalizator PC do gier, mniej lagów w Windows", features: 'Funkcje · Unlag', how: 'Jak to działa · Unlag', pricing: 'Cennik · Unlag',
     faq: 'FAQ · Unlag', download: 'Pobierz · Unlag', signIn: 'Logowanie · Unlag', signUp: 'Załóż konto · Unlag',
     reset: 'Resetowanie hasła · Unlag', account: 'Konto · Unlag', terms: 'Regulamin · Unlag', privacy: 'Prywatność · Unlag',
     legal: 'Informacje prawne · Unlag', notFound: 'Nie znaleziono strony · Unlag', checkout: "Płatność · Unlag",
@@ -15,6 +15,7 @@ export default {
     backToSignIn: 'Wróć do logowania', email: 'E-mail', and: 'i', showPassword: 'Pokaż hasło', hidePassword: 'Ukryj hasło', code: 'Kod',
   },
   hero: {
+    kicker: "Optymalizator PC do gier na Windows",
     alt: 'Mysz gamingowa sunąca po podkładce, narysowana cyframi szesnastkowymi w kobaltowym świetle',
     title: 'Pozbądź się lagów w Windows',
     sub: 'Mniejszy input lag, równiejsze klatki i cichszy system. Unlag dostraja sieć, procesor, prywatność i BIOS pod gry, a wcześniej zapisuje każdą oryginalną wartość, żebyś mógł wszystko cofnąć.',
@@ -87,6 +88,7 @@ export default {
     title: 'Pytania i odpowiedzi', lead: 'Co warto wiedzieć przed instalacją Unlag.',
     groups: [
       { group: 'Bezpieczeństwo', items: [
+          { q: "Czym jest Unlag", a: "Unlag to optymalizator PC dla Windows 10 i 11, stworzony z myślą o grach. Zmniejsza input lag i ping, stabilizuje czasy klatek i wyłącza telemetrię, oferując ponad sto ustawień w modułach Ogólne, Wydajność, Sieć i Prywatność, a do tego czyszczenie, debloat, punkty przywracania i ustawienia BIOS. Na start jest darmowy, a każdą zmianę można cofnąć." },
         { q: 'Czy mogę cofnąć ustawienie', a: 'Tak. Zanim cokolwiek zapisze, Unlag odczytuje obecne wartości i przechowuje je w %ProgramData%\\unlag\\tweaks.json. Wyłączenie ustawienia zapisuje je dokładnie z powrotem lub usuwa klucz, jeśli go nie było. Strona Kopie może też tworzyć punkty przywracania Windows.' },
         { q: 'Dlaczego Unlag potrzebuje uprawnień administratora', a: 'Ustawienia zmieniają rejestr, usługi i plany zasilania. Bez uprawnień administratora silnik Unlag odmawia każdej zmiany systemu.' },
         { q: 'Co znaczą Bezpieczne, Umiarkowane i Zaawansowane', a: 'Każde ustawienie ma poziom ryzyka. Bezpieczne pasują do prawie każdego komputera. Umiarkowane mogą zmienić działanie funkcji, np. usunąć centrum powiadomień. Zaawansowane są dla tych, którzy wiedzą, co robi ustawienie. Zalecane są bezpieczne dla większości komputerów do gier.' },

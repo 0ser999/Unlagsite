@@ -1,6 +1,6 @@
 export default {
   meta: {
-    home: 'Unlag · Supprimez la latence de Windows',
+    home: "Unlag · Optimiseur PC gaming, moins de latence sous Windows",
     features: 'Fonctionnalités · Unlag',
     how: 'Fonctionnement · Unlag',
     pricing: 'Tarifs · Unlag',
@@ -28,6 +28,7 @@ export default {
     showPassword: 'Afficher le mot de passe', hidePassword: 'Masquer le mot de passe', code: 'Code',
   },
   hero: {
+    kicker: "Optimiseur PC pour le gaming sous Windows",
     alt: 'Une souris gaming glissant sur un tapis, dessinée en chiffres hexadécimaux sous une lumière bleu cobalt',
     title: 'Supprimez la latence de Windows',
     sub: "Moins d'input lag, des images plus régulières et un système plus calme. Unlag règle votre réseau, votre processeur, votre confidentialité et votre BIOS pour le jeu, et enregistre chaque valeur d'origine pour tout pouvoir annuler.",
@@ -143,6 +144,7 @@ export default {
     lead: 'Ce qu’il faut savoir avant d’installer Unlag.',
     groups: [
       { group: 'Sécurité', items: [
+          { q: "Qu’est-ce que Unlag", a: "Unlag est un optimiseur PC pour Windows 10 et 11, pensé pour le gaming. Il réduit l’input lag et le ping, stabilise les temps d’image et coupe la télémétrie, avec plus d’une centaine de réglages en Général, Performances, Réseau et Confidentialité, plus un nettoyeur, le debloat, des points de restauration et des réglages BIOS. Il est gratuit pour commencer et chaque changement peut être annulé." },
         { q: 'Puis-je annuler un réglage', a: 'Oui. Avant d’écrire quoi que ce soit, Unlag lit les valeurs actuelles et les enregistre dans %ProgramData%\\unlag\\tweaks.json. Désactiver le réglage les réécrit à l’identique, ou supprime la clé si elle n’existait pas. La page Sauvegardes peut aussi créer des points de restauration Windows.' },
         { q: 'Pourquoi Unlag a-t-il besoin des droits administrateur', a: 'Les réglages modifient le registre, les services et les plans d’alimentation. Sans droits administrateur, le moteur d’Unlag refuse toute modification du système.' },
         { q: 'Que veulent dire Sûr, Modéré et Avancé', a: 'Chaque réglage a un niveau de risque. Les réglages sûrs conviennent à presque tous les PC. Les modérés peuvent changer le comportement d’une fonction, comme retirer le centre de notifications. Les avancés sont pour ceux qui savent ce que fait le réglage. Les réglages recommandés conviennent à la plupart des PC de jeu.' },

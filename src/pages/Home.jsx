@@ -17,6 +17,7 @@ function Hero() {
       </div>
       <Nav />
       <div className="wrap hero-copy">
+        <p className="hero-kicker enter">{t('hero.kicker')}</p>
         <h1 className="enter">{t('hero.title')}</h1>
         <p className="hero-sub enter">{t('hero.sub')}</p>
         <div className="hero-actions enter">

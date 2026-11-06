@@ -1,6 +1,6 @@
 export default {
   meta: {
-    home: 'Unlag · Elimina il lag da Windows', features: 'Funzioni · Unlag', how: 'Come funziona · Unlag', pricing: 'Prezzi · Unlag',
+    home: "Unlag · Ottimizzatore PC per il gaming, meno lag su Windows", features: 'Funzioni · Unlag', how: 'Come funziona · Unlag', pricing: 'Prezzi · Unlag',
     faq: 'Domande frequenti · Unlag', download: 'Download · Unlag', signIn: 'Accedi · Unlag', signUp: 'Crea un account · Unlag',
     reset: 'Reimposta la password · Unlag', account: 'Account · Unlag', terms: 'Termini di servizio · Unlag', privacy: 'Privacy · Unlag',
     legal: 'Note legali · Unlag', notFound: 'Pagina non trovata · Unlag', checkout: "Pagamento · Unlag",
@@ -15,6 +15,7 @@ export default {
     backToSignIn: "Torna all'accesso", email: 'Email', and: 'e', showPassword: 'Mostra password', hidePassword: 'Nascondi password', code: 'Codice',
   },
   hero: {
+    kicker: "Ottimizzatore PC per il gaming su Windows",
     alt: 'Un mouse da gaming che scivola su un tappetino, disegnato in cifre esadecimali sotto una luce blu cobalto',
     title: 'Elimina il lag da Windows',
     sub: "Meno input lag, frame più stabili e un sistema più silenzioso. Unlag ottimizza rete, CPU, privacy e BIOS per il gaming, e salva prima ogni valore originale così puoi annullare tutto.",
@@ -87,6 +88,7 @@ export default {
     title: 'Domande e risposte', lead: 'Cosa sapere prima di installare Unlag.',
     groups: [
       { group: 'Sicurezza', items: [
+          { q: "Che cos’è Unlag", a: "Unlag è un ottimizzatore PC per Windows 10 e 11, pensato per il gaming. Riduce l’input lag e il ping, stabilizza i frame time e taglia la telemetria, con più di cento tweak tra Generale, Prestazioni, Rete e Privacy, più pulizia, debloat, punti di ripristino e impostazioni BIOS. È gratis per iniziare e ogni modifica si può annullare." },
         { q: "Posso annullare un'ottimizzazione", a: "Sì. Prima di scrivere qualsiasi cosa, Unlag legge i valori attuali e li salva in %ProgramData%\\unlag\\tweaks.json. Disattivare l'ottimizzazione li riscrive esattamente, o elimina la chiave se non esisteva. La pagina Backup può anche creare punti di ripristino di Windows." },
         { q: 'Perché Unlag ha bisogno dei diritti di amministratore', a: 'Le ottimizzazioni cambiano registro, servizi e piani di alimentazione. Senza diritti di amministratore il motore di Unlag rifiuta qualsiasi modifica al sistema.' },
         { q: 'Cosa significano Sicuro, Moderato e Avanzato', a: "Ogni ottimizzazione ha un livello di rischio. Quelle sicure vanno bene per quasi ogni PC. Quelle moderate possono cambiare il comportamento di una funzione, come rimuovere il centro notifiche. Quelle avanzate sono per chi sa cosa fa l'impostazione. Quelle consigliate sono sicure per la maggior parte dei PC da gaming." },

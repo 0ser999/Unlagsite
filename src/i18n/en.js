@@ -1,12 +1,12 @@
 // English, the source language. Other files only need the keys they translate: anything missing falls back to this file.
 export default {
   meta: {
-    home: 'Unlag · Lower Input Lag and Smoother Games on Windows',
-    features: 'Features · Unlag',
-    how: 'How it works · Unlag',
-    pricing: 'Pricing · Unlag',
-    faq: 'FAQ · Unlag',
-    download: 'Download · Unlag',
+    home: "Unlag · PC Optimizer for Gaming, Lower Input Lag on Windows",
+    features: 'Features · Unlag PC Optimizer',
+    how: 'How it works · Unlag PC Optimizer',
+    pricing: 'Pricing · Unlag PC Optimizer',
+    faq: 'FAQ · Unlag PC Optimizer',
+    download: 'Download Unlag · Free PC Optimizer for Windows',
     signIn: 'Sign in · Unlag',
     signUp: 'Create an account · Unlag',
     reset: 'Reset password · Unlag',
@@ -54,6 +54,7 @@ export default {
     code: 'Code',
   },
   hero: {
+    kicker: "PC optimizer for Windows gaming",
     alt: 'A gaming mouse sliding across a desk mat, drawn in hexadecimal digits under cobalt light',
     title: 'Cut the lag out of Windows',
     sub: 'Lower input lag, steadier frame times and a quieter system. Unlag tunes your network, CPU, privacy settings and BIOS for gaming, and saves every original value first so you can undo anything.',
@@ -214,6 +215,7 @@ export default {
       {
         group: 'Safety',
         items: [
+          { q: "What is Unlag", a: "Unlag is a PC optimizer for Windows 10 and 11, made for gaming. It lowers input lag and ping, steadies frame times and cuts telemetry, with more than a hundred tweaks across General, Performance, Network and Privacy, plus a cleaner, debloat, restore points and BIOS tuning. It is free to start and every change can be undone." },
           { q: 'Can I undo a tweak', a: 'Yes. Before writing anything, Unlag reads the current values and stores them in %ProgramData%\\unlag\\tweaks.json. Turning the tweak off writes them back exactly, or deletes the key if it did not exist. The Backups page can also create Windows System Restore points.' },
           { q: 'Why does Unlag need administrator rights', a: 'Tweaks change the system registry, services and power plans. Without administrator rights the Unlag engine refuses every system change.' },
           { q: 'What do Safe, Moderate and Advanced mean', a: 'Each tweak carries a risk level. Safe tweaks fit almost every PC. Moderate ones can change how a feature behaves, like removing the notification center. Advanced ones are for people who know what the setting does. Tweaks marked as recommended are safe for most gaming PCs.' },

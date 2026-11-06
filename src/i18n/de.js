@@ -1,6 +1,6 @@
 export default {
   meta: {
-    home: 'Unlag · Schluss mit Lag unter Windows', features: 'Funktionen · Unlag', how: 'So funktioniert es · Unlag', pricing: 'Preise · Unlag',
+    home: "Unlag · PC-Optimierer für Gaming, weniger Input-Lag", features: 'Funktionen · Unlag', how: 'So funktioniert es · Unlag', pricing: 'Preise · Unlag',
     faq: 'FAQ · Unlag', download: 'Download · Unlag', signIn: 'Anmelden · Unlag', signUp: 'Konto erstellen · Unlag',
     reset: 'Passwort zurücksetzen · Unlag', account: 'Konto · Unlag', terms: 'Nutzungsbedingungen · Unlag', privacy: 'Datenschutz · Unlag',
     legal: 'Impressum · Unlag', notFound: 'Seite nicht gefunden · Unlag', checkout: "Kasse · Unlag",
@@ -15,6 +15,7 @@ export default {
     backToSignIn: 'Zurück zur Anmeldung', email: 'E-Mail', and: 'und', showPassword: 'Passwort anzeigen', hidePassword: 'Passwort verbergen', code: 'Code',
   },
   hero: {
+    kicker: "PC-Optimierer für Gaming unter Windows",
     alt: 'Eine Gaming-Maus gleitet über ein Mauspad, gezeichnet in Hexadezimalziffern unter kobaltblauem Licht',
     title: 'Schluss mit Lag unter Windows',
     sub: 'Weniger Input-Lag, gleichmäßigere Frametimes und ein ruhigeres System. Unlag optimiert Netzwerk, CPU, Datenschutz und BIOS fürs Gaming und speichert vorher jeden Originalwert, damit du alles rückgängig machen kannst.',
@@ -87,6 +88,7 @@ export default {
     title: 'Fragen und Antworten', lead: 'Was du vor der Installation von Unlag wissen solltest.',
     groups: [
       { group: 'Sicherheit', items: [
+          { q: "Was ist Unlag", a: "Unlag ist ein PC-Optimierer für Windows 10 und 11, gemacht fürs Gaming. Er senkt Input-Lag und Ping, glättet Frametimes und kappt die Telemetrie, mit über hundert Tweaks in Allgemein, Leistung, Netzwerk und Datenschutz, dazu Cleaner, Debloat, Wiederherstellungspunkte und BIOS-Tuning. Der Einstieg ist kostenlos und jede Änderung lässt sich rückgängig machen." },
         { q: 'Kann ich einen Tweak rückgängig machen', a: 'Ja. Bevor Unlag etwas schreibt, liest es die aktuellen Werte und speichert sie in %ProgramData%\\unlag\\tweaks.json. Beim Ausschalten werden sie exakt zurückgeschrieben oder der Schlüssel gelöscht, falls er nicht existierte. Die Seite Sicherungen kann auch Windows-Wiederherstellungspunkte erstellen.' },
         { q: 'Warum braucht Unlag Administratorrechte', a: 'Tweaks ändern Registry, Dienste und Energiepläne. Ohne Administratorrechte verweigert die Unlag-Engine jede Systemänderung.' },
         { q: 'Was bedeuten Sicher, Mittel und Fortgeschritten', a: 'Jeder Tweak hat ein Risikolevel. Sichere Tweaks passen zu fast jedem PC. Mittlere können das Verhalten einer Funktion ändern, etwa das Info-Center entfernen. Fortgeschrittene sind für alle, die wissen, was die Einstellung macht. Empfohlene Tweaks sind für die meisten Gaming-PCs sicher.' },

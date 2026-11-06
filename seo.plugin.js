@@ -34,6 +34,8 @@ const APP_LD = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
   name: 'Unlag',
+  alternateName: ['Unlag PC Optimizer', 'Unlag Optimizer'],
+  keywords: 'pc optimizer, gaming optimizer, windows optimizer, input lag, fps, ping, windows tweaks, debloat',
   url: SITE,
   applicationCategory: 'UtilitiesApplication',
   operatingSystem: 'Windows 10, Windows 11 (64-bit)',
@@ -46,6 +48,8 @@ const APP_LD = {
     price: PRICES[id].replace(/[^\d,]/g, '').replace(',', '.') || '0',
   })),
 };
+const SITE_LD = { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Unlag', alternateName: 'Unlag PC Optimizer', url: `${SITE}/` };
+const ORG_LD = { '@context': 'https://schema.org', '@type': 'Organization', name: 'Unlag', url: SITE, logo: `${SITE}/logo.png`, sameAs: ['https://discord.gg/8eMpzNCErW', 'https://github.com/0ser999/unlag'] };
 const FAQ_LD = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -57,9 +61,9 @@ const FAQ_LD = {
 // Public routes. Account, checkout and sign-in pages stay out of the index.
 const ROUTES = [
   {
-    path: '/', title: en.meta.home, priority: '1.0', ld: [APP_LD, FAQ_LD],
-    description: 'Lower input lag and smoother games on Windows 10 and 11. Unlag tunes your network, CPU, privacy and BIOS, and saves every original setting so you can undo it.',
-    body: () => `<h1>${esc(en.hero.title)}</h1><p>${esc(en.hero.sub)}</p><p>Version ${VERSION} · Windows 10 and 11 x64 · free to start. <a href="/download">${en.common.downloadWindows}</a></p>
+    path: '/', title: en.meta.home, priority: '1.0', ld: [APP_LD, FAQ_LD, SITE_LD, ORG_LD],
+    description: 'Unlag is a PC optimizer for gaming on Windows 10 and 11. Lower input lag and ping, smoother games, and every original setting saved so you can undo it.',
+    body: () => `<p>${esc(en.hero.kicker)}</p><h1>${esc(en.hero.title)}</h1><p>${esc(en.hero.sub)}</p><p>Version ${VERSION} · Windows 10 and 11 x64 · free to start. <a href="/download">${en.common.downloadWindows}</a></p>
 <h2>${esc(en.home.familiesTitle)}</h2><p>${esc(en.home.familiesText)}</p>${modules()}
 <h2>${esc(en.home.toolsHead)}</h2>${tools()}
 <h2>${esc(en.home.revTitle)}</h2><p>${esc(en.home.revLead)}</p>${steps()}
@@ -68,7 +72,7 @@ const ROUTES = [
   },
   {
     path: '/features', title: en.meta.features, priority: '0.9',
-    description: `${TOTAL_TWEAKS} Windows tweaks in four modules: General, Performance, Network and Privacy, plus Cleaner, Debloat, Backups, BIOS and an assistant. Each tweak shows its impact and risk.`,
+    description: `Unlag PC optimizer: ${TOTAL_TWEAKS} Windows tweaks in four modules: General, Performance, Network and Privacy, plus Cleaner, Debloat, Backups, BIOS and an assistant. Each tweak shows its impact and risk.`,
     body: () => `<h1>${esc(en.features.title)}</h1><p>${esc(en.features.lead)}</p>${modules()}<p>${esc(en.features.note)}</p><h2>${esc(en.features.toolsTitle)}</h2><p>${esc(en.features.toolsText)}</p>${tools()}`,
   },
   {
@@ -80,7 +84,7 @@ const ROUTES = [
   },
   {
     path: '/pricing', title: en.meta.pricing, priority: '0.9', ld: [APP_LD],
-    description: `Unlag is free to start. Premium ${PRICES.premium} and Ultimate ${PRICES.ultra}, one-time payment per PC, add latency, network and BIOS tweaks.`,
+    description: `Unlag PC optimizer is free to start. Premium ${PRICES.premium} and Ultimate ${PRICES.ultra}, one-time payment per PC, add latency, network and BIOS tweaks.`,
     body: () => `<h1>${esc(en.pricing.title)}</h1><p>${esc(en.pricing.lead)}</p>${plans()}<p>Free: ${PLAN_TWEAKS.free} tweaks · Premium: ${PLAN_TWEAKS.premium} · Ultimate: ${PLAN_TWEAKS.ultra}.</p><p>${esc(en.pricing.note)}</p>`,
   },
   {
@@ -90,7 +94,7 @@ const ROUTES = [
   },
   {
     path: '/download', title: en.meta.download, priority: '0.9', ld: [APP_LD],
-    description: `Download Unlag ${VERSION} for Windows 10 and 11 (64-bit). Free installer, upgrade from inside the app.`,
+    description: `Download Unlag ${VERSION}, the free PC optimizer for gaming on Windows 10 and 11 (64-bit). Lower input lag, upgrade from inside the app.`,
     body: () => `<h1>${esc(en.download.title)}</h1><p>${esc(en.download.lead)}</p><p><a href="${DOWNLOAD_URL}">${en.download.button}</a> (v${VERSION}, x64 installer)</p><h2>Requirements</h2>${list(en.download.reqs.map(([k, v]) => `${k}: ${v}`))}<h2>${esc(en.download.installTitle)}</h2><ol>${en.download.install.map(([h, p]) => `<li><strong>${esc(h)}</strong>: ${esc(p)}</li>`).join('')}</ol>`,
   },
   { path: '/terms', title: en.meta.terms, priority: '0.3', description: 'Terms of service for the Unlag Windows optimization app and website.', body: () => `<h1>${en.footer.terms}</h1>` },
@@ -147,11 +151,11 @@ Disallow: /checkout
 Sitemap: ${SITE}/sitemap.xml
 `;
 
-const llms = () => `# Unlag
+const llms = () => `# Unlag (PC optimizer for Windows gaming)
 
 > ${en.hero.sub}
 
-Unlag is a Windows 10 and 11 (64-bit) app with ${TOTAL_TWEAKS} tweaks in four modules. Version ${VERSION}. Free plan, Premium ${PRICES.premium} and Ultimate ${PRICES.ultra} (one-time payment, one PC).
+Unlag is a PC optimizer for gaming, a Windows 10 and 11 (64-bit) app with ${TOTAL_TWEAKS} tweaks in four modules. Version ${VERSION}. Free plan, Premium ${PRICES.premium} and Ultimate ${PRICES.ultra} (one-time payment, one PC).
 
 ## Pages
 

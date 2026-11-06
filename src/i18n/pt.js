@@ -1,6 +1,6 @@
 export default {
   meta: {
-    home: 'Unlag · Tire o lag do Windows', features: 'Recursos · Unlag', how: 'Como funciona · Unlag', pricing: 'Preços · Unlag',
+    home: "Unlag · Otimizador de PC para jogos, menos lag no Windows", features: 'Recursos · Unlag', how: 'Como funciona · Unlag', pricing: 'Preços · Unlag',
     faq: 'Perguntas frequentes · Unlag', download: 'Download · Unlag', signIn: 'Entrar · Unlag', signUp: 'Criar uma conta · Unlag',
     reset: 'Redefinir senha · Unlag', account: 'Conta · Unlag', terms: 'Termos de serviço · Unlag', privacy: 'Privacidade · Unlag',
     legal: 'Aviso legal · Unlag', notFound: 'Página não encontrada · Unlag', checkout: "Pagamento · Unlag",
@@ -15,6 +15,7 @@ export default {
     backToSignIn: 'Voltar para entrar', email: 'E-mail', and: 'e', showPassword: 'Mostrar senha', hidePassword: 'Ocultar senha', code: 'Código',
   },
   hero: {
+    kicker: "Otimizador de PC para jogos no Windows",
     alt: 'Um mouse gamer deslizando sobre um mousepad, desenhado em dígitos hexadecimais sob luz azul-cobalto',
     title: 'Tire o lag do Windows',
     sub: 'Menos input lag, frames mais estáveis e um sistema mais silencioso. O Unlag ajusta sua rede, CPU, privacidade e BIOS para jogos, e salva cada valor original antes para você poder desfazer tudo.',
@@ -87,6 +88,7 @@ export default {
     title: 'Perguntas e respostas', lead: 'O que saber antes de instalar o Unlag.',
     groups: [
       { group: 'Segurança', items: [
+          { q: "O que é o Unlag", a: "O Unlag é um otimizador de PC para Windows 10 e 11, feito para jogos. Ele reduz o input lag e o ping, estabiliza os tempos de quadro e corta a telemetria, com mais de cem ajustes em Geral, Desempenho, Rede e Privacidade, além de limpeza, debloat, pontos de restauração e ajustes de BIOS. É grátis para começar e toda alteração pode ser desfeita." },
         { q: 'Posso desfazer um ajuste', a: 'Sim. Antes de escrever qualquer coisa, o Unlag lê os valores atuais e os salva em %ProgramData%\\unlag\\tweaks.json. Desligar o ajuste os regrava exatamente, ou apaga a chave se ela não existia. A página Backups também cria pontos de restauração do Windows.' },
         { q: 'Por que o Unlag precisa de direitos de administrador', a: 'Os ajustes mudam o registro, serviços e planos de energia. Sem direitos de administrador, o motor do Unlag recusa qualquer mudança no sistema.' },
         { q: 'O que significam Seguro, Moderado e Avançado', a: 'Cada ajuste tem um nível de risco. Os seguros servem para quase todo PC. Os moderados podem mudar o comportamento de um recurso, como remover a central de notificações. Os avançados são para quem sabe o que a configuração faz. Os recomendados são seguros para a maioria dos PCs gamer.' },

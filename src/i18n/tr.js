@@ -1,6 +1,6 @@
 export default {
   meta: {
-    home: "Unlag · Windows'taki gecikmeyi yok edin", features: 'Özellikler · Unlag', how: 'Nasıl çalışır · Unlag', pricing: 'Fiyatlar · Unlag',
+    home: "Unlag · Oyun için PC optimizasyonu, Windows'ta daha az gecikme", features: 'Özellikler · Unlag', how: 'Nasıl çalışır · Unlag', pricing: 'Fiyatlar · Unlag',
     faq: 'SSS · Unlag', download: 'İndir · Unlag', signIn: 'Giriş yap · Unlag', signUp: 'Hesap oluştur · Unlag',
     reset: 'Şifreyi sıfırla · Unlag', account: 'Hesap · Unlag', terms: 'Hizmet şartları · Unlag', privacy: 'Gizlilik · Unlag',
     legal: 'Yasal bilgiler · Unlag', notFound: 'Sayfa bulunamadı · Unlag', checkout: "Ödeme · Unlag",
@@ -15,6 +15,7 @@ export default {
     backToSignIn: 'Girişe dön', email: 'E-posta', and: 've', showPassword: 'Şifreyi göster', hidePassword: 'Şifreyi gizle', code: 'Kod',
   },
   hero: {
+    kicker: "Windows'ta oyun için PC optimizasyon aracı",
     alt: 'Kobalt ışık altında onaltılık rakamlarla çizilmiş, mousepad üzerinde kayan bir oyuncu faresi',
     title: "Windows'taki gecikmeyi yok edin",
     sub: "Daha az input lag, daha düzgün kare süreleri ve daha sessiz bir sistem. Unlag ağını, işlemcini, gizliliğini ve BIOS'unu oyun için ayarlar ve her şeyi geri alabilmen için önce her orijinal değeri kaydeder.",
@@ -87,6 +88,7 @@ export default {
     title: 'Sorular ve cevaplar', lead: "Unlag'i kurmadan önce bilmen gerekenler.",
     groups: [
       { group: 'Güvenlik', items: [
+          { q: "Unlag nedir", a: "Unlag, oyun için tasarlanmış Windows 10 ve 11 PC optimizasyon aracıdır. Giriş gecikmesini ve pingi düşürür, kare sürelerini dengeler ve telemetriyi keser. Genel, Performans, Ağ ve Gizlilik modüllerinde yüzden fazla ayar, ayrıca temizleyici, debloat, geri yükleme noktaları ve BIOS ayarları sunar. Başlamak ücretsizdir ve her değişiklik geri alınabilir." },
         { q: 'Bir ayarı geri alabilir miyim', a: 'Evet. Unlag bir şey yazmadan önce mevcut değerleri okur ve %ProgramData%\\unlag\\tweaks.json içine kaydeder. Ayarı kapatmak onları tam olarak geri yazar ya da yoksa anahtarı siler. Yedekler sayfası ayrıca Windows geri yükleme noktaları oluşturabilir.' },
         { q: 'Unlag neden yönetici hakları istiyor', a: 'Ayarlar kayıt defterini, hizmetleri ve güç planlarını değiştirir. Yönetici hakları olmadan Unlag motoru her sistem değişikliğini reddeder.' },
         { q: 'Güvenli, Orta ve İleri ne demek', a: 'Her ayarın bir risk seviyesi vardır. Güvenli ayarlar neredeyse her bilgisayara uyar. Orta seviyeler bir özelliğin davranışını değiştirebilir, örneğin bildirim merkezini kaldırmak. İleri seviyeler ayarın ne yaptığını bilenler içindir. Önerilen ayarlar çoğu oyun bilgisayarı için güvenlidir.' },
