@@ -521,7 +521,7 @@ a.cat:hover .cat-bar span { background: var(--text-2); }
 .side-foot-link:hover { color: var(--text); background: rgba(238, 240, 245, 0.03); }
 
 /* Account motion: one curve, nothing loops */
-@keyframes dash-rise { from { opacity: 0; transform: translateY(10px); } }
+@keyframes dash-rise { from { opacity: 0.01; transform: translateY(10px); } }
 @keyframes bar-in { from { transform: scaleX(0); } }
 .dash-view { display: flex; flex-direction: column; gap: 24px; animation: dash-rise 420ms var(--ease) both; }
 .dash-view > *, .dash-top > * { animation: dash-rise var(--enter) var(--ease) both; }
@@ -680,7 +680,7 @@ a.cat:hover .cat-bar span { background: var(--text-2); }
 .field textarea:focus { border-color: rgba(91, 140, 255, 0.6); }
 
 /* Entrance on load. On even with Windows animations off, like the smooth scroll. */
-.enter { opacity: 0; transform: translateY(16px); filter: blur(6px); animation: enter 800ms var(--ease) forwards; }
+.enter { opacity: 0.01; transform: translateY(16px); filter: blur(6px); animation: enter 800ms var(--ease) forwards; }
 .page-header .enter:nth-child(2) { animation-delay: 80ms; }
 .hero-copy .enter:nth-child(2) { animation-delay: 90ms; }
 .hero-copy .enter:nth-child(3) { animation-delay: 180ms; }
@@ -691,7 +691,7 @@ a.cat:hover .cat-bar span { background: var(--text-2); }
 
 /* Page change */
 .route { animation: route-in 500ms var(--ease); }
-@keyframes route-in { from { opacity: 0; } }
+@keyframes route-in { from { opacity: 0.01; } }
 
 /* Reveal on scroll (src/lib/reveal.js) */
 .rv { opacity: 0; transform: translateY(24px); filter: blur(5px); }
