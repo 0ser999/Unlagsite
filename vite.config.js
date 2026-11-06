@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import seo from './seo.plugin.js';
 
 // Absolute site address for the link preview tags in index.html. Set SITE_URL (for example
 // https://unlag.app) or let Vercel / Netlify provide the production domain.
@@ -16,6 +17,7 @@ if (!siteUrl) {
 export default defineConfig({
   plugins: [
     react(),
+    seo(),
     { name: 'site-url', transformIndexHtml: (html) => html.replaceAll('__SITE_URL__', siteUrl) },
   ],
   base: '/',
