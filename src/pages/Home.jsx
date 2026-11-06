@@ -5,6 +5,7 @@ import LaserFlow from '../components/LaserFlow.jsx';
 import { Nav } from '../components/Layout.jsx';
 import { Ledger, Steps, PlanCards, CtaBand } from '../components/Blocks.jsx';
 import { ToolIcon } from '../components/ToolIcon.jsx';
+import { FaqList } from './Faq.jsx';
 import { DOWNLOAD_URL, VERSION, CATEGORIES, TOOLS, BLOATWARE } from '../data.js';
 import { t } from '../i18n/index.jsx';
 
@@ -109,6 +110,21 @@ function PricingTeaser() {
   );
 }
 
+function HomeFaq() {
+  return (
+    <section className="section">
+      <div className="wrap faq">
+        <div className="section-head">
+          <h2>{t('faq.title')}</h2>
+          <p>{t('faq.lead')}</p>
+        </div>
+        <FaqList items={t('faq.groups').flatMap((g) => g.items)} openFirst={false} />
+        <p className="plans-note"><Link to="/faq" className="text-link inline">{t('nav.faq')}<ArrowRight size={16} strokeWidth={1.5} /></Link></p>
+      </div>
+    </section>
+  );
+}
+
 export default function Home() {
   return (
     <>
@@ -117,6 +133,7 @@ export default function Home() {
         <Overview />
         <Reversible />
         <PricingTeaser />
+        <HomeFaq />
         <CtaBand />
       </main>
     </>

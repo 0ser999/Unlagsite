@@ -7,7 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import en from './src/i18n/en.js';
-import { VERSION, PRICES, CATEGORIES, TOTAL_TWEAKS, PLAN_TWEAKS, DOWNLOAD_URL } from './src/data.js';
+import { VERSION, PRICES, CATEGORIES, TOTAL_TWEAKS, PLAN_TWEAKS, DOWNLOAD_URL, BLOATWARE } from './src/data.js';
 
 const SITE = 'https://www.unlag.pro';
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -21,11 +21,13 @@ const modules = () => CATEGORIES.map((c) => {
   const k = en.cat[c.id];
   return `<section><h2>${esc(k.name)} (${c.count} tweaks, ${c.plan === 'Free' ? 'free' : 'Premium and Ultimate'})</h2><p>${esc(k.line)}</p>${list(k.outcomes)}<p>Areas: ${esc(k.areas.join(', '))}. ${c.recommended} recommended, ${c.reboot} need a restart.</p></section>`;
 }).join('');
-const tools = () => list(Object.values(en.tools).map((x) => `${x.name}: ${fill(x.line, { n: 'many' })}`));
+const tools = () => list(Object.values(en.tools).map((x) => `${x.name}: ${fill(x.line, { n: BLOATWARE.length })}`));
 const plans = () => ['free', 'premium', 'ultra'].map((id) => {
   const p = en.plans[id];
   return `<section><h3>${en.plans.names[id]} · ${PRICES[id]}${id === 'free' ? '' : ' one-time, 1 PC'}</h3><p>${esc(p.line)}</p>${list([...p.pages, ...p.perks])}</section>`;
 }).join('');
+const faqItems = () => en.faq.groups.flatMap((g) => g.items).map((i) => `<h3>${esc(i.q)}?</h3><p>${esc(i.a)}</p>`).join('');
+const steps = () => `<ol><li><strong>${en.steps.read}</strong>: ${esc(en.steps.readText)}</li><li><strong>${en.steps.save}</strong>: ${esc(en.steps.saveText)} %ProgramData%\\unlag\\tweaks.json</li><li><strong>${en.steps.revert}</strong>: ${esc(en.steps.revertText)}</li></ol>`;
 const faqHtml = () => en.faq.groups.map((g) => `<section><h2>${esc(g.group)}</h2>${g.items.map((i) => `<h3>${esc(i.q)}?</h3><p>${esc(i.a)}</p>`).join('')}</section>`).join('');
 
 const APP_LD = {
@@ -55,13 +57,14 @@ const FAQ_LD = {
 // Public routes. Account, checkout and sign-in pages stay out of the index.
 const ROUTES = [
   {
-    path: '/', title: en.meta.home, priority: '1.0', ld: [APP_LD],
-    description: 'Lower input lag and smoother games on Windows 10 and 11. Unlag tunes your network, CPU and BIOS for gaming, and saves every original setting so you can undo anything.',
+    path: '/', title: en.meta.home, priority: '1.0', ld: [APP_LD, FAQ_LD],
+    description: 'Lower input lag and smoother games on Windows 10 and 11. Unlag tunes your network, CPU, privacy and BIOS, and saves every original setting so you can undo it.',
     body: () => `<h1>${esc(en.hero.title)}</h1><p>${esc(en.hero.sub)}</p><p>Version ${VERSION} · Windows 10 and 11 x64 · free to start. <a href="/download">${en.common.downloadWindows}</a></p>
 <h2>${esc(en.home.familiesTitle)}</h2><p>${esc(en.home.familiesText)}</p>${modules()}
 <h2>${esc(en.home.toolsHead)}</h2>${tools()}
-<h2>${esc(en.home.revTitle)}</h2><p>${esc(en.home.revLead)}</p>
-<h2>${esc(en.home.freeTitle)}</h2><p>${esc(en.home.freeText)}</p>${plans()}`,
+<h2>${esc(en.home.revTitle)}</h2><p>${esc(en.home.revLead)}</p>${steps()}
+<h2>${esc(en.home.freeTitle)}</h2><p>${esc(en.home.freeText)}</p>${plans()}
+<h2>${esc(en.faq.title)}</h2><p>${esc(en.faq.lead)}</p>${faqItems()}`,
   },
   {
     path: '/features', title: en.meta.features, priority: '0.9',

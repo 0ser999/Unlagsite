@@ -1,7 +1,7 @@
 // English, the source language. Other files only need the keys they translate: anything missing falls back to this file.
 export default {
   meta: {
-    home: 'Unlag · Cut the lag out of Windows',
+    home: 'Unlag · Lower Input Lag and Smoother Games on Windows',
     features: 'Features · Unlag',
     how: 'How it works · Unlag',
     pricing: 'Pricing · Unlag',
