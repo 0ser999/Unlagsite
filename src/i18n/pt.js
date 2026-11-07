@@ -76,8 +76,8 @@ export default {
     everythingIn: 'Tudo do {plan}', assistant: 'Assistente, {n} mensagens por dia', yourPlan: 'Seu plano', download: 'Baixar', get: 'Obter {plan}',
     free: { line: 'Limpe o Windows e recupere sua privacidade', pages: ['Início', 'Geral', 'Privacidade', 'Limpeza', 'Debloat', 'Backups'], perks: ['34 ajustes essenciais'] },
     premium: { line: 'Menos latência nos jogos e online', pages: ['Desempenho', 'Modo jogo', 'Rede'], perks: ['143 ajustes, moderados incluídos', 'Suporte prioritário'] },
-    ultra: { line: 'Ajuste também o firmware da placa-mãe', pages: ['Ajustes de BIOS liberados'], perks: ['Todos os ajustes, avançados incluídos', 'Acesso prioritário a novos ajustes', 'Ajuda pessoal para configurar seu PC'] },
-    matrix: ['Início', 'Geral', 'Privacidade', 'Limpeza', 'Debloat', 'Backups', 'Desempenho', 'Modo jogo', 'Rede', 'BIOS', 'Ajustes essenciais', 'Ajustes moderados', 'Ajustes avançados', 'Suporte prioritário', 'Acesso prioritário a novos ajustes', 'Ajuda pessoal'],
+    ultra: { line: 'Ajuste também o firmware da placa-mãe', pages: ['Ajustes de BIOS liberados', 'Ajuste avançado de interrupções'], perks: ['Todos os ajustes, avançados incluídos', 'Acesso prioritário a novos ajustes', 'Ajuda pessoal para configurar seu PC'] },
+    matrix: ['Início', 'Geral', 'Privacidade', 'Limpeza', 'Debloat', 'Backups', 'Desempenho', 'Modo jogo', 'Rede', 'BIOS', 'Avançado', 'Ajustes essenciais', 'Ajustes moderados', 'Ajustes avançados', 'Suporte prioritário', 'Acesso prioritário a novos ajustes', 'Ajuda pessoal'],
   },
   pricing: {
     title: 'Comece grátis, evolua quando jogar', lead: 'Limpeza e privacidade são grátis. Os planos pagos adicionam os módulos de latência e BIOS.',

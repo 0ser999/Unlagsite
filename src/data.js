@@ -1,7 +1,7 @@
 // Everything on the site comes from the Unlag app itself (src/data.js, core/Tweaks.cs, README).
 
 export const DOWNLOAD_URL = 'https://download.unlag.pro';
-export const VERSION = '1.0.7';
+export const VERSION = '1.0.8';
 
 // One-time prices per PC (a plan is bound to one HWID), same as the app's Plans page.
 export const PRICES = {
@@ -162,7 +162,7 @@ export const PLANS = [
     name: 'Ultimate',
     line: 'Tune the motherboard firmware too',
     inherits: 'Premium',
-    pages: ['Unlock BIOS tweaks'],
+    pages: ['Unlock BIOS tweaks', 'Advanced interrupt tuning'],
     perks: ['Every tweak, advanced ones included', 'Priority access to new tweaks', 'Personal help to set up your PC'],
     ai: 20,
   },
@@ -183,6 +183,7 @@ export const PLAN_MATRIX = [
   ['Game Mode', 'premium'],
   ['Network', 'premium'],
   ['BIOS', 'ultra'],
+  ['Advanced', 'ultra'],
   ['Essential tweaks', 'free'],
   ['Moderate tweaks', 'premium'],
   ['Advanced tweaks', 'ultra'],

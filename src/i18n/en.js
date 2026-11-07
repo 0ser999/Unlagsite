@@ -193,8 +193,8 @@ export default {
     get: 'Get {plan}',
     free: { line: 'Clean up Windows and take back your privacy', pages: ['Home', 'General', 'Privacy', 'Cleaner', 'Debloat', 'Backups'], perks: ['34 essential tweaks'] },
     premium: { line: 'Lower latency in games and online', pages: ['Performance', 'Game Mode', 'Network'], perks: ['143 tweaks, moderate ones included', 'Priority support'] },
-    ultra: { line: 'Tune the motherboard firmware too', pages: ['Unlock BIOS tweaks'], perks: ['Every tweak, advanced ones included', 'Priority access to new tweaks', 'Personal help to set up your PC'] },
-    matrix: ['Home', 'General', 'Privacy', 'Cleaner', 'Debloat', 'Backups', 'Performance', 'Game Mode', 'Network', 'BIOS', 'Essential tweaks', 'Moderate tweaks', 'Advanced tweaks', 'Priority support', 'Priority access to new tweaks', 'Personal help'],
+    ultra: { line: 'Tune the motherboard firmware too', pages: ['Unlock BIOS tweaks', 'Advanced interrupt tuning'], perks: ['Every tweak, advanced ones included', 'Priority access to new tweaks', 'Personal help to set up your PC'] },
+    matrix: ['Home', 'General', 'Privacy', 'Cleaner', 'Debloat', 'Backups', 'Performance', 'Game Mode', 'Network', 'BIOS', 'Advanced', 'Essential tweaks', 'Moderate tweaks', 'Advanced tweaks', 'Priority support', 'Priority access to new tweaks', 'Personal help'],
   },
   pricing: {
     title: 'Start for free, upgrade when you play',

@@ -76,8 +76,8 @@ export default {
     everythingIn: "{plan} planındaki her şey", assistant: 'Asistan, günde {n} mesaj', yourPlan: 'Planın', download: 'İndir', get: "{plan} al",
     free: { line: "Windows'u temizle ve gizliliğini geri al", pages: ['Ana sayfa', 'Genel', 'Gizlilik', 'Temizleyici', 'Debloat', 'Yedekler'], perks: ['34 temel ayar'] },
     premium: { line: 'Oyunlarda ve internette daha az gecikme', pages: ['Performans', 'Oyun modu', 'Ağ'], perks: ['143 ayar, orta seviyeler dahil', 'Öncelikli destek'] },
-    ultra: { line: 'Anakart firmware’ini de ayarla', pages: ['BIOS ayarlarının kilidi açık'], perks: ['Her ayar, ileri seviyeler dahil', 'Yeni ayarlara öncelikli erişim', 'Bilgisayarını ayarlamak için kişisel yardım'] },
-    matrix: ['Ana sayfa', 'Genel', 'Gizlilik', 'Temizleyici', 'Debloat', 'Yedekler', 'Performans', 'Oyun modu', 'Ağ', 'BIOS', 'Temel ayarlar', 'Orta ayarlar', 'İleri ayarlar', 'Öncelikli destek', 'Yeni ayarlara öncelikli erişim', 'Kişisel yardım'],
+    ultra: { line: 'Anakart firmware’ini de ayarla', pages: ['BIOS ayarlarının kilidi açık', 'Gelişmiş kesme ayarları'], perks: ['Her ayar, ileri seviyeler dahil', 'Yeni ayarlara öncelikli erişim', 'Bilgisayarını ayarlamak için kişisel yardım'] },
+    matrix: ['Ana sayfa', 'Genel', 'Gizlilik', 'Temizleyici', 'Debloat', 'Yedekler', 'Performans', 'Oyun modu', 'Ağ', 'BIOS', 'Gelişmiş', 'Temel ayarlar', 'Orta ayarlar', 'İleri ayarlar', 'Öncelikli destek', 'Yeni ayarlara öncelikli erişim', 'Kişisel yardım'],
   },
   pricing: {
     title: 'Ücretsiz başla, oynarken yükselt', lead: 'Temizlik ve gizlilik ücretsiz. Ücretli planlar gecikme ve BIOS modüllerini ekler.',

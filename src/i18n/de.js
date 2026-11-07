@@ -76,8 +76,8 @@ export default {
     everythingIn: 'Alles aus {plan}', assistant: 'Assistent, {n} Nachrichten pro Tag', yourPlan: 'Dein Plan', download: 'Herunterladen', get: '{plan} holen',
     free: { line: 'Windows aufräumen und deine Privatsphäre zurückholen', pages: ['Start', 'Allgemein', 'Datenschutz', 'Bereinigung', 'Debloat', 'Sicherungen'], perks: ['34 wichtige Tweaks'] },
     premium: { line: 'Weniger Latenz in Spielen und online', pages: ['Leistung', 'Spielmodus', 'Netzwerk'], perks: ['143 Tweaks, mittlere inklusive', 'Bevorzugter Support'] },
-    ultra: { line: 'Auch die Mainboard-Firmware optimieren', pages: ['BIOS-Tweaks freigeschaltet'], perks: ['Jeder Tweak, fortgeschrittene inklusive', 'Bevorzugter Zugang zu neuen Tweaks', 'Persönliche Hilfe bei der PC-Einrichtung'] },
-    matrix: ['Start', 'Allgemein', 'Datenschutz', 'Bereinigung', 'Debloat', 'Sicherungen', 'Leistung', 'Spielmodus', 'Netzwerk', 'BIOS', 'Wichtige Tweaks', 'Mittlere Tweaks', 'Fortgeschrittene Tweaks', 'Bevorzugter Support', 'Bevorzugter Zugang zu neuen Tweaks', 'Persönliche Hilfe'],
+    ultra: { line: 'Auch die Mainboard-Firmware optimieren', pages: ['BIOS-Tweaks freigeschaltet', 'Erweitertes Interrupt-Tuning'], perks: ['Jeder Tweak, fortgeschrittene inklusive', 'Bevorzugter Zugang zu neuen Tweaks', 'Persönliche Hilfe bei der PC-Einrichtung'] },
+    matrix: ['Start', 'Allgemein', 'Datenschutz', 'Bereinigung', 'Debloat', 'Sicherungen', 'Leistung', 'Spielmodus', 'Netzwerk', 'BIOS', 'Erweitert', 'Wichtige Tweaks', 'Mittlere Tweaks', 'Fortgeschrittene Tweaks', 'Bevorzugter Support', 'Bevorzugter Zugang zu neuen Tweaks', 'Persönliche Hilfe'],
   },
   pricing: {
     title: 'Kostenlos starten, upgraden wenn du spielst', lead: 'Bereinigung und Datenschutz sind kostenlos. Bezahlte Pläne fügen die Module für Latenz und BIOS hinzu.',

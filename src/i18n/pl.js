@@ -76,8 +76,8 @@ export default {
     everythingIn: 'Wszystko z {plan}', assistant: 'Asystent, {n} wiadomości dziennie', yourPlan: 'Twój plan', download: 'Pobierz', get: 'Wybierz {plan}',
     free: { line: 'Wyczyść Windows i odzyskaj prywatność', pages: ['Start', 'Ogólne', 'Prywatność', 'Czyszczenie', 'Debloat', 'Kopie'], perks: ['34 kluczowych ustawień'] },
     premium: { line: 'Mniejsze opóźnienia w grach i online', pages: ['Wydajność', 'Tryb gry', 'Sieć'], perks: ['143 ustawienia, z umiarkowanymi', 'Priorytetowe wsparcie'] },
-    ultra: { line: 'Dostrój też firmware płyty głównej', pages: ['Odblokowane ustawienia BIOS'], perks: ['Wszystkie ustawienia, z zaawansowanymi', 'Priorytetowy dostęp do nowych ustawień', 'Osobista pomoc w konfiguracji komputera'] },
-    matrix: ['Start', 'Ogólne', 'Prywatność', 'Czyszczenie', 'Debloat', 'Kopie', 'Wydajność', 'Tryb gry', 'Sieć', 'BIOS', 'Kluczowe ustawienia', 'Umiarkowane ustawienia', 'Zaawansowane ustawienia', 'Priorytetowe wsparcie', 'Priorytetowy dostęp do nowych ustawień', 'Osobista pomoc'],
+    ultra: { line: 'Dostrój też firmware płyty głównej', pages: ['Odblokowane ustawienia BIOS', 'Zaawansowane strojenie przerwań'], perks: ['Wszystkie ustawienia, z zaawansowanymi', 'Priorytetowy dostęp do nowych ustawień', 'Osobista pomoc w konfiguracji komputera'] },
+    matrix: ['Start', 'Ogólne', 'Prywatność', 'Czyszczenie', 'Debloat', 'Kopie', 'Wydajność', 'Tryb gry', 'Sieć', 'BIOS', 'Zaawansowane', 'Kluczowe ustawienia', 'Umiarkowane ustawienia', 'Zaawansowane ustawienia', 'Priorytetowe wsparcie', 'Priorytetowy dostęp do nowych ustawień', 'Osobista pomoc'],
   },
   pricing: {
     title: 'Zacznij za darmo, ulepsz, gdy grasz', lead: 'Czyszczenie i prywatność są darmowe. Płatne plany dodają moduły od opóźnień i BIOS-u.',
