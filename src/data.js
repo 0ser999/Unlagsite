@@ -1,7 +1,7 @@
 // Everything on the site comes from the Unlag app itself (src/data.js, core/Tweaks.cs, README).
 
 export const DOWNLOAD_URL = 'https://download.unlag.pro';
-export const VERSION = '1.0.9';
+export const VERSION = '1.0.10';
 
 // One-time prices per PC (a plan is bound to one HWID), same as the app's Plans page.
 export const PRICES = {
