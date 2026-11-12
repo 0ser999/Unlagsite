@@ -1,7 +1,7 @@
 // Everything on the site comes from the Unlag app itself (src/data.js, core/Tweaks.cs, README).
 
 export const DOWNLOAD_URL = 'https://download.unlag.pro';
-export const VERSION = '1.0.10';
+export const VERSION = '1.0.12';
 
 // One-time prices per PC (a plan is bound to one HWID), same as the app's Plans page.
 export const PRICES = {
@@ -123,11 +123,11 @@ export const LEDGER = [
 ];
 
 export const NETWORK_ROWS = [
-  { name: 'Remove Network Throttling', desc: 'Disables the multimedia throttling index that caps non-media traffic', impact: 'Medium', on: true, open: true },
+  { name: 'Remove Network Throttling', desc: 'Removes the limit Windows puts on network traffic while media is playing', impact: 'Medium', on: true, open: true },
   { name: 'Disable Delivery Optimization', desc: 'Stops Windows from uploading updates to other PCs over your connection', impact: 'Medium', on: true },
-  { name: 'Optimize TCP Auto-Tuning', desc: 'Sets TCP auto-tuning to Normal so fast connections are not capped', impact: 'Low', on: false },
-  { name: 'Release Reserved Bandwidth', desc: 'Frees the bandwidth Windows keeps aside for QoS-aware applications', impact: 'Low', on: false },
-  { name: 'Faster Port Reuse', desc: 'Opens the full port range and frees closed connections after 30 s', impact: 'Low', on: false },
+  { name: 'Uncap TCP Receive Window', desc: 'Makes sure Windows does not cap the speed of fast connections', impact: 'Low', on: false },
+  { name: 'Release Reserved Bandwidth', desc: 'Frees the bandwidth Windows keeps aside for certain apps', impact: 'Low', on: false },
+  { name: 'Faster Port Reuse', desc: 'Lets Windows reuse network connections faster so new ones open without waiting', impact: 'Low', on: false },
 ];
 
 export const TOOLS = [
