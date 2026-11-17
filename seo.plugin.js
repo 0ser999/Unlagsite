@@ -7,7 +7,18 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import en from './src/i18n/en.js';
-import { VERSION, PRICES, CATEGORIES, TOTAL_TWEAKS, PLAN_TWEAKS, DOWNLOAD_URL, BLOATWARE } from './src/data.js';
+import { VERSION as FALLBACK_VERSION, PRICES, CATEGORIES, TOTAL_TWEAKS, PLAN_TWEAKS, DOWNLOAD_URL, BLOATWARE } from './src/data.js';
+
+/* The version in the prerendered pages: the latest GitHub release at build time (Vercel builds on every push),
+   data.js when GitHub cannot be reached. Visitors also get it live from src/lib/version.js. */
+async function latestVersion() {
+  try {
+    const r = await fetch('https://api.github.com/repos/0ser999/unlag/releases/latest', { headers: { Accept: 'application/vnd.github+json' }, signal: AbortSignal.timeout(5000) });
+    const m = r.ok ? /^v?(\d+\.\d+\.\d+)$/.exec((await r.json()).tag_name || '') : null;
+    return m ? m[1] : FALLBACK_VERSION;
+  } catch { return FALLBACK_VERSION; }
+}
+const VERSION = await latestVersion();
 
 const SITE = 'https://www.unlag.pro';
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');

@@ -11,7 +11,8 @@ import { useAuth } from '../lib/auth.jsx';
 import {
   AI_LIMIT, LINKABLE, hasPlan, authMessage, changePassword, linkProvider, unlinkProvider, readQuota, resendConfirmation, submitReview, updateDisplayName,
 } from '../lib/account.js';
-import { PLANS, PLAN_MATRIX, PLAN_TWEAKS, DOWNLOAD_URL, VERSION } from '../data.js';
+import { PLANS, PLAN_MATRIX, PLAN_TWEAKS, DOWNLOAD_URL } from '../data.js';
+import { useVersion } from '../lib/version.js';
 import { t, currentLang } from '../i18n/index.jsx';
 import { GoogleIcon, DiscordIcon } from '../components/BrandIcons.jsx';
 
@@ -77,6 +78,7 @@ function hexField(seed, rows, cols) {
 const shortId = (value) => (value ? `${value.slice(0, 4)}…${value.slice(-4)}` : null);
 
 function LicenseCard({ info, hwid, refresh }) {
+  const version = useVersion();
   const [status, setStatus] = useState('');
   const texture = useMemo(() => hexField(info.uid, 9, 64), [info.uid]);
   const onRefresh = async () => {
@@ -112,7 +114,7 @@ function LicenseCard({ info, hwid, refresh }) {
         <div className="lic-top">
           <img src="/logo-64.webp" alt="" width="28" height="28" />
           <span className="lic-brand">Unlag</span>
-          <span className="lic-ver mono">v{VERSION}</span>
+          <span className="lic-ver mono">v{version}</span>
         </div>
         <div className="lic-plan">{planName(info.plan)}</div>
         <div className="lic-meta">
@@ -256,12 +258,13 @@ function Unlocks({ info }) {
 }
 
 function AppStrip() {
+  const version = useVersion();
   return (
     <section className="dash-strip">
       <img src="/logo-64.webp" alt="" width="40" height="40" />
       <div>
         <div className="dash-strip-title">{t('account.appTitle')}</div>
-        <div className="dash-strip-meta mono">{t('account.appMeta', { v: VERSION })}</div>
+        <div className="dash-strip-meta mono">{t('account.appMeta', { v: version })}</div>
       </div>
       <a href={DOWNLOAD_URL} className="btn btn-secondary btn-sm"><Download size={16} strokeWidth={1.5} />{t('account.download')}</a>
     </section>

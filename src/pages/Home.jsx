@@ -6,10 +6,12 @@ import { Nav } from '../components/Layout.jsx';
 import { Ledger, Steps, PlanCards, CtaBand } from '../components/Blocks.jsx';
 import { ToolIcon } from '../components/ToolIcon.jsx';
 import { FaqList } from './Faq.jsx';
-import { DOWNLOAD_URL, VERSION, CATEGORIES, TOOLS, BLOATWARE } from '../data.js';
+import { DOWNLOAD_URL, CATEGORIES, TOOLS, BLOATWARE } from '../data.js';
+import { useVersion } from '../lib/version.js';
 import { t } from '../i18n/index.jsx';
 
 function Hero() {
+  const version = useVersion();
   return (
     <section className="hero">
       <div className="hero-scene">
@@ -26,7 +28,7 @@ function Hero() {
           </a>
           <Link to="/features" className="btn btn-secondary">{t('hero.see')}</Link>
         </div>
-        <p className="hero-meta enter mono">{t('hero.meta', { v: VERSION })}</p>
+        <p className="hero-meta enter mono">{t('hero.meta', { v: version })}</p>
       </div>
       <div className="wrap hero-product enter">
         <LaserFlow x={0.82} hit={260} />

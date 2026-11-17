@@ -1,7 +1,8 @@
 // Everything on the site comes from the Unlag app itself (src/data.js, core/Tweaks.cs, README).
 
 export const DOWNLOAD_URL = 'https://download.unlag.pro';
-export const VERSION = '1.0.12';
+// Shown until the latest GitHub release is known (src/lib/version.js), and when GitHub cannot be reached.
+export const VERSION = '1.0.14';
 
 // One-time prices per PC (a plan is bound to one HWID), same as the app's Plans page.
 export const PRICES = {

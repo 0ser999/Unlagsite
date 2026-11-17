@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
 import { Download as DownloadIcon, ArrowRight } from 'lucide-react';
 import { PageHeader } from '../components/Blocks.jsx';
-import { DOWNLOAD_URL, VERSION } from '../data.js';
+import { DOWNLOAD_URL } from '../data.js';
+import { useVersion } from '../lib/version.js';
 import { t } from '../i18n/index.jsx';
 
 export default function Download() {
+  const version = useVersion();
   return (
     <main>
       <PageHeader title={t('download.title')}>{t('download.lead')}</PageHeader>
@@ -14,7 +16,7 @@ export default function Download() {
             <img src="/logo.webp" alt="" width="64" height="64" className="download-logo" />
             <div>
               <h2>{t('download.card')}</h2>
-              <p className="mono">{t('download.meta', { v: VERSION })}</p>
+              <p className="mono">{t('download.meta', { v: version })}</p>
             </div>
             <a href={DOWNLOAD_URL} className="btn btn-primary download-btn">
               <DownloadIcon size={18} strokeWidth={1.5} />{t('download.button')}
